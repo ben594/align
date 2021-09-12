@@ -48,7 +48,9 @@ __pycache__/
 ######################
 google_credential.json
 *.pem
-passwords.py
+# TODO: uncomment the following line after adding in your passwords, 
+#       but before comitting in git
+#passwords.py
 
 # DS Store #
 ######################
