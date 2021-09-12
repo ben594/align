@@ -1,4 +1,6 @@
+import passwords # separate file not tracked by git
+
 SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@localhost/{}'\
-    .format("USER",
-            "DATABASE_PASSWORD",
-            "DATABASE")
+    .format(passwords.USER,
+            passwords.DATABASE_PASSWORD,
+            passwords.DATABASE)
