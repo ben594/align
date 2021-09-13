@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block msg %}
+<h2>Mini Amazon<br> Login Page</h2>
+<p>Login or register from here to access.</p>
+{% endblock %}
+
+{% block content %}
+    <div class="login-form">
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label>{{ form.email.label }}</label>
+                {{ form.email(size=32, class_="form-control") }}<br>
+                {% for error in form.email.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+<!--                <input type="text" class="form-control" placeholder="User Name">-->
+            </div>
+            <div class="form-group">
+                <label>{{ form.password.label }}</label>
+                {{ form.password(size=32, class_="form-control") }}<br>
+                {% for error in form.password.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+<!--                <input type="password" class="form-control" placeholder="Password">-->
+            </div>
+            {{ form.submit(class_="btn btn-black") }}
+            <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Register</a>
+        </form>
+    </div>
+
+
+{% endblock %}

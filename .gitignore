@@ -1,6 +1,8 @@
 # environment (requirements.txt is still tracked) #
 ######################
 env/
+venv/
+migrations/
 gunicorn.conf.py
 
 # Compiled source #

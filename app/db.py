@@ -24,10 +24,11 @@ class DB:
         else:
             engn = self.engine
         # Execute the query
-        if output:
+        if return_output:
             return engn.execute(sqlstr).fetchall()[0]
         else:
             engn.execute(sqlstr)
+
 
     # EXAMPLE QUERY
     def get_first_userid(self, username):
@@ -35,5 +36,5 @@ class DB:
         return output[0]
 
     # EXAMPLE TRANSACTION
-    def example_transaction(self, )
+    def example_transaction(self):
         pass
