@@ -33,14 +33,7 @@ The following instructions also exist as a recorded video, which you can find [a
 6. You will be asked what type of platform the VM is. Select `Linux`.
 7. Now you're connected! In the lower left corner of the window you'll see a green bar that reads "SSH: ...". You can access files and run things through the terminal just as you would be able to locally.
 
-## Keep Track of Your Project with Gitlab
-### Creating a gitlab project
-1. Log into gitlab, create a new repository. 
-2. Once created there will be a `Clone` button. Copy the `Clone with SSH` text.
-3. Navigate to the directory where you'd like to work on the project.
-4. Now run the command `git clone THE_TEXT_YOU_COPIED`. Make sure to replace 'THE_TEXT_YOU_COPIED' with the text you copied in step 2.
-
-### Making changes, using merge requests
+## Keep Track of Your Project with Gitlab: Merge Requests
 These instructions seem long, but they aren't complicated. If you've never worked with merge requests, make sure to read this thoroughly. 
 
 To work on a gitlab project with many team members, you want to avoid working directly on the 'main' branch as much as possible. If multiple people work on this branch at the same time, you are likely to run into conflicts and be forced to restore old versions. This is a mess. Instead, use new branches every time you add a feature or make an edit, and then merge these into the main branch. This is how to do it:
@@ -57,5 +50,3 @@ Let's imagine we want to create a new function to help with some specific query 
 5. To merge the changes into the main project so others can add on top of your work, you need to open a merge request. This request is an open invitation for your teammates to take a look at your code, make sure the changes look good to them, and then incorporate them onto the main branch for others to use. To open a merge request, click on 'merge requests' in the left hand navigation bar, and then hit the blue 'New merge request' button at the top right. It will ask you to select a source branch. For our example above this would be the `query-feature` branch. For the target branch, leave it as main.
 6. Once the merge request is created, ping your teammates to take a look at it. If they think it's acceptable, they just need to click 'merge' and the code you've written get's incorporated. Now you can safely delete the `query-feature` branch on gitlab.
 Done!
-### Other Gitlab features
-Gitlab offers a host of other features and plugins to help you develop code faster and better. If you are curious to learn more, two things to explore next would be to create tests that run automatically on any code pushed to the repo, and to specify linters to make sure the code remains clean and legible.
