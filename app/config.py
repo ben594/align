@@ -8,8 +8,3 @@ class Config(object):
                                         app.passwords.DATABASE_PASSWORD,
                                         app.passwords.DATABASE)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-# SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@localhost/{}'\
-#     .format(passwords.USER,
-#             passwords.DATABASE_PASSWORD,
-#             passwords.DATABASE)
