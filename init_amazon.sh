@@ -19,3 +19,7 @@ if [[ -n `sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -w "$dbname"` ]]; t
 fi
 sudo -u postgres createdb $dbname
 
+source env/bin/activate
+flask db init
+flask db migrate
+flask db upgrade

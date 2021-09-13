@@ -6,7 +6,7 @@ Skeleton code for the CompSci 316 (Database Design) undergraduate course project
 ## Deploying the current skeleton
 1. Fork this repo by clicking the small 'Fork' button at the very top right [on Gitlab](www.example.com). It's important that you fork first, because if you clone the directory directly you won't be able to push changes (save your progress) back to Gitlab.
 2. In your newly forked repo, find the blue "Clone" button. Copy the "Clone with SSH" text. In your terminal on the VM, you can now issue the command `git clone THE_TEXT_YOU_JUST_COPIED`. Make sure to replace 'THE_TEXT_YOU_JUST_COPIED' with the "Clone with SSH" text.
-3. Move into the repository directory and then run `sudo bash init_amazon.sh`. When you're asked for a password, type `postgres`.
+3. Move into the repository directory and then run `sudo bash init_amazon.sh`. When you're asked for a password, type `postgres`. Alternatively, you generate a more secure password (read the next section on how), but then you have to make sure this password is matched in the `passwords.py` file.
 5. To view the app in your browser, you need to edit the firewall rules. Here are [instructions provided by Google](https://cloud.google.com/vpc/docs/using-firewalls). To begin with, open up port 5000. That should enable you to run `flask run --host=0.0.0.0` and view your app using your browser by pointing it to `vm_external_ip_addr:5000`.
 ## Important! before you push to the repo: Hide Passwords
 1. For all your password/secret key needs, use passwords.py. You can randomly generate passwords with this tool: https://www.lastpass.com/password-generator
