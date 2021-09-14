@@ -15,7 +15,7 @@ Skeleton code for the CompSci 316 (Database Design) undergraduate course project
 
 # Tips for Working on This Project
 ## Set up VS Code on Google Cloud VM
-The following instructions also exist as a recorded video, which you can find [at this link](http:www.example.com). If you need specific help setting up VSCode, the TAs will be able to help you in office hours.
+The following instructions also exist as a recorded video, which you can find [at this link](https://youtu.be/y-l6FLSsCz0). If you need specific help setting up VSCode, the TAs will be able to help you in office hours.
 
 1. First we need to set up SSH access through your local machine (Mac) to the Google VM.
    1. Create an SSH key-pair on your local machine. If you have a macOS, use: `ssh-keygen -f /Users/YOUR_MAC_USERNAME/.ssh/vm_316`. If you are on Windows, use: `ssh-keygen -f C:\Users\YOUR_WINDOWS_USERNAME\.ssh\vm_316`. Make sure to replace 'YOUR_XXX_USERNAME' with your local machine's username. For the passphrase, just hit enter to opt out.
