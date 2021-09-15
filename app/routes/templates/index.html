@@ -23,11 +23,31 @@
         <section class="container">
             <div class="left-half">
                 <h3>Available Products:</h3>
-                <p>{{avail_products}}</p>
+                <table class="container">
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                    {% for item in avail_products%}
+                    </tr>
+                        <td>{{item[0]}}</td>
+                        <td>{{item[1]}}</td>
+                    <tr>
+                    {% endfor %}
+                </table>
             </div>
             <div class="right-half">
                 <h3>Past Purchases:</h3>
-                <p>{{purchased_history}}</p>
+                <table class="container">
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                    {% for item in purchased_history%}
+                    </tr>
+                        <td>{{item[0]}}</td>
+                        <td>{{item[1]}}</td>
+                    <tr>
+                    {% endfor %}
+                </table>
             </div>
           </section>
 
