@@ -25,16 +25,20 @@ class DB:
             engn = self.engine
         # Execute the query
         if return_output:
-            return engn.execute(sqlstr).fetchall()[0]
+            return engn.execute(sqlstr).fetchall()[0]  # if the query expects something in return
         else:
-            engn.execute(sqlstr)
-
+            engn.execute(sqlstr)  # if the query has no response (ex: UPDATE)
 
     # EXAMPLE QUERY
-    def get_first_userid(self, username):
+    def get_userid(self, username):
         output = self.execute(f"SELECT id FROM users WHERE username={username}")
         return output[0]
 
     # EXAMPLE TRANSACTION
-    def example_transaction(self):
-        pass
+    def example_transaction(self, username):
+        """This is not a functioning transaction, but is just meant to explain how to create your own."""
+        with self.engine.connect() as conn:
+            with conn.begin() as transaction:
+                # here, submit all the queries to be part of the transaction
+                # if any of these fail, rollbacks will happen to undo any changes
+                first_usr = get_userid(username)  # your query should be handled by another function
