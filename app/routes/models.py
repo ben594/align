@@ -28,14 +28,16 @@ class User(UserMixin, db.Model):
 class Products(db.Model):
     __tablename__ = 'products'
     pid = db.Column(db.Integer, primary_key=True)
-    productname = db.Column(db.String(255), index=True, unique=True)
-    price = db.Column(db.Integer)
+    product_name = db.Column(db.String(255), index=True, unique=True)
+    price = db.Column(db.Float)
+    available = db.Column(db.Boolean, default=True)
 
 
 class Purchases(db.Model):
     __tablename__ = 'purchases'
     order_nr = db.Column(db.Integer, primary_key=True)
-    uid = db.Column(db.Integer. index=True)
+    uid = db.Column(db.Integer, index=True)
+    pid = db.Column(db.Integer, index=True)
     time_purchased = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 

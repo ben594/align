@@ -25,16 +25,20 @@ class DB:
             engn = self.engine
         # Execute the query
         if return_output:
-            return engn.execute(sqlstr).fetchall()[0]  # if the query expects something in return
+            return engn.execute(sqlstr).fetchall()  # if the query expects something in return
         else:
             engn.execute(sqlstr)  # if the query has no response (ex: UPDATE)
 
     # EXAMPLE QUERIES
+    def get_avail_products(self):
+        """Returns all product ids for available products."""
+        return self.execute("SELECT pid FROM products WHERE available=true;", return_output=True)
+
     def get_product_details(self, product_id):
         """Returns all rows for a given product by id"""
         return self.execute(f"SELECT * FROM products WHERE pid={product_id};", return_output=True)
 
-    def get_users_purchases(self, user_id, since):
+    def get_purchase_history(self, user_id, since):
         """Returns a list of product_ids that the given user has purchased.
         
         Args:
@@ -42,10 +46,10 @@ class DB:
             since (datetime Obj): Sets the limit to how far back to look
         """
         str_date = str(since)
-        return self.execute(f"SELECT pid
-                              FROM purchases
-                              WHERE uid={user_id} 
-                                AND time_purchased > {str_date}", return_output=True)  # you can do multiline!
+        return self.execute(f"SELECT pid \
+                              FROM purchases \
+                              WHERE uid={user_id} \
+                                AND time_purchased > '{str_date}';", return_output=True)  # you can do multiline!
 
     # EXAMPLE TRANSACTION
     def get_my_purchases(self, product_id):
