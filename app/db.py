@@ -25,16 +25,37 @@ class DB:
             engn = self.engine
         # Execute the query
         if return_output:
-            return engn.execute(sqlstr).fetchall()[0]
+            return engn.execute(sqlstr).fetchall()  # if the query expects something in return
         else:
-            engn.execute(sqlstr)
+            engn.execute(sqlstr)  # if the query has no response (ex: UPDATE)
 
+    # EXAMPLE QUERIES
+    def get_avail_products(self):
+        """Returns all product ids for available products."""
+        return self.execute("SELECT pid FROM products WHERE available=true;", return_output=True)
 
-    # EXAMPLE QUERY
-    def get_first_userid(self, username):
-        output = self.execute(f"SELECT id FROM users WHERE username={username}")
-        return output[0]
+    def get_product_details(self, product_id):
+        """Returns all rows for a given product by id"""
+        return self.execute(f"SELECT * FROM products WHERE pid={product_id};", return_output=True)
+
+    def get_purchase_history(self, user_id, since):
+        """Returns a list of product_ids that the given user has purchased.
+        
+        Args:
+            user_id (int): Integer User id. Has to match what's in the DB
+            since (datetime Obj): Sets the limit to how far back to look
+        """
+        str_date = str(since)
+        return self.execute(f"SELECT pid \
+                              FROM purchases \
+                              WHERE uid={user_id} \
+                                AND time_purchased > '{str_date}';", return_output=True)  # you can do multiline!
 
     # EXAMPLE TRANSACTION
-    def example_transaction(self):
-        pass
+    def get_my_purchases(self, product_id):
+        """This is not a functioning transaction, it is just meant to explain how to create your own."""
+        with self.engine.connect() as conn:
+            with conn.begin() as transaction:
+                # here, submit all the queries to be part of the transaction
+                # if any of these fail, rollbacks will happen to undo any changes
+                first_usr = get_product_details(product_id)
