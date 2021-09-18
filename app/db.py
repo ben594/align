@@ -1,4 +1,6 @@
 from sqlalchemy import create_engine
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 class DB:
     """Hosts all functions for querying the database."""
@@ -29,6 +31,34 @@ class DB:
         else:
             engn.execute(sqlstr)  # if the query has no response (ex: UPDATE)
 
+
+    # EXAMPLE QUERIES for user authentication
+    def register_user(self, email, password, firstname, lastname):
+        """Add a user to the users table."""
+        try: 
+            output = self.execute(f"INSERT INTO users(email, password, firstname, lastname) VALUES \
+                                                ('{email}', '{generate_password_hash(password)}', '{firstname}', '{lastname}')")
+            return True
+        except:
+            return False
+
+    def check_user_credentials(self, email, password):
+        """Verify user email and password combination."""
+        output = self.execute(f"SELECT password FROM users WHERE email='{email}'", return_output=True)
+        if not output:
+            return False
+        return check_password_hash(output[0][0], password)
+
+    def get_user_info_by_email(self, email):
+        """Get user info based on email."""
+        output = self.execute(f"SELECT id, email, firstname, lastname FROM users WHERE email='{email}'", return_output=True)
+        return output[0] if output else output
+
+    def get_user_info_by_id(self, id):
+        """Get user info based on user id."""
+        output = self.execute(f"SELECT id, email, firstname, lastname FROM users WHERE id='{id}'", return_output=True)
+        return output[0] if output else output
+
     # EXAMPLE QUERIES
     def get_avail_products(self):
         """Returns all product ids for available products."""
@@ -58,4 +88,4 @@ class DB:
             with conn.begin() as transaction:
                 # here, submit all the queries to be part of the transaction
                 # if any of these fail, rollbacks will happen to undo any changes
-                first_usr = get_product_details(product_id)
+                first_usr = self.get_product_details(product_id)

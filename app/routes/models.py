@@ -1,46 +1,24 @@
-from datetime import datetime
-from app.routes import db, login
+from app.routes import login
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
-import datetime
+from flask import current_app as app
 
 
-class User(UserMixin, db.Model):
-    """Class for user table. Includes necessary functions for authentication. 
-    Do not remove anything. Feel free to add more."""
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(255), index=True)
-    lastname = db.Column(db.String(255), index=True)
-    email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
+class User(UserMixin):
+    def __init__(self, id, email, firstname, lastname):
+        self.id = id
+        self.email = email
+        self.firstname = firstname
+        self.lastname = lastname
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<User {}>'.format(self.firstname)
 
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-
-class Products(db.Model):
-    __tablename__ = 'products'
-    pid = db.Column(db.Integer, primary_key=True)
-    product_name = db.Column(db.String(255), index=True, unique=True)
-    price = db.Column(db.Float)
-    available = db.Column(db.Boolean, default=True)
-
-
-class Purchases(db.Model):
-    __tablename__ = 'purchases'
-    order_nr = db.Column(db.Integer, primary_key=True)
-    uid = db.Column(db.Integer, index=True)
-    pid = db.Column(db.Integer, index=True)
-    time_purchased = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 
 @login.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+    info = app.db.get_user_info_by_id(id)
+    if not info:
+        return None
+    user = User(info[0], info[1], info[2], info[3])
+    return user

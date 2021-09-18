@@ -18,14 +18,11 @@ if [[ -n `sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -w "$dbname"` ]]; t
 fi
 sudo -u postgres createdb $dbname
 
-source env/bin/activate
-flask db init
-flask db migrate
-flask db upgrade
+sudo -u postgres psql -af create.sql $dbname
 
 # populate the database with initial data:
 # user 'icecream@tastes.good' has password 'test123' 
-psql amazon -c "INSERT INTO users(id,firstname,lastname,email,password_hash) VALUES (0,'Joey','Shmoey','icecream@tastes.good','pbkdf2:sha256:260000\$1GvmeoAkcWb89TyU\$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb');"
+psql amazon -c "INSERT INTO users(email, password, firstname,lastname) VALUES ('icecream@tastes.good','pbkdf2:sha256:260000\$1GvmeoAkcWb89TyU\$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb','Joey','Shmoey');"
 # insert products
 psql amazon -c "INSERT INTO products(pid,product_name,price,available) VALUES (1,'vanilla ice cream',2.99,true);"
 psql amazon -c "INSERT INTO products(pid,product_name,price,available) VALUES (2,'chocolate ice cream',2.99,true);"
