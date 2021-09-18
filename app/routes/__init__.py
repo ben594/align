@@ -1,13 +1,10 @@
-from flask import Flask, Blueprint, redirect, render_template, url_for
+from flask import Flask
 from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from app.config import Config
-from flask_babel import Babel, lazy_gettext as _l
-from ..db import DB
+from flask_babel import Babel
+from app.db import DB
 
-db = SQLAlchemy()
-migrate = Migrate()
+
 login = LoginManager()
 login.login_view = 'users.login'
 babel = Babel()
@@ -17,18 +14,12 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    app.db = db.init_app(app)
-    app.dbq = DB(app)  # for queries
-    migrate.init_app(app, db)
+    
+    app.db = DB(app)
     login.init_app(app)
     babel.init_app(app)
 
-    # from .accounts import *
-    # from .cart import *
-    # from .feedback import *
-    # from .inventory import *
-    # from .product import *
-    
+
     from .index import bp as index_bp
     app.register_blueprint(index_bp)
 
