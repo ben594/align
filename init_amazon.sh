@@ -18,6 +18,7 @@ if [[ -n `sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -w "$dbname"` ]]; t
 fi
 sudo -u postgres createdb $dbname
 
+# create tables in the database
 sudo -u postgres psql -af create.sql $dbname
 
 # populate the database with initial data:
