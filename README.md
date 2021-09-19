@@ -1,23 +1,59 @@
 # mini-amazon-skeleton
 
-Skeleton code for the CompSci 316 (Database Design) undergraduate course project. This course project is intended as a 'standard option'. Created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](https://www.linkedin.com/in/yihaoh/).
+Skeleton code for the CompSci 316 undergraduate course project.
+This course project is intended as a 'standard option'.
+Created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](https://www.linkedin.com/in/yihaoh/).
 
 # Setup Instructions
+
+We assume you are in your class VM.
+If you have a different setup, your mileage with the following instructions may vary.
+
 ## Deploying the current skeleton
-1. Fork this repo by clicking the small 'Fork' button at the very top right [on Gitlab](www.example.com). It's important that you fork first, because if you clone the directory directly you won't be able to push changes (save your progress) back to Gitlab. Name your forked repo as you prefer.
-2. In your newly forked repo, find the blue "Clone" button. Copy the "Clone with SSH" text. In your terminal on the VM, you can now issue the command `git clone THE_TEXT_YOU_JUST_COPIED`. Make sure to replace 'THE_TEXT_YOU_JUST_COPIED' with the "Clone with SSH" text.
-3. Move into the repository directory and then run `sudo bash init_amazon.sh`. When you're asked for a password, type `postgres`. Alternatively, you can generate a more secure password (read the next section on how), but then you have to make sure this password is matched in the `passwords.py` file.
-5. To view the app in your browser, you need to edit the firewall rules. The [Google VM instructions](https://sites.duke.edu/compsci316_01_f2021/creating-and-running-vm-on-google-cloud/) on the course page has instructions for how to add rules at the bottom. if those for some reason are outdated, here are [instructions provided by Google](https://cloud.google.com/vpc/docs/using-firewalls). To begin with, create a rule to open up port 5000. That should enable you to run `flask run --host=0.0.0.0` and view your app using your browser by pointing it to `vm_external_ip_addr:5000`.
-## Activating the python environment
-A lot of things won't work if your environment isn't activated. Make sure that you've activated it by running `source env/bin/activate` before you run any commands to due with python. You'll see that its active by the `(env)` text ahead of your username in the terminal. To deactivate, use `deactivate`.
-## Important! before you push to the repo: Hide Passwords
-1. For all your password/secret key needs, use passwords.py. You can randomly generate passwords with this tool: https://www.lastpass.com/password-generator
-2. This file is currently tracked with git. That means any passwords you put in here will be exposed: that's bad. To fix this, uncomment line 55 in `.gitignore` ("`#passwords.py`" -> "`passwords.py`"). This will hide the file from git so your newly created passwords don't get leaked through your repo. Only share this file securely with your teammates and have them add it to their repo independently to make the app work.
-3. Now you commit and push changes to your gitlab repo. Your passwords will be hidden.
+
+1. Fork this repo by clicking the small 'Fork' button at the very top right [on Gitlab](www.example.com).
+   It's important that you fork first, because if you clone the directory directly you won't be able to push changes (save your progress) back to Gitlab.
+   Name your forked repo as you prefer.
+
+2. In your newly forked repo, find the blue "Clone" button.
+   Copy the "Clone with SSH" text.
+   In your terminal on the VM, you can now issue the command `git clone THE_TEXT_YOU_JUST_COPIED`.
+   Make sure to replace 'THE_TEXT_YOU_JUST_COPIED' with the "Clone with SSH" text.
+
+3. In your VM, move into the repository directory and then run `install.sh`.
+   This will install a bunch of things, set up an important file called `.flashenv`, and creates a simple PostgreSQL database named `amazon`.
+
+
+4. If you are running a local Vagrant VM, to view the app in your browser, you simply need to visit [http://localhost:5000/](http://localhost:5000/).
+
+5. If you are running a Google VM, to view the app in your browser, you may need to edit the firewall rules.
+   The [Google VM instructions](https://sites.duke.edu/compsci316_01_f2021/creating-and-running-vm-on-google-cloud/) on the course page has instructions for how to add rules at the bottom.
+   if those for some reason are outdated, here are [instructions provided by Google](https://cloud.google.com/vpc/docs/using-firewalls).
+   To begin with, create a rule to open up port 5000. That should enable you to run `flask run --host=0.0.0.0` and view your app using your browser by pointing it to `vm_external_ip_addr:5000`.
+
+## Running/Stopping the Website
+
+To run your website, in your VM, go into the repository directory and issue the following commands:
+```
+source env/bin/activate
+flask run
+```
+The first command will activate a specialized Python environment for running Flask.
+While the environment is activated, you should see a `(env)` prefix in the command prompt in your VM shell.
+You should only run Flask while inside this environment; otherwise it will produce an error.
+
+To stop your website, simply press <kbd>Ctrl</kbd><kbd>C</kbd> when flask is running.
+You can deactivate the environment using
+```
+deactiviate
+```
 
 # Tips for Working on This Project
+
 ## Set up VS Code on Google Cloud VM
-The following instructions also exist as a recorded video, which you can find [at this link](https://youtu.be/y-l6FLSsCz0). If you need specific help setting up VSCode, the TAs will be able to help you in office hours.
+
+The following instructions also exist as a recorded video, which you can find [at this link](https://youtu.be/y-l6FLSsCz0).
+If you need specific help setting up VSCode, the TAs will be able to help you in office hours.
 
 1. First we need to set up SSH access through your local machine (Mac) to the Google VM.
    1. Create an SSH key-pair on your local machine. If you have a macOS, use: `ssh-keygen -f /Users/YOUR_MAC_USERNAME/.ssh/vm_316`. If you are on Windows, use: `ssh-keygen -f C:\Users\YOUR_WINDOWS_USERNAME\.ssh\vm_316`. Make sure to replace 'YOUR_XXX_USERNAME' with your local machine's username. For the passphrase, just hit enter to opt out.
@@ -36,7 +72,9 @@ The following instructions also exist as a recorded video, which you can find [a
 7. Now you're connected! In the lower left corner of the window you'll see a green bar that reads "SSH: ...". You can access files and run things through the terminal just as you would be able to locally.
 
 ## Keep Track of Your Project with Gitlab: Merge Requests
-These instructions seem long, but they aren't complicated. If you've never worked with merge requests, make sure to read this thoroughly. 
+
+These instructions seem long, but they aren't complicated.
+If you've never worked with merge requests, make sure to read this thoroughly. 
 
 To work on a gitlab project with many team members, you want to avoid working directly on the 'main' branch as much as possible. If multiple people work on this branch at the same time, you are likely to run into conflicts and be forced to restore old versions. This is a mess. Instead, use new branches every time you add a feature or make an edit, and then merge these into the main branch. This is how to do it:
 
@@ -52,3 +90,12 @@ Let's imagine we want to create a new function to help with some specific query 
 5. To merge the changes into the main project so others can add on top of your work, you need to open a merge request. This request is an open invitation for your teammates to take a look at your code, make sure the changes look good to them, and then incorporate them onto the main branch for others to use. To open a merge request, click on 'merge requests' in the left hand navigation bar, and then hit the blue 'New merge request' button at the top right. It will ask you to select a source branch. For our example above this would be the `query-feature` branch. For the target branch, leave it as main.
 6. Once the merge request is created, ping your teammates to take a look at it. If they think it's acceptable, they just need to click 'merge' and the code you've written get's incorporated. Now you can safely delete the `query-feature` branch on gitlab.
 Done!
+
+## Important! before you push to the repo: Hide Passwords
+
+For all your password/secret key needs, use `.flaskenv`.
+This file is NOT tracked by git and it was automatically generated when you first ran `install.sh` (from a template file).
+You can change any credentials in this file.
+Only share this file securely with your teammates, but don't check it into git.
+
+You can randomly generate passwords with this tool: https://www.lastpass.com/password-generator
