@@ -20,13 +20,13 @@ FROM Users
 WHERE email = :email
 """,
                                 email=email)
-        row = result.first()
-        if row is None:  # email not found
+        if not result:  # email not found
             return None
-        elif not check_password_hash(row[0], password):  # incorrect password
+        elif not check_password_hash(result[0][0], password):
+            # incorrect password
             return False
         else:
-            return User(*(row[1:]))
+            return User(*(result[0][1:]))
 
     @staticmethod
     def email_exists(email):
@@ -36,7 +36,7 @@ FROM Users
 WHERE email = :email
 """,
                                 email=email)
-        return result.first() is not None
+        return len(result) > 0
 
     @staticmethod
     def register(email, password, firstname, lastname):
@@ -44,12 +44,13 @@ WHERE email = :email
             result = app.db.execute("""
 INSERT INTO Users(email, password, firstname, lastname)
 VALUES(:email, :password, :firstname, :lastname)
+RETURNING id
 """,
                                     email=email,
                                     password=generate_password_hash(password),
                                     firstname=firstname,
                                     lastname=lastname)
-            id = result.inserted_primary_key[0]
+            id = result[0][0]
             return User.get(id)
         except Exception:
             # likely email already in use; better error checking and
@@ -65,5 +66,4 @@ FROM Users
 WHERE id = :id
 """,
                                 id=id)
-        row = result.first()
-        return User(*row) if row is not None else None
+        return User(*(result[0])) if result else None

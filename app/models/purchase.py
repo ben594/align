@@ -16,8 +16,7 @@ FROM Purchases
 WHERE id = :id
 ''',
                                 id=id)
-        row = result.first()
-        return Purchase(*row) if row is not None else None
+        return Purchase(*(result[0])) if result else None
 
     @staticmethod
     def get_all_by_uid_since(uid, since):
