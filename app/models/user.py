@@ -14,43 +14,43 @@ class User(UserMixin):
 
     @staticmethod
     def get_by_auth(email, password):
-        result = app.db.execute("""
+        rows = app.db.execute("""
 SELECT password, id, email, firstname, lastname
 FROM Users
 WHERE email = :email
 """,
-                                email=email)
-        if not result:  # email not found
+                              email=email)
+        if not rows:  # email not found
             return None
-        elif not check_password_hash(result[0][0], password):
+        elif not check_password_hash(rows[0][0], password):
             # incorrect password
             return False
         else:
-            return User(*(result[0][1:]))
+            return User(*(rows[0][1:]))
 
     @staticmethod
     def email_exists(email):
-        result = app.db.execute("""
+        rows = app.db.execute("""
 SELECT email
 FROM Users
 WHERE email = :email
 """,
-                                email=email)
-        return len(result) > 0
+                              email=email)
+        return len(rows) > 0
 
     @staticmethod
     def register(email, password, firstname, lastname):
         try:
-            result = app.db.execute("""
+            rows = app.db.execute("""
 INSERT INTO Users(email, password, firstname, lastname)
 VALUES(:email, :password, :firstname, :lastname)
 RETURNING id
 """,
-                                    email=email,
-                                    password=generate_password_hash(password),
-                                    firstname=firstname,
-                                    lastname=lastname)
-            id = result[0][0]
+                                  email=email,
+                                  password=generate_password_hash(password),
+                                  firstname=firstname,
+                                  lastname=lastname)
+            id = rows[0][0]
             return User.get(id)
         except Exception:
             # likely email already in use; better error checking and
@@ -60,10 +60,10 @@ RETURNING id
     @staticmethod
     @login.user_loader
     def get(id):
-        result = app.db.execute("""
+        rows = app.db.execute("""
 SELECT id, email, firstname, lastname
 FROM Users
 WHERE id = :id
 """,
-                                id=id)
-        return User(*(result[0])) if result else None
+                              id=id)
+        return User(*(rows[0])) if rows else None

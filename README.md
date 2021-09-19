@@ -9,7 +9,7 @@ Created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](
 We assume you are in your class VM.
 If you have a different setup, your mileage with the following instructions may vary.
 
-## Deploying the current skeleton
+## Installing the Current Skeleton
 
 1. Fork this repo by clicking the small 'Fork' button at the very top right [on Gitlab](www.example.com).
    It's important that you fork first, because if you clone the directory directly you won't be able to push changes (save your progress) back to Gitlab.
@@ -23,13 +23,10 @@ If you have a different setup, your mileage with the following instructions may 
 3. In your VM, move into the repository directory and then run `install.sh`.
    This will install a bunch of things, set up an important file called `.flashenv`, and creates a simple PostgreSQL database named `amazon`.
 
-
-4. If you are running a local Vagrant VM, to view the app in your browser, you simply need to visit [http://localhost:5000/](http://localhost:5000/).
-
-5. If you are running a Google VM, to view the app in your browser, you may need to edit the firewall rules.
+4. If you are running a Google VM, to view the app in your browser, you may need to edit the firewall rules.
    The [Google VM instructions](https://sites.duke.edu/compsci316_01_f2021/creating-and-running-vm-on-google-cloud/) on the course page has instructions for how to add rules at the bottom.
    if those for some reason are outdated, here are [instructions provided by Google](https://cloud.google.com/vpc/docs/using-firewalls).
-   To begin with, create a rule to open up port 5000. That should enable you to run `flask run --host=0.0.0.0` and view your app using your browser by pointing it to `vm_external_ip_addr:5000`.
+   Create a rule to open up port 5000, which flask will run on.
 
 ## Running/Stopping the Website
 
@@ -42,8 +39,11 @@ The first command will activate a specialized Python environment for running Fla
 While the environment is activated, you should see a `(env)` prefix in the command prompt in your VM shell.
 You should only run Flask while inside this environment; otherwise it will produce an error.
 
-To stop your website, simply press <kbd>Ctrl</kbd><kbd>C</kbd> when flask is running.
-You can deactivate the environment using
+If you are running a local Vagrant VM, to view the app in your browser, you simply need to visit [http://localhost:5000/](http://localhost:5000/).
+If you are running a Google VM, you will need to point your browser to `http://vm_external_ip_addr:5000/`, where `vm_external_ip_addr` is the external IP address of your Google VM.
+
+To stop your website, simply press <kbd>Ctrl</kbd><kbd>C</kbd> in the VM shell where flask is running.
+You can then deactivate the environment using
 ```
 deactiviate
 ```

@@ -30,7 +30,7 @@ def login():
         if user is None:
             flash('Invalid email or password')
             return redirect(url_for('users.login'))
-        login_user(user, remember=form.remember_me.data)
+        login_user(user)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index.index')
