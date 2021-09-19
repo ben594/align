@@ -1,44 +1,38 @@
 {% extends "base.html" %}
 
-{% block msg %}
-<h2>Mini Amazon<br> Login Page</h2>
-<p>Login or register from here to access.</p>
-{% endblock %}
-
 {% block content %}
 
-<div class="login-form">
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            <label>{{ form.email.label }}</label>
-            {{ form.email(size=32, class_="form-control") }}<br>
-            {% for error in form.email.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            <label>{{ form.password.label }}</label>
-            {{ form.password(size=32, class_="form-control") }}<br>
-            {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </div>
-        <div>
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <ul>
-                {% for message in messages %}
-                <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            {% endwith %}
-        </div>
-        {{ form.submit(class_="btn btn-black") }}
-        <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Register</a>
-    </form>
-</div>
+<h1>Login</h1>
 
+<form action="" method="post" novalidate>
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.email.label }}<br/>
+    {{ form.email(size=32) }}<br/>
+    {% for error in form.email.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.password.label }}<br/>
+    {{ form.password(size=32) }}<br/>
+    {% for error in form.password.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+  </p>
+  {{ form.submit(class_="btn btn-black") }}
+  <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Register</a>
+</form>
 
 {% endblock %}

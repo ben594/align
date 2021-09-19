@@ -1,23 +1,24 @@
 from flask import render_template
 from flask_login import current_user, login_required
 import datetime
-from flask import current_app as app
+from app.models.product import Product
+from app.models.purchase import Purchase
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
+
 @bp.route('/')
-@login_required
 def index():
-    # get all the products for sale
-    products = app.db.get_avail_products()
-    products_list = [app.db.get_product_details(x[0])[0] for x in products]
-    products_and_price = [(x[3],x[1]) for x in products_list]
-    # find the products current user has bought
-    purchases = app.db.get_purchase_history(current_user.id, datetime.datetime(1980,9,14,0,0,0))
-    purchase_list = [app.db.get_product_details(x[0])[0] for x in purchases]
-    purchase_name_and_price = [(x[3],x[1]) for x in purchase_list]
+    # get all available products for sale:
+    products = Product.get_all(True)
+    # find the products current user has bought:
+    if current_user.is_authenticated:
+        purchases = Purchase.get_all_by_uid_since(
+            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+    else:
+        purchases = None
     # render the page by adding information to the index.html file
-    return render_template('index.html', 
-                            avail_products=products_and_price,
-                            purchased_history=purchase_name_and_price)
+    return render_template('index.html',
+                           avail_products=products,
+                           purchase_history=purchases)
