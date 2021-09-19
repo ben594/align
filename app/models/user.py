@@ -1,7 +1,8 @@
-from app.routes import login
 from flask_login import UserMixin
 from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
+
+from .. import login
 
 
 class User(UserMixin):
