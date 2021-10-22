@@ -20,8 +20,9 @@ If you have a different setup, your mileage with the following instructions may 
    In your terminal on the VM, you can now issue the command `git clone THE_TEXT_YOU_JUST_COPIED`.
    Make sure to replace 'THE_TEXT_YOU_JUST_COPIED' with the "Clone with SSH" text.
 
-3. In your VM, move into the repository directory and then run `install.sh`.
+3. In your VM, move into the repository directory and then run `./install.sh`.
    This will install a bunch of things, set up an important file called `.flashenv`, and creates a simple PostgreSQL database named `amazon`.
+   - Note that if you have a Windows host with Vagrant VM, installation may fail; see [project megathread](https://edstem.org/us/courses/7473/discussion/695195) on Ed for a fix.
 
 4. If you are running a Google VM, to view the app in your browser, you may need to edit the firewall rules.
    The [Google VM instructions](https://sites.duke.edu/compsci316_01_f2021/creating-and-running-vm-on-google-cloud/) on the course page has instructions for how to add rules at the bottom.
@@ -80,7 +81,7 @@ If you've never worked with merge requests, make sure to read this thoroughly.
 To work on a gitlab project with many team members, you want to avoid working directly on the 'main' branch as much as possible. If multiple people work on this branch at the same time, you are likely to run into conflicts and be forced to restore old versions. This is a mess. Instead, use new branches every time you add a feature or make an edit, and then merge these into the main branch. This is how to do it:
 
 Let's imagine we want to create a new function to help with some specific query of the database. Before you begin, create and checkout a new branch for this feature.
-1. `git branch query-feature` will create a branch named "query-feature". You can change the name as you'd like.
+1. `git branch query-feature` will create a branch named "query-feature". You can change the name as you'd like. Then switch to this branch using `git checkout query-feature`.
 2. Once you are on this branch, get to work. Make the edits you need to the files you want to work on.
 3. Run the command `git status` to see what files have changed. Let's say you only edit the file `app/db.py` to add the new function along with some comments, and `README.md` to include some information about this feature. These files will then appear in red under the title 'modified:'.
 4. Now that you're done editing, you want to save your changes. Each save appears as a notification on gitlab in the form of a 'commit'. To be helpful, we save our edits in small chunks so that others can easily read these notifications and follow along which changes were made. Let's say we want to make two 'commits', one for `app/db.py` and another for `README.md`. 
@@ -95,7 +96,7 @@ Done!
 ## Important! before you push to the repo: Hide Passwords
 
 For all your password/secret key needs, use `.flaskenv`.
-This file is NOT tracked by git and it was automatically generated when you first ran `install.sh` (from a template file).
+This file is NOT tracked by git and it was automatically generated when you first ran `./install.sh` (from a template file).
 You can change any credentials in this file.
 Only share this file securely with your teammates, but don't check it into git.
 
