@@ -42,7 +42,7 @@ def gen_products(num_products):
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
             name = fake.sentence(nb_words=4)[:-1]
-            price = f'{str(fake.random_int(500))}.{fake.random_int(max=99):02}'
+            price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             available = fake.random_element(elements=('true', 'false'))
             if available == 'true':
                 available_pids.append(pid)
