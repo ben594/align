@@ -48,13 +48,13 @@ RETURNING id
 """,
                                   email=email,
                                   password=generate_password_hash(password),
-                                  firstname=firstname,
-                                  lastname=lastname)
+                                  firstname=firstname)
             id = rows[0][0]
             return User.get(id)
-        except Exception:
-            # likely email already in use; better error checking and
-            # reporting needed
+        except Exception as e:
+            # likely email already in use; better error checking and reporting needed;
+            # the following simply prints the error to the console:
+            print(str(e))
             return None
 
     @staticmethod

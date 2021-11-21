@@ -4,7 +4,6 @@ from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from flask_babel import _, lazy_gettext as _l
 
 from .models.user import User
 
@@ -14,10 +13,10 @@ bp = Blueprint('users', __name__)
 
 
 class LoginForm(FlaskForm):
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()])
-    password = PasswordField(_l('Password'), validators=[DataRequired()])
-    remember_me = BooleanField(_l('Remember Me'))
-    submit = SubmitField(_l('Sign In'))
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Sign In')
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -40,18 +39,18 @@ def login():
 
 
 class RegistrationForm(FlaskForm):
-    firstname = StringField(_l('First Name'), validators=[DataRequired()])
-    lastname = StringField(_l('Last Name'), validators=[DataRequired()])
-    email = StringField(_l('Email'), validators=[DataRequired(), Email()])
-    password = PasswordField(_l('Password'), validators=[DataRequired()])
+    firstname = StringField('First Name', validators=[DataRequired()])
+    lastname = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
-        _l('Repeat Password'), validators=[DataRequired(),
-                                           EqualTo('password')])
-    submit = SubmitField(_l('Register'))
+        'Repeat Password', validators=[DataRequired(),
+                                       EqualTo('password')])
+    submit = SubmitField('Register')
 
     def validate_email(self, email):
         if User.email_exists(email.data):
-            raise ValidationError(_('Already a user with this email.'))
+            raise ValidationError('Already a user with this email.')
 
 
 @bp.route('/register', methods=['GET', 'POST'])
