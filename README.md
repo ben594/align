@@ -10,16 +10,13 @@ If you have a different setup, your mileage with the following instructions may 
 1. Fork this repo by clicking the small 'Fork' button at the very top right on Gitlab.
    It's important that you fork first, because if you clone the directory directly you won't be able to push changes (save your progress) back to Gitlab.
    Name your forked repo as you prefer.
-
 2. In your newly forked repo, find the blue "Clone" button.
    Copy the "Clone with SSH" text.
    In your terminal on the VM, you can now issue the command `git clone THE_TEXT_YOU_JUST_COPIED`.
    Make sure to replace 'THE_TEXT_YOU_JUST_COPIED' with the "Clone with SSH" text.
-
 3. In your VM, change into the repository directory and then run `./install.sh`.
    This will install a bunch of things, set up an important file called `.flashenv`, and creates a simple PostgreSQL database named `amazon`.
    - Note that if you have a Windows host with Vagrant VM, installation may fail; see [project megathread](https://edstem.org/us/courses/7473/discussion/695195) on Ed for a fix.
-
 4. If you are running a Google VM, to view the app in your browser, you may need to edit the firewall rules.
    The [Google VM instructions](https://sites.duke.edu/compsci316_01_f2021/creating-and-running-vm-on-google-cloud/) on the course page has instructions for how to add rules at the bottom.
    If those for some reason are outdated, here are [instructions provided by Google](https://cloud.google.com/vpc/docs/using-firewalls).
