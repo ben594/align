@@ -48,7 +48,7 @@ RETURNING id
 """,
                                   email=email,
                                   password=generate_password_hash(password),
-                                  firstname=firstname)
+                                  firstname=firstname, lastname=lastname)
             id = rows[0][0]
             return User.get(id)
         except Exception as e:

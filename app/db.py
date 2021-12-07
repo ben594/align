@@ -10,7 +10,7 @@ class DB:
     If you want to execute multiple SQL statements in the same
     transaction, use the following pattern:
 
-    >>> with app.db.engine.connect() as conn:
+    >>> with app.db.engine.begin() as conn:
     >>>     # everything in this block executes as one transaction
     >>>     value = conn.execute(text('SELECT...'), bar='foo').first()[0]
     >>>     conn.execute(text('INSERT...'), par=value)
@@ -21,9 +21,6 @@ class DB:
     def __init__(self, app):
         self.engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
                                     execution_options={"isolation_level": "SERIALIZABLE"})
-
-    def connect(self):
-        return self.engine.connect()
 
     def execute(self, sqlstr, **kwargs):
         """Execute a single SQL statement sqlstr.
@@ -41,7 +38,7 @@ class DB:
         for additional details.  See models/*.py for examples of
         calling this function.
         """
-        with self.engine.connect() as conn:
+        with self.engine.begin() as conn:
             result = conn.execute(text(sqlstr), kwargs)
             if result.returns_rows:
                 return result.fetchall()
