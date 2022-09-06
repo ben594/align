@@ -1,6 +1,8 @@
 Skeleton code for the CompSci 316 undergraduate course project.
 This course project is intended as a 'standard option'.
-Created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](https://www.linkedin.com/in/yihaoh/).
+
+Originally created by [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](https://www.linkedin.com/in/yihaoh/) for Fall 2021.
+Amended for Fall 2022.
 
 We assume you are in your class VM.
 If you have a different setup, your mileage with the following instructions may vary.
@@ -16,9 +18,8 @@ If you have a different setup, your mileage with the following instructions may 
    Make sure to replace 'THE_TEXT_YOU_JUST_COPIED' with the "Clone with SSH" text.
 3. In your VM, change into the repository directory and then run `./install.sh`.
    This will install a bunch of things, set up an important file called `.flashenv`, and creates a simple PostgreSQL database named `amazon`.
-   - Note that if you have a Windows host with Vagrant VM, installation may fail; see [project megathread](https://edstem.org/us/courses/7473/discussion/695195) on Ed for a fix.
 4. If you are running a Google VM, to view the app in your browser, you may need to edit the firewall rules.
-   The [Google VM instructions](https://sites.duke.edu/compsci316_01_f2021/creating-and-running-vm-on-google-cloud/) on the course page has instructions for how to add rules at the bottom.
+   The [Google VM instructions](https://courses.cs.duke.edu/fall22/compsci316d/instructions/gcp/) on the course page has instructions for how to add rules at the bottom.
    If those for some reason are outdated, here are [instructions provided by Google](https://cloud.google.com/vpc/docs/using-firewalls).
    Create a rule to open up port 5000, which flask will run on.
 
