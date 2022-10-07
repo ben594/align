@@ -2,6 +2,10 @@ from flask import current_app as app
 
 
 class Cart:
+    """
+    This is just a TEMPLATE for Cart, you should change this by adding or 
+        replacing new columns, etc. for your design.
+    """
     def __init__(self, id, uid, pid, time_added_to_cart):
         self.id = id
         self.uid = uid

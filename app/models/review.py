@@ -2,6 +2,10 @@ from flask import current_app as app
 
 
 class Review:
+    """
+    This is just a TEMPLATE for Review, you should change this by adding or 
+        replacing new columns, etc. for your design.
+    """
     def __init__(self, id, uid, pid, review_time, review_content):
         self.id = id
         self.uid = uid
