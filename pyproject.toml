@@ -13,6 +13,7 @@ psycopg2-binary = "^2.9.7"
 flask-login = "^0.6.2"
 email-validator = "^2.0.0.post2"
 faker = "^19.3.1"
+python-dotenv = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]
