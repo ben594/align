@@ -54,24 +54,23 @@ You can now use your laptop's browser to explore the website.
 Depending on your setup, the URL will be different:
 
 * If you use containers on your own laptop, point your browser to
-http://localhost:8080/
+  http://localhost:8080/
 
-* If you use the Duke OIT container, visit TBD
+* If you use the Duke OIT container, visit
+  https://cmgr.oit.duke.edu/containers and open the CONTAINER CONTROLS
+  info pane for your CS316 container.  There will be a line specifying
+  a user-specific URL for accessing a Flask app.  Point your browser
+  to that URL.
 
-You can keep your Flask server running and edit your app code on the
-side. In most cases, your edits will be automatically reflected. If
-your changes introduce some error (such as a syntax error in your
-code), it may cause the server to exit with an error; you can note the
-error reported in the container shell, fix it, and restart by running
-`flask run` again. Sometimes you will see an error reported by the
-server in your browser (while the server continues to run); in that
-case you can do some limited form of debugging directly from your
-browser (you can find the debugger PIN from the output in the
-container shell).
+  - If you are using VSCode to access your Duke OIT container and
+    run/debug your project from there (by following these
+    instructions), then VSCode will do some (SSH port forwarding)
+    magic to make your Flask app also accessible at
+    http://localhost:8080/
 
-To stop your app, type <kdb>CTRL</kdb><kdb>C</kdb> in the container
+To stop your app, type <kbd>CTRL</kbd>-<kbd>C</kbd> in the container
 shell; that will take you back to the command-line prompt, still
-within the `poetry` environment. If you are all done with this app for
+inside the `poetry` environment. If you are all done with this app for
 now, you can type `exit` to get out of the `poetry` environment and
 get back to the normal container shell.
 
@@ -134,7 +133,7 @@ running `python gen.py`.
 Use the file `.flaskenv` for passwords/secret keys --- we are talking
 about passwords used to access your database server, for example (not
 user passwords for your website in CSV files described earlier).  This
-file is NOT tracked by git and it was automatically generated when you
-first ran `./install.sh`.  Don't check it into git because your
+file is NOT tracked by `git` and it was automatically generated when
+you first ran `./install.sh`.  Don't check it into `git` because your
 credentials would be exposed to everybody on GitLab if you are not
 careful.
