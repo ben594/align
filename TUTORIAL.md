@@ -19,20 +19,22 @@ We highly recommend you use VSCode; VSCode-related instructions below
 assume that you have already got VSCode to work with your container
 (see
 [instructions](https://docs.google.com/document/d/1khEXxG-7dO-RU7-AJcQQqRXXuBtJCOt-hjpYu8rw25o/edit?usp=sharing)).
+The tutorial below can be completed in a VSCode window connected to
+the course container, with the project folder opened.  You can browse
+and edit files, and use the TERMINAL pane
 
 ## Overview and goal
 
 Let's say that you want to add a simple feature to Mini Amazon that
-allows users to add product to their wish list.  Users can then see
-products on their wish list along with the times when they were added.
+allows users to add product to their wishlist.  Users can then see
+products on their wishlist along with the times when they were added.
 That's it.
 
 In order to accomplish this task, you will learn:
 
-* How to use the source control tool `git` to create a private
-  workspace for you to work on this feature without stepping on your
-  teammates' toes, and to integrate new feature into your team repo in
-  the end;
+* How to use the source control tool `git` to create a workspace for
+  you to work on this feature without stepping on your teammates'
+  toes, and to integrate new feature into your team repo in the end;
 
 * How to extend your database design and Flask models for this
   feature;
@@ -44,13 +46,320 @@ In order to accomplish this task, you will learn:
 
 ## Making your feature branch
 
-## Extending database design and Flask models
+First, you want to create a "branch" to work on this new feature.
+Your team repo has a `main` branch that holds the "definitive" version
+of your project.  Creating a separate branch allows you to work making
+your changes to code in a protected environment where you and your
+teammates can work on things independently without stepping on each
+other's toes.  Pick a name for your branch that's meaningful to your
+team, say `lisa-wishlist` if you are Lisa Simpson, create it,
+switch to it, and tell the team repo about it:
+```
+git branch lisa-wishlist
+git checkout lisa-wishlist
+git push --set-upstream origin lisa-wishlist
+```
+We will walk you through the steps of checking in code changes next.
+
+## Extending the database design
+
+1. First, think about how would you store the wish list in your
+   PostgreSQL database called `amazon`.  To get a feel what's already
+   in there, take a look at the code inside `db/`:
+   * `create.sql` contains the SQL code that creates the schema.
+   * `load.sql` contains the SQL code that loads database from data
+     files (in CSV format).
+   * `setup.sh` is `bash` script that sets up or resets the `amazon`
+     database for you by calling the SQL code above.  (Running it will
+     wipe out any data presently stored in the database, so use it
+     with caution.)
+     - Running `db/setup.sh` will (re)create a small sample database
+       for testing, using the data from the `data/` subdirectory.
+     - Running `db/setup.sh generate` will (re)create a larger test
+       database, using the synthetic data from the `generate/`
+       subdirectory (which also contains the generator code).
+
+2. Now, let's figure out what to add to `db/create.sql` to support
+   wishlist.  How about a separate table `Wishes` with the same
+   structure as `Purchases`, except you'd have `time_added` (to the
+   list) instead of `time_purchased`?  Go ahead edit `db/create.sql`
+   add the new `CREATE TABLE` statement.
+
+3. Beside the schema, it would be a good idea to update the SQL data
+   loading code as well as sample/test database contents to be
+   consistent.
+   * Go ahead and create a new file `db/data/Wishes.csv` with, say,
+     just two or items on the wishlist for one user.  You can model it
+     after `db/data/Purchases.csv`.  Check other data files in that
+     directory for valid ids to use to refer to users/products.  At
+     the very least, add a wishlist item for user with `uid` `0`.
+   * Edit the SQL loading code in `db/data/load.sql` accordingly to
+     load the `Wishes` table.  Again, you can model the code after
+     those for `Purchases`.  See that funny-looking
+     `pg_catalog.setval` thingy?  It's for those automatically
+     generated id values.  Take some time to learn how it works.
+   * To be comprehensive, you should also modify the synthetic
+     generation code and data in `db/data/generate/`, but we will skip
+     it this time (just for this tutorial :smirk:).
+
+4. Now, it's a good time to test everything!  Run `db/setup.sh` and
+   fix any errors.  Run `psql amazon` to examine the result database,
+   and run some SQL queries to do some sanity check on your schema and
+   sample data.  It's also a good time to think a bit ahead about what
+   SQL query you might want to run to support the frontend.  What
+   would be SQL query that retrieves the wish list for a given user?
+   What if you want to display the product name in that list?  Try
+   these SQL queries.
+
+## Your first `git` commit
+
+1. You've done enough work to warrant a commit, which saves your work
+   so far.  Here are some rules of thumbs on what goes into a commit:
+   * Try to make your changes in conceptually clean steps, and commit
+     at the end of every step.  Don't let too many changes accumulate!
+   * Each step should be "complete" in some sense.  Don't check in
+     a change that depends on something else not in the commit yet.
+   * Always test your code before committing.  Every commit should
+     end with a working code base.  Imagine how frustrating it would
+     be if you check out somebody's changes only to find out that they
+     break everything!
+
+2. The following command gives you a summary of what changes you have
+   made:
+   ```
+   git status
+   ```
+   You should see that you are currently on the `lisa-wishlist`
+   branch, and you have some files modified (e.g., `db/create.sql`)
+   and some "untracked" (e.g., `db/data/Wishes.csv`).  You can add all
+   modifications into a staging area for commit in one go:
+   ```
+   git add -u
+   ```
+   You should add untracked files one at time, making sure that each
+   one is really needed (as opposed to some temporary/sensitive file
+   that shouldn't be checked in).  For example:
+   ```
+   git add db/data/Wishes.csv
+   ```
+   You can use the `git status` again to see where things stand.  It
+   will show which files you've already added to the staging area for
+   commit, and what other changes remain.
+
+3. To commit, issue the following command:
+   ```
+   git commit -m "adding database support for wishlist"
+   ```
+   Here, use the message in quotes to describe your changes briefly.
+   Congrats!  You made your first commit (at least in your local
+   repo).
+
+4. Next, you need to push the commit upstream:
+   ```
+   git push
+   ```
+   Now, your changes will be visible in your team's repo for others to
+   see, though at this point they still remain in branch separately
+   from the `main` --- we will discuss how to do a "merge request"
+   later.
+
+## Extending Flask models
+
+1. Code in `app/models/` "wraps" data stored in the database as Python
+   objects so they are easier for the rest of your Flask app to work
+   with.  The intention is to encapsulate all SQL and database-facing
+   code inside this subdirectory.  You will see `User`, `Product`, and
+   `Purchase` Python classes already defined in the respective `.py`
+   files.  Study these files and think about how you would write one
+   to support wishlist data.
+   * There is some useful boilerplate code in these `.py` files.  For
+     example, the `app` object, imported from Flask's `current_app`,
+     has an attribute `db` through which you can issue SQL commands
+     --- see `app/db.py` for its implementation.  (If you feel you
+     need better support from the `DB` class, feel free to
+     modify/extend `app/db.py`, but that's not the focus of this
+     tutorial.)
+
+2. Create a file under `app/models/`, say `wishlist.py`, and define a
+   `WishlistItem` class.  Hint: `purchase.py` is a good candidate to
+   model after, though it's doesn't have a method for entering a new
+   object into the database --- for that, see `User.register()` in
+   `user.py` as an example.
+   * You really also need a method for removing an object, but for the
+     purpose of tutorial, we will just ignore it.
+
+3. Before you make another commit, you ought to test your code.  You
+   can write some unit test code in Python just for your
+   `WishlistItem`, but for this tutorial, we will just write some API
+   endpoints using `WishlistItem` and test them as part of the
+   website.  So let's continue with the next step of the tutorial.
 
 ## Designing, implementing, and testing API endpoints
 
+1. If you think of each HTTP request (initiated by a user click on a
+   web page, for example) as a function call, then an "API endpoint"
+   on your web server is the function that gets called.  In our
+   project, these endpoint definitions live in various "blueprint"
+   files under `app/`, such as `index.py` and `users.py`.  Each
+   blueprint file holds a bunch of related endpoints: e.g., `users.py`
+   contains endpoints related to user registration/authenetication.
+   These various blueprints are made known to the Flask app in
+   `app/__init__.py`'s `create_app()` function.
+   * For simple projects, you could in fact have all your endpoints in
+     a single file, without organizing them into blueprints.  For
+     larger team projects like yours, however, blueprints help keep
+     things modular and more tidy.
+
+2. Let's take a closer look at one of the API endpoints, `index()` in
+   `app/index.py`.  A few points are worth noting:
+   * The Flask "route decoration" `@bp.route('/')` says that whenever
+     user hits the landing (root) page of the website (with URL '/'),
+     this endpoint function should be called.  Flask will maintain a
+     mapping between URL patterns and all endpoint functions.
+   * By doing `from flask_login import current_user`, you have access
+     to a `current_user` object (of class `User` defined in
+     `app/models/user.py`) as long as the user has already logged into
+     your website (or it will be `None` otherwise).  Here, if the user
+     is logged in, we will also display the user's purchase history.
+   * This endpoint function returns with a call to `render_template()`,
+     which basically takes a HTML template and additional data that we
+     just retrieved from the database to be embedded into the HTML
+     output.  The final HTML output gets returned to the user's
+     browser and displayed.  We will come back to how templates work
+     later.
+
+3. Now it's your turn.  Create a new blueprint by starting a new file
+   `wishlist.py` under `app/` (you can model it after `index.py`).  We
+   will start with a simple endpoint `wishlist()`, with route
+   decoration `@bp.route('/wishlist')`, which generates the wishlist
+   for the current user.  It can use the `current_user` to get the id
+   of the user, and calls the appropriate method of the `WishlistItem`
+   class you previously implemented.  (If your `WishlistItem`
+   implementation isn't adequate, fix that!  Resist the temptation of
+   coming up with band-aid fix here.)
+
+   Instead of having this endpoint returning fancy HTML using
+   `render_template()`, let's try something simpler first --- we will
+   just return the list in JSON format for now (we will add the
+   templating later).  Make sure you `from flask import jsonify` at
+   the beginning of `app/wishlist.py`; then, assuming that
+   `wishlist()` has retrieved the list of `WishlistItem` objects in
+   `items`, end `wishlist()` with the following:
+   ```
+   return jsonify([item.__dict__ for item in items])
+   ```
+   If the user is not logged in, you can do the following, where `404`
+   is the "not found" error code:
+   ```
+   return jsonfiy({}), 404
+   ```
+
+4. Next, let's link in your new wishlist blueprint by editing
+   `app/__init__.py`; just follow the example of adding the `user`
+   blueprint.  Now you are now ready to try your new endpoint!
+
+   Start your Flask app, or follow the [instructions
+   below](#debugging) for debugging in VSCode.  Once your app is
+   running, log in using the test user (who has `uid` of `0`) in the
+   sample database:
+   * Email: `icecream@tastes.good`
+   * Password: `test123`
+   Now, in the address bar of your browser, modify the current URL to
+   append `wishlist` (so the whole thing would look like
+   `http://HOST:PORT/wishlist`) and hit <kbd>Return</kbd>.  If all
+   goes well, you should see a JSON snippet showing the wishlist
+   item(s) you added for this user in `db/data/Wishes.csv`!
+
+   If you made it succesfully to this point, you deserve a second
+   `git` `commit` and `push`! :congratulations:
+
+5. Now let's add a second endpoint to `app/wishlist.py`:
+   `wishlist_add(product_id)`, with route decoration
+   ```
+   @bp.route('/wishlist/add/<int:product_id>', methods=['POST'])
+   ```
+   which adds the product with the given (integer-valued) id to the
+   current user's wishlist.  The "patterned" URL decoration is one of
+   the simplest ways to pass additional inputs to endpoints.  If a
+   user visits the URL `/wishlist/add/12345`, then `wishlist_add()`
+   will be called with `product_id = 12345`.
+
+   The `POST` request method signifies that this request has side
+   effects (e.g., it updates the database).  In HTML, POST requests
+   typically come from some submit/action button.  They also allow
+   more complex data to be passed as input to the endpoint than the
+   patterned URL approach.  We don't need that feature here, however,
+   because the `product_id` encoded as part of the URL already
+   suffices.
+
+   What should `wishlist_add()` return?  Well, if it succeeds, it
+   makes sense to redirect the user to the newly updated wishlist.  To
+   to that, add `from flask import redirect, url_for` to the beginning
+   of `app/wishlist.py`, and use the following:
+   ```
+   return redirect(url_for('wishlist.wishlist'))
+   ```
+   Here, `redirect()` is self-explanatory, but `url_for()` is an
+   important feature of Flask that you should use as much as
+   possible.  It basically allows you to specify the target URL by the
+   combination of the blueprint name and the method name (both happen
+   to be `wishlist` in this case).  It also allows you to pass
+   additional parameters too, e.g.: `url_for('blah.bleh',
+   param1=value1, param2=value2, ...)`  Without `url_for()`, you'd
+   have to remember the correct URLs and encode the input parameters
+   yourself into the URL!  Isn't Flask great? :smirk:
+
+   > Unlike `wishlist_add()`, the majority of your endpoints may be
+     ready-only (like `wishlist()`) and therefore can use the simpler
+     `GET` request method (which is the default).  Those requests can
+     encode additional input parameters (if any) by appending them to
+     the end of the URL like this: `?param1=value1&param2=value2`.
+     You don't need to worry about these details though, because Flask
+     supports automatic encoding of these via `url_for()` and the
+     endpoint functions will have their function arguments set
+     automatically.
+
+   What if adding the item fails (e.g., the product id is
+   non-existent)?  You can redirect it to an error page, for example.
+   For simplicity of this tutorial, let's ignore it (but you should
+   certainly handle this case for yor project!).
+
+6. Ready for more testing?  Fire up your Flask app again, log in using
+   the same test user as before.  Pick an existing product id, say
+   `6`, and we would like to generate a POST request for
+   `http://HOST:PORT/wishlist/add/6` (replace `HOST` and `PORT` with
+   appropriate values for your setup) to test adding this product to
+   the user's wishlist.  This is a little tricky to test though,
+   because the browser address bar trick can only send `GET` but not
+   `POST` requests.
+
+   There are a few tools out there that can accomplish this (including
+   the vernerable `Postman`) but a simple, lightweight browser
+   extension should suffice for our purpose --- if you use Chrome, we
+   recommend installing the Restman extension, for example.  While the
+   test user is still logged in from the browser, open the extension,
+   enter the request URL (`http://HOST:PORT/wishlist/add/6`), and
+   importantly, select `POST` instead of `GET` as the request type.
+   If all goes well, you should see a JSON result now showing the
+   new item `6` in addition to the old one.
+
+7. This is a good point to do another `git` `commit` and `push`!
+
 ## Keeping up with the `main` branch
 
-## Working with templates the rest of the website
+1. So far, our changes are fairly local, but our next steps may
+   involve editing other files in none-trivial ways, and these files
+   might have changed since you branched off from `main`, causing
+   conflicts.  If you don't expect there to be major changes affecting
+   your own branch, you could wait until you are ready to merge your
+   branch into `main` to resolve those conflicts.  But what if
+   signficant changes have been already made on `main`?  It would be
+   prudent to incorporate these changes into your own branch now
+   rather than later.  We will walk through this scenario next.
+
+2. UNDER DEVELOPMENT.
+
+## Working with templates and the rest of the website
 
 ## Merging your feature branch into `main`
 
