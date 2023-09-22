@@ -1,10 +1,10 @@
 # Tutorial: How to Get Started with the Mini Amazon Skeleton
 
-[Under Construction]
+[:construction: Under Construction :construction:]
 
 This tutorial walks you through the steps of adding a simple feature
 to the Mini Amazon in a teamwork setting.  It touches on the basics of
-source control, dependency management, and full-slack
+source control, Python dependency management, and full-slack
 development/debugging.
 
 ## Prerequisites
@@ -52,8 +52,9 @@ of your project.  Creating a separate branch allows you to work making
 your changes to code in a protected environment where you and your
 teammates can work on things independently without stepping on each
 other's toes.  Pick a name for your branch that's meaningful to your
-team, say `lisa-wishlist` if you are Lisa Simpson, create it,
-switch to it, and tell the team repo about it:
+team, say `lisa-wishlist` (replace `lisa` with your own name to avoid
+nameclash with your teammates), create it, switch to it, and tell the
+team repo about it:
 ```
 git branch lisa-wishlist
 git checkout lisa-wishlist
@@ -262,8 +263,10 @@ We will walk you through the steps of checking in code changes next.
    below](#debugging) for debugging in VSCode.  Once your app is
    running, log in using the test user (who has `uid` of `0`) in the
    sample database:
+
    * Email: `icecream@tastes.good`
    * Password: `test123`
+
    Now, in the address bar of your browser, modify the current URL to
    append `wishlist` (so the whole thing would look like
    `http://HOST:PORT/wishlist`) and hit <kbd>Return</kbd>.  If all
@@ -304,8 +307,8 @@ We will walk you through the steps of checking in code changes next.
    possible.  It basically allows you to specify the target URL by the
    combination of the blueprint name and the method name (both happen
    to be `wishlist` in this case).  It also allows you to pass
-   additional parameters too, e.g.: `url_for('blah.bleh',
-   param1=value1, param2=value2, ...)`  Without `url_for()`, you'd
+   additional parameters, e.g.: `url_for('blah.bleh',
+   param1=value1, param2=value2, ...)`.  Without `url_for()`, you'd
    have to remember the correct URLs and encode the input parameters
    yourself into the URL!  Isn't Flask great? :smirk:
 
@@ -350,18 +353,188 @@ We will walk you through the steps of checking in code changes next.
 1. So far, our changes are fairly local, but our next steps may
    involve editing other files in none-trivial ways, and these files
    might have changed since you branched off from `main`, causing
-   conflicts.  If you don't expect there to be major changes affecting
-   your own branch, you could wait until you are ready to merge your
-   branch into `main` to resolve those conflicts.  But what if
-   signficant changes have been already made on `main`?  It would be
-   prudent to incorporate these changes into your own branch now
-   rather than later.  We will walk through this scenario next.
+   potential conflicts.  If you don't expect there to be major changes
+   affecting your own branch, you could wait until you are ready to
+   merge your branch into `main` and resolve any conflicts at that
+   time.  But what if signficant changes have been already made on
+   `main`?  It would be prudent to incorporate these changes into your
+   own branch soon rather than later.  We will walk through this
+   scenario next.
 
-2. UNDER DEVELOPMENT.
+2. Before you start, make sure that your branch is itself "clean"; you
+   have committed and pushed all changes.  When you are ready, here is
+   the sequence of `git` steps needed to refresh your branch:
+   ```
+   # first, temporarily switch to the main branch to download the latest:
+   git checkout main
+   git pull
+   # then, go back to lisa-wishlist and merge the lastet main into it:
+   git checkout lisa-wishlist
+   git merge main -m 'incorporating latest from main'
+   git push
+   ```
+   The `git merge` step may fail because there are conflicts between
+   your changes and those made to `main` that `git` cannot resolve.
+   In that case, `git` will ask you to first fix conflicts manaully
+   and then commit.  When that happens, you won't be able to do `git
+   push` yet.  Instead, you must edit the files to resolve the
+   conflicts.  When you open up one such file, you will see sections
+   with conflicts marked as follows:
+   ```
+   <<<<<<< ...
+   ... changes you made ...
+   =======
+   ... changes coming from the merge ...
+   >>>>>>> ...
+   ```
+   To resolve the conflicts, you may have to discard either your
+   changes or someone else's or doing a mixture of the two.  You will
+   also need to delete the lines with `<<<<<<<`, `=======`, and
+   `>>>>>>>`.  Once you are done with a file, `git add` it for commit.
+   At any point, you can run `git status` to see what changes have
+   already been staged for commit and what files remain unmerged.
+   After you are all done, commit, and finally push.
 
 ## Working with templates and the rest of the website
 
+1. Back to finishing our feature.  Instead of letting
+   ``wishlist_add()` return JSON, let's actually display the list
+   properly as a web page.  Flask uses "templates" to accomplish this
+   task.  All templates can be found in the `templates/` subdirectory.
+   Here, all templates "extends" `base.html`, which controls the
+   overall look of the website.
+
+   A template looks like a normal HTML file, except it has processing
+   directive enclosed in `{% ... %}` (to express looping and
+   conditional constructs) as well as expressions enclosed in `{{
+   ... }}` (which will be replace by the results of evaluating them).
+   Besides useful things like `current_user` and `url_for()`, any
+   additional parameters specified in the `render_template()` call to
+   a template will be accessible by the template.  For example,
+   `templates/index.html` expects `avail_products` to be passed in,
+   and makes loop over this list to display its contents as a table.
+
+2. Now, let's add a new template `templates/wishlist.html` for
+   displaying the wishlist for a user.  You can model this file after
+   `templates/index.html`.  Suppose it would be given `items`, a list
+   of `WishlistItem` objects.  If `current_user` is authenticated,
+   let's display the wishlist as a table with two columns --- the
+   product id and when it was added to the list.
+
+   Just to spice things up a bit, instead of displaying the timetamp
+   when an item was added, let's display something like "a day ago" or
+   "2 years ago".  This requires the use of a new Python package
+   called `humanize`.  To install it properly in your environment, do
+   NOT use `pip`!  Do the following instead:
+   ```
+   poetry add humanize
+   ```
+   The nice thing is that `poetry` automatically updates the file
+   `pyproject.toml` to track this new dependency.  The project repo is
+   set up to track this file (if you do `git status` at this point,
+   you will see that `pyproject.toml` has been modified), so by
+   committing this change later, you will let your teammates'
+   development environments pick up the new package too.
+
+   In `app/wishlist.py`, you can define this little helper function to
+   format the a `datetime` object:
+   ```
+   from humanize import naturaltime
+   
+   def humanize_time(dt):
+       return naturaltime(datetime.datetime.now() - dt)
+   ```
+   Then, when the endpoint `wishlist()` renders the template
+   `templates/wishlist.html`, it can pass in this helper function in
+   addition to the `items` being rendered:
+   ```
+   return ender_template('wishlist.html',
+                         items=items,
+                         humanize_time=humanize_time)
+   ```
+
+   Back in `templates/wishlist.html`, instead of directly embedding
+   the timestamp `{{item.time_added}}` (replace with whatever is
+   appropriate of you), you would do
+   `{{humanize_time(item.time_added)}}`.
+
+   Test your template-powered endpoint now!
+
+3. Our next step is to add a button "Add to Wishlist" next to each
+   product displayed on the landing page, so an authenticated user can
+   click on the button to add it to the user's wishlist.  (In reality,
+   if a product is already on the wishlist, you probably should mark
+   it as such instead of making a button, but we will ignore this for
+   simplicity in this tutorial.)  Let's edit `template/index.html`.
+
+   To make a button that sends `POST` request, you can use an HTML
+   `form` element without user input fields:
+   ```
+   <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id)}}"
+         method="POST">
+     <input type="submit" value="Add to Wishlist"/>
+   </form>
+   ```
+   Note the use of `url_for()` to construct the URL for the target
+   endpiont.  In this case, we don't need to pass any additional
+   information through the `POST` request.
+   * But if we do, you can have additional elements of form `<input
+     type="hidden" name="some_key" value="some_value"/>` inside the
+     `form` element.  The endpoint can then retrieve `'some_value'`
+     using `request.form.get('some_key')`.
+
+   Once you are done with editing `template/index.html`, try the
+   buttons out!  If they work as intended, clicking on one will add
+   the corresponding product and automatically redirects you to the
+   updated wishlist.  Check to make sure that the new item is there!
+
+   You've completed all the coding required for this feature.  Time
+   for another `git commit` and `push`!
+
 ## Merging your feature branch into `main`
+
+1. Make sure that your branch is clean (you've committed and push all
+   the changes).  The last step of this process to open a "merge"
+   requeset to your teammates so your changes can be incorporated into
+   `main`.
+
+   **IMPORTANT:** This step is tricky for this tutorial because all
+   your teammates are working on the exact same feature (which
+   shouldn't happen in practice) so it wouldn't make sense for
+   everybody to merge.  As a team, to complete this tutorial, discuss
+   as a team what you'd like to do: you may elect one member to merge
+   his or her branch into `main`, or none will merge at all (because
+   your own project may not need this wishlist feature).  Depending on
+   what your team decides to do, you may skip Step 2 below and just to
+   go Step 3.
+
+2. To open a merge request, visit `https://gitlab.oit.duke.edu/`, find
+   your team's project repo, click on "Merge Requests" in the left
+   navigation bar, and then hit the blue "New merge request" button on
+   the top right.  Then:
+   * For the source branch, select `lisa-wishlist`.
+   * For the target branch, select `main`.
+   Once the merge request is created, ping your teammates to take a
+   look at it.  If they think it's acceptable, they just need to
+   approve the merge request and you are done!
+
+3. Now that you are done.  You should now delete your branch --- it's
+   considered a good `git` practice to delete a feature branch once
+   it's done, instead of reusing it for other purposes.  If the branch
+   has been merged, run:
+   ```
+   git branch -d lisa-wishlist
+   ```
+   Or if it hasn't been merged, run:
+   ```
+   git branch -D lisa-wishlist
+   ```
+   Then, delete that from the team repo as well:
+   ```
+   git push --delete origin lisa-wishlist
+   ```
+   :fireworks: Congrats on surviving this long tutorial!  Now get
+   started on your real project!
 
 ## Debugging
 
