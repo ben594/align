@@ -302,9 +302,9 @@ We will walk you through the steps of checking in code changes next.
    ```
    return redirect(url_for('wishlist.wishlist'))
    ```
-   Here, `redirect()` is self-explanatory, but `url_for()` is an
-   important feature of Flask that you should use as much as
-   possible.  It basically allows you to specify the target URL by the
+   Here, `redirect()` is self-explanatory; `url_for()` is an
+   important Flask feature that you should use as much as possible.
+   It basically allows you to specify the target URL by the
    combination of the blueprint name and the method name (both happen
    to be `wishlist` in this case).  It also allows you to pass
    additional parameters, e.g.: `url_for('blah.bleh',
@@ -325,26 +325,25 @@ We will walk you through the steps of checking in code changes next.
    What if adding the item fails (e.g., the product id is
    non-existent)?  You can redirect it to an error page, for example.
    For simplicity of this tutorial, let's ignore it (but you should
-   certainly handle this case for yor project!).
+   certainly handle such cases for yor project!).
 
 6. Ready for more testing?  Fire up your Flask app again, log in using
    the same test user as before.  Pick an existing product id, say
    `6`, and we would like to generate a POST request for
    `http://HOST:PORT/wishlist/add/6` (replace `HOST` and `PORT` with
    appropriate values for your setup) to test adding this product to
-   the user's wishlist.  This is a little tricky to test though,
-   because the browser address bar trick can only send `GET` but not
-   `POST` requests.
+   the user's wishlist.  This is a little tricky though, because the
+   browser address bar trick can send `GET` but not `POST` requests.
 
-   There are a few tools out there that can accomplish this (including
-   the vernerable `Postman`) but a simple, lightweight browser
-   extension should suffice for our purpose --- if you use Chrome, we
-   recommend installing the Restman extension, for example.  While the
-   test user is still logged in from the browser, open the extension,
-   enter the request URL (`http://HOST:PORT/wishlist/add/6`), and
-   importantly, select `POST` instead of `GET` as the request type.
-   If all goes well, you should see a JSON result now showing the
-   new item `6` in addition to the old one.
+   There are a few tools that do this (including the vernerable
+   `Postman`) but a simple, lightweight browser extension should
+   suffice for our purpose.  If you use Chrome, we recommend
+   installing the Restman extension, for example.  While the test user
+   is still logged in from the browser, open the extension, enter the
+   request URL (`http://HOST:PORT/wishlist/add/6`), and importantly,
+   select `POST` instead of `GET` as the request type.  If all goes
+   well, you should see a JSON result now showing the new item `6` in
+   addition to the old one.
 
 7. This is a good point to do another `git` `commit` and `push`!
 
@@ -395,10 +394,10 @@ We will walk you through the steps of checking in code changes next.
    already been staged for commit and what files remain unmerged.
    After you are all done, commit, and finally push.
 
-## Working with templates and the rest of the website
+## Working with templates (and Python dependencies)
 
 1. Back to finishing our feature.  Instead of letting
-   ``wishlist_add()` return JSON, let's actually display the list
+   `wishlist_add()` return JSON, let's actually display the list
    properly as a web page.  Flask uses "templates" to accomplish this
    task.  All templates can be found in the `templates/` subdirectory.
    Here, all templates "extends" `base.html`, which controls the
@@ -455,10 +454,10 @@ We will walk you through the steps of checking in code changes next.
 
    Back in `templates/wishlist.html`, instead of directly embedding
    the timestamp `{{item.time_added}}` (replace with whatever is
-   appropriate of you), you would do
+   appropriate for your implementation), you would do
    `{{humanize_time(item.time_added)}}`.
 
-   Test your template-powered endpoint now!
+   Test your template-powered endpoint on your browser now!
 
 3. Our next step is to add a button "Add to Wishlist" next to each
    product displayed on the landing page, so an authenticated user can
@@ -470,7 +469,7 @@ We will walk you through the steps of checking in code changes next.
    To make a button that sends `POST` request, you can use an HTML
    `form` element without user input fields:
    ```
-   <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id)}}"
+   <form action="{{ url_for('wishlist.wishlist_add', product_id=product.id) }}"
          method="POST">
      <input type="submit" value="Add to Wishlist"/>
    </form>
@@ -478,10 +477,10 @@ We will walk you through the steps of checking in code changes next.
    Note the use of `url_for()` to construct the URL for the target
    endpiont.  In this case, we don't need to pass any additional
    information through the `POST` request.
-   * But if we do, you can have additional elements of form `<input
-     type="hidden" name="some_key" value="some_value"/>` inside the
-     `form` element.  The endpoint can then retrieve `'some_value'`
-     using `request.form.get('some_key')`.
+   * But in case you do, you can have additional elements of form
+     `<input type="hidden" name="some_key" value="some_value"/>`
+     inside the `form` element.  The endpoint can then retrieve
+   `'some_value'` using `request.form.get('some_key')`.
 
    Once you are done with editing `template/index.html`, try the
    buttons out!  If they work as intended, clicking on one will add
