@@ -447,7 +447,7 @@ We will walk you through the steps of checking in code changes next.
    `templates/wishlist.html`, it can pass in this helper function in
    addition to the `items` being rendered:
    ```
-   return ender_template('wishlist.html',
+   return render_template('wishlist.html',
                          items=items,
                          humanize_time=humanize_time)
    ```
