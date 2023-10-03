@@ -132,8 +132,8 @@ running `python gen.py`.
 
 Use the file `.flaskenv` for passwords/secret keys --- we are talking
 about passwords used to access your database server, for example (not
-user passwords for your website in CSV files described earlier).  This
-file is NOT tracked by `git` and it was automatically generated when
-you first ran `./install.sh`.  Don't check it into `git` because your
-credentials would be exposed to everybody on GitLab if you are not
-careful.
+user passwords for your website in CSV files for loading sample
+database).  This file is NOT tracked by `git` and it was automatically
+generated when you first ran `./install.sh`.  Don't check it into
+`git` because your credentials would be exposed to everybody on GitLab
+if you are not careful.

@@ -6,7 +6,8 @@ description = "Mini Amazon Course Project"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-flask = "^2.3.3"
+flask = "2.3.3"
+werkzeug = "2.3.7"
 flask-sqlalchemy = "^3.0.5"
 flask-wtf = "^1.1.1"
 psycopg2-binary = "^2.9.7"

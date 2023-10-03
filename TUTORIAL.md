@@ -448,8 +448,8 @@ We will walk you through the steps of checking in code changes next.
    addition to the `items` being rendered:
    ```
    return render_template('wishlist.html',
-                         items=items,
-                         humanize_time=humanize_time)
+                          items=items,
+                          humanize_time=humanize_time)
    ```
 
    Back in `templates/wishlist.html`, instead of directly embedding

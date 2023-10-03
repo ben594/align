@@ -1,7 +1,7 @@
 #!/bin/bash
 
-mypath=`realpath $0`
-mybase=`dirname $mypath`
+mypath=`realpath "$0"`
+mybase=`dirname "$mypath"`
 cd $mybase
 
 SECRET=`tr -dc 'a-z0-9-_' < /dev/urandom | head -c50`

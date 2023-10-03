@@ -1,7 +1,7 @@
 #!/bin/bash
 
-mypath=`realpath $0`
-mybase=`dirname $mypath`
+mypath=`realpath "$0"`
+mybase=`dirname "$mypath"`
 cd $mybase
 
 datadir="${1:-data/}"
