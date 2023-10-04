@@ -48,14 +48,6 @@ under `db/data/`.  Those files only store the initial sample data to
 load into the database.  To examine the current state of the database,
 use `psql amazon`.
 
-### Loading the database from CSV files keeps giving me "invalid input syntax"
-
-If you use Microsoft Excel to create CSV files, you might run into
-weird errors where `psql:load.sql` keeps complaining about in your CSV
-files.  The root cause is that Excel by default saves CSV file in
-UTF-8 format (and adds an extra pesky linefeed character to every
-line), while `psql` is expecting basic text. See #647 for a fix.
-
 ### What's the website login/password for user `0` in the default sample database?
 
 * Email: `icecream@tastes.good`
@@ -118,7 +110,7 @@ Your teammates' Flask apps will connect to this same backend database.
 We do NOT recommend this approach for development, however, because:
 * You have to keep that server running at all times (which is not
   cheap).
-* Whenever one of you changes the database schema, it immediately
+* Whenever one of you change the database schema, it immediately
   affects all other teammates' Flask apps.  There is no isolation and
   it's too easy to break things.
 
@@ -135,8 +127,7 @@ See lecture
 [slides](https://courses.cs.duke.edu/fall23/compsci316d/lectures/09-sql-prog.pdf)
 on this topic.  Specifically Slides 11 and 14-16.
 
-### How do I paginate when there are too many result rows?  Can I
-    avoid retrieving all of them from database in one go?
+### How do I paginate when there are too many result rows?  Can I avoid retrieving all of them from the database in one go?
 
 Check out the very useful SQL feature `LIMIT`/`OFFSET`. For example,
 this query returns the 400th-499th rows:
@@ -162,8 +153,8 @@ For a complete example, see
 for `RegistrationForm` and `register()`.
 
 Note that it's not necessary to use `flask-wtf`.  For simple things
-such as implementing a button to POST a modification request, you can
-just code a simple HTML form by hand; see
+such as implementing a button for a `POST` request, you can just code
+a simple HTML form by hand; see
 [tutorial](https://gitlab.oit.duke.edu/compsci316/mini-amazon-skeleton/-/blob/main/TUTORIAL.md)
 for the implementation of "Add to Wishlist" as an example.
 
