@@ -280,9 +280,9 @@ We will walk you through the steps of checking in code changes next.
    ```
    which adds the product with the given (integer-valued) id to the
    current user's wishlist.  The "patterned" URL decoration is one of
-   the simplest ways to pass additional inputs to endpoints.  If a
-   user visits the URL `/wishlist/add/12345`, then `wishlist_add()`
-   will be called with `product_id = 12345`.
+   the simplest ways to pass input parameters to endpoints (we will
+   get to other ways later).  If a user visits the URL `/wishlist/add/12345`,
+   then `wishlist_add()` will be called with `product_id = 12345`.
 
    The `POST` request method signifies that this request has side
    effects (e.g., it updates the database).  In HTML, POST requests
@@ -311,13 +311,20 @@ We will walk you through the steps of checking in code changes next.
 
    > Unlike `wishlist_add()`, the majority of your endpoints may be
      ready-only (like `wishlist()`) and therefore can use the simpler
-     `GET` request method (which is the default).  Those requests can
-     encode additional input parameters (if any) by appending them to
-     the end of the URL like this: `?param1=value1&param2=value2`.
-     You don't need to worry about these details though, because Flask
-     supports automatic encoding of these via `url_for()` and the
-     endpoint functions will have their function arguments set
-     automatically.
+     `GET` request method (which is the default).
+
+   > With the `GET` request method, you can in fact encode additional
+     parameters beyond those you declare with the patterned URL decoration.
+     These will be automatically encoded by `url_for()` as a suffix of
+     the URL, like `?paramX=valueX&paramY=valueY`.  You don't need to worry
+     about these details though; in your endpoint code, you can simply
+     retrieve these extra parameter values using `request.args.get('paramX')`,
+     where `request` is a built-in Flask object (to gain access, just do
+     `from flask import request` at the beginning of your Python file).
+
+   > With the `POST` request method, you unfortuantely cannot encode
+     additional parameters as a URL suffix as with `GET`.  We will see
+     how to pass complex HTML form data through `POST` later.
 
    What if adding the item fails (e.g., the product id is
    non-existent)?  You can redirect it to an error page, for example.
@@ -326,7 +333,7 @@ We will walk you through the steps of checking in code changes next.
 
 6. Ready for more testing?  Fire up your Flask app again, log in using
    the same test user as before.  Pick an existing product id, say
-   `6`, and we would like to generate a POST request for
+   `6`, and we would like to generate a `POST` request for
    `http://HOST:PORT/wishlist/add/6` (replace `HOST` and `PORT` with
    appropriate values for your setup) to test adding this product to
    the user's wishlist.  This is a little tricky though, because the
@@ -473,11 +480,16 @@ We will walk you through the steps of checking in code changes next.
    ```
    Note the use of `url_for()` to construct the URL for the target
    endpiont.  In this case, we don't need to pass any additional
-   information through the `POST` request.
-   * But in case you do, you can have additional elements of form
-     `<input type="hidden" name="some_key" value="some_value"/>`
-     inside the `form` element.  The endpoint can then retrieve
-   `'some_value'` using `request.form.get('some_key')`.
+   information through the `POST` request.  But in case you do, you
+   could have additional elements that look like
+   `<input type="hidden" name="some_key" value="some_value"/>`
+   inside the `form` element.  These elements are not visible to users
+   inside their browser, but their values would be passed to the backend
+   in the same way other other visible elements (that hold user input,
+   for example).  The endpoint can retrieve `'some_value'` using
+   `request.form.get('some_key')`, where `request` is a built-in Flask
+    object (to gain access, just do `from flask import request` at the
+   beginning of your Python file).
 
    Once you are done with editing `template/index.html`, try the
    buttons out!  If they work as intended, clicking on one will add
