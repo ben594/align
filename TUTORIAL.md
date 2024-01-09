@@ -485,7 +485,7 @@ We will walk you through the steps of checking in code changes next.
    `<input type="hidden" name="some_key" value="some_value"/>`
    inside the `form` element.  These elements are not visible to users
    inside their browser, but their values would be passed to the backend
-   in the same way other other visible elements (that hold user input,
+   in the same way as other visible elements (that hold user input,
    for example).  The endpoint can retrieve `'some_value'` using
    `request.form.get('some_key')`, where `request` is a built-in Flask
     object (to gain access, just do `from flask import request` at the
@@ -494,7 +494,7 @@ We will walk you through the steps of checking in code changes next.
    Once you are done with editing `template/index.html`, try the
    buttons out!  If they work as intended, clicking on one will add
    the corresponding product and automatically redirects you to the
-   updated wishlist.  Check to make sure that the new item is there!
+   updated wishlist.  Check to make sure that the new item is there.
 
    You've completed all the coding required for this feature.  Time
    for another `git commit` and `push`!
