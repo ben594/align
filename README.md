@@ -1,4 +1,4 @@
-# Skeleton Code for CompSci 316 Standard Course Project.
+# Skeleton Code for CompSci 316/516 Standard Course Project.
 
 Originally created by [Rickard
 Stureborg](http://www.rickard.stureborg.com) and [Yihao
@@ -58,7 +58,7 @@ Depending on your setup, the URL will be different:
 
 * If you use the Duke OIT container, visit
   https://cmgr.oit.duke.edu/containers and open the CONTAINER CONTROLS
-  info pane for your CS316 container.  There will be a line specifying
+  info pane for your CS316/516 container.  There will be a line specifying
   a user-specific URL for accessing a Flask app.  Point your browser
   to that URL.
 

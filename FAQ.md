@@ -118,7 +118,7 @@ We do NOT recommend this approach for development, however, because:
 
 ### How do I put multiple SQL statements in a single transaction?
 
-Read the commennts in
+Read the comments in
 [`app/db.py`](https://gitlab.oit.duke.edu/compsci316/mini-amazon-skeleton/-/blob/main/app/db.py).
 
 ### How do I protect against SQL injection attacks?

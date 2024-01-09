@@ -1,7 +1,5 @@
 # Tutorial: How to Get Started with the Mini Amazon Skeleton
 
-[:construction: Under Construction :construction:]
-
 This tutorial walks you through the steps of adding a simple feature
 to the Mini Amazon in a teamwork setting.  It touches on the basics of
 source control, Python dependency management, and full-slack
@@ -17,8 +15,7 @@ and you have cloned it and run the installation script succesfully.
 
 We highly recommend you use VSCode; VSCode-related instructions below
 assume that you have already got VSCode to work with your container
-(see
-[instructions](https://docs.google.com/document/d/1khEXxG-7dO-RU7-AJcQQqRXXuBtJCOt-hjpYu8rw25o/edit?usp=sharing)).
+(see "Help" section of course website for instructions).
 The tutorial below can be completed in a VSCode window connected to
 the course container, with the project folder opened.  You can browse
 and edit files, and use the TERMINAL pane
