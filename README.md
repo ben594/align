@@ -50,23 +50,8 @@ of the environment).  The second command runs the Flask/web server.
 Do NOT run Flask outside the `poetry` environment; you will get
 errors.
 
-You can now use your laptop's browser to explore the website.
-Depending on your setup, the URL will be different:
-
-* If you use containers on your own laptop, point your browser to
-  http://localhost:8080/
-
-* If you use the Duke OIT container, visit
-  https://cmgr.oit.duke.edu/containers and open the CONTAINER CONTROLS
-  info pane for your CS316/516 container.  There will be a line specifying
-  a user-specific URL for accessing a Flask app.  Point your browser
-  to that URL.
-
-  - If you are using VSCode to access your Duke OIT container and
-    run/debug your project from there (by following these
-    instructions), then VSCode will do some (SSH port forwarding)
-    magic to make your Flask app also accessible at
-    http://localhost:8080/
+You can now use your laptop's browser to explore the website. Point your browser to
+http://localhost:8080/
 
 To stop your app, type <kbd>CTRL</kbd>-<kbd>C</kbd> in the container
 shell; that will take you back to the command-line prompt, still
