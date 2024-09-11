@@ -9,7 +9,7 @@ development/debugging.
 
 We assume that you have already installed the current skeleton in your
 course container per
-[instructions](https://gitlab.oit.duke.edu/compsci316/mini-amazon-skeleton/-/blob/main/README.md).
+[instructions](https://gitlab.oit.duke.edu/compsci316/mini-amazon-skeleton-24-fall/-/blob/main/README.md).
 That means one member of your project team has already created a repo,
 and you have cloned it and run the installation script succesfully.
 
@@ -73,7 +73,7 @@ We will walk you through the steps of checking in code changes next.
      with caution.)
      - Running `db/setup.sh` will (re)create a small sample database
        for testing, using the data from the `data/` subdirectory.
-     - Running `db/setup.sh generate` will (re)create a larger test
+     - Running `db/setup.sh generated` will (re)create a larger test
        database, using the synthetic data from the `generate/`
        subdirectory (which also contains the generator code).
 
@@ -97,7 +97,7 @@ We will walk you through the steps of checking in code changes next.
      `pg_catalog.setval` thingy?  It's for those automatically
      generated id values.  Take some time to learn how it works.
    * To be comprehensive, you should also modify the synthetic
-     generation code and data in `db/data/generate/`, but we will skip
+     generation code and data in `db/data/generated/`, but we will skip
      it this time (just for this tutorial :smirk:).
 
 4. Now, it's a good time to test everything!  Run `db/setup.sh` and
