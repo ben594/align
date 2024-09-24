@@ -1,15 +1,4 @@
-Team members:
-- Ben Li
-- Max Lin
-- Caroline Zhang
-- Jamie Tan
-- Rally Lin
-
-We are working on the open project.
-
-Team name: align
-
-Progress since milestone 1:
-- Ben: Worked on feature proposal, user flow mockups, boilerplate code
-
-Link to repo: https://github.com/ben594/align
+Team members: Caroline Zhang, Jamie Tan, Rally Lin, Ben Li, Maxwell Lin 
+Team name: Align (Open Project)
+Github link: https://github.com/ben594/align 
+Since the last milestone, we planned the different components/functionalities of our project and set up our code repository. We also designed a Figma wireframe outlining the possible actions you can take in the app.
