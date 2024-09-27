@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "amazon.py",
+                "FLASK_APP": "align.py",
                 "FLASK_ENV": "develpment",
                 "FLASK_DEBUG": "1"
             },

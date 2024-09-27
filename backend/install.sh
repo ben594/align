@@ -5,7 +5,7 @@ mybase=`dirname "$mypath"`
 cd $mybase
 
 SECRET=`tr -dc 'a-z0-9-_' < /dev/urandom | head -c50`
-echo "FLASK_APP=amazon.py
+echo "FLASK_APP=align.py
 FLASK_DEBUG=True
 FLASK_RUN_HOST=0.0.0.0
 FLASK_RUN_PORT=8080
