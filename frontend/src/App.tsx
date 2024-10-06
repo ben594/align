@@ -3,6 +3,7 @@ import HomePage from "./views/Home/HomePage";
 import AuthPage from "./views/Auth/AuthPage";
 import LabelingInterface from "./views/Labeling/LabelingInterface";
 import ReviewingInterface from "./views/Labeling/ReviewingInterface";
+import Dashboard from "./views/Home/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -12,6 +13,10 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
   },
   {
     path: "/label/:projectId",
