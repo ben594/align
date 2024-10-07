@@ -21,7 +21,7 @@ npm run dev
 Once you are in the container, and in the `align` repo, run the following in the container shell.
 ```
 cd backend
-./setup.sh
+./install.sh
 poetry shell
 flask run
 ```
