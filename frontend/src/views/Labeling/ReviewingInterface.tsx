@@ -15,7 +15,7 @@ export default function ReviewingInterface() {
       justifyContent="center"
       alignItems="center"
     >
-      <ImageScroller images={images} />
+      <ImageScroller interface_type="review" images={images} />
     </Box>
-  );
+  )
 }
