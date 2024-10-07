@@ -1,37 +1,41 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import HomePage from "./views/Home/HomePage";
-import AuthPage from "./views/Auth/AuthPage";
-import LabelingInterface from "./views/Labeling/LabelingInterface";
-import ReviewingInterface from "./views/Labeling/ReviewingInterface";
-import Dashboard from "./views/Home/Dashboard";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+
+import AuthPage from './views/Auth/AuthPage'
+import Dashboard from './views/Home/Dashboard'
+import HomePage from './views/Home/HomePage'
+import LabelingInterface from './views/Labeling/LabelingInterface'
+import ProfilePage from './views/Profile/ProfilePage'
+import ReviewingInterface from './views/Labeling/ReviewingInterface'
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <HomePage />,
   },
   {
-    path: "/auth",
+    path: '/auth',
     element: <AuthPage />,
   },
   {
-    path: "/dashboard",
+    path: '/user/:userId',
+    element: <ProfilePage />,
+  },
+  {
+    path: '/dashboard',
     element: <Dashboard />,
   },
   {
-    path: "/label/:projectId",
+    path: '/label/:projectId',
     element: <LabelingInterface />,
   },
   {
-    path: "/review/:projectId",
+    path: '/review/:projectId',
     element: <ReviewingInterface />,
   },
-]);
+])
 
 function App() {
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />
 }
 
-export default App;
+export default App

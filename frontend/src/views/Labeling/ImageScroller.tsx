@@ -1,27 +1,38 @@
 import React, { useState } from "react";
-import { Box, Flex, IconButton, Image, Text, VStack } from "@chakra-ui/react";
-import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  Image,
+  Text,
+  Textarea,
+  VStack,
+} from '@chakra-ui/react'
+import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons'
+import FlexRow from '../../components/FlexRow'
 
 type ImageList = {
-  images: string[];
-};
+  interface_type: 'label' | 'review'
+  images: string[]
+}
 
-export default function ImageScroller({ images }: ImageList) {
-  const [imageIndex, setImageIndex] = useState(0);
+export default function ImageScroller({ images, interface_type }: ImageList) {
+  const [imageIndex, setImageIndex] = useState(0)
 
-  const imageCount = images.length;
+  const imageCount = images.length
 
   const nextImage = () => {
     if (imageIndex < imageCount - 1) {
-      setImageIndex(imageIndex + 1);
+      setImageIndex(imageIndex + 1)
     }
-  };
+  }
 
   const previousImage = () => {
     if (imageIndex > 0) {
-      setImageIndex(imageIndex - 1);
+      setImageIndex(imageIndex - 1)
     }
-  };
+  }
 
   return (
     <Box
@@ -41,9 +52,7 @@ export default function ImageScroller({ images }: ImageList) {
           borderWidth="2px"
           borderRadius="md"
         >
-          <Text>
-            {`${imageIndex + 1}/${imageCount}`}
-          </Text>
+          <Text>{`${imageIndex + 1}/${imageCount}`}</Text>
         </Box>
         <Flex>
           <Image
@@ -74,7 +83,27 @@ export default function ImageScroller({ images }: ImageList) {
           aria-label="Next Image"
           colorScheme="blue"
         />
+
+        <Textarea placeholder="What is this image of?" />
+
+        {interface_type === 'label' && (
+          <FlexRow width="100%" columnGap={1}>
+            <Button flexGrow={1} colorScheme="blue">
+              Submit
+            </Button>
+          </FlexRow>
+        )}
+        {interface_type === 'review' && (
+          <FlexRow width="100%" columnGap={1}>
+            <Button flexGrow={1} colorScheme="red">
+              Reject
+            </Button>
+            <Button flexGrow={1} colorScheme="green">
+              Accept
+            </Button>
+          </FlexRow>
+        )}
       </VStack>
     </Box>
-  );
+  )
 }

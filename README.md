@@ -14,11 +14,12 @@ Since the last milestone, we planned the different components/functionalities of
 Starting from the base directory of the `align` repo, run the following in the container shell.
 ```
 cd frontend
+npm install
 npm run dev
 ```
 
 ## Run Backend with Docker
-Once you are in the container, and in the `align` repo, run the following in the container shell.
+Once you are in the container shell, and in the `align` repo, run the following in the container shell.
 ```
 cd backend
 ./install.sh
