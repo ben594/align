@@ -25,6 +25,7 @@ CREATE TABLE Labels (
     user_id INT NOT NULL,
     image_id INT NOT NULL,
     response VARCHAR(255) NOT NULL,
+    reviewed BOOLEAN,
     PRIMARY KEY (user_id, image_id),
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (image_id) REFERENCES Images(id)

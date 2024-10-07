@@ -11,10 +11,23 @@ class Project:
     def get(id):
         rows = app.db.execute(
             """
-SELECT id, name, deadline
-FROM Projects
-WHERE id = :id
-""",
+            SELECT id, name, deadline
+            FROM Projects
+            WHERE id = :id
+            """,
             id=id,
         )
         return Project(*(rows[0])) if rows else None
+
+    @staticmethod
+    def create(name, deadline):
+        inserted_row = app.db.execute(
+            """
+            INSERT INTO Projects (name, deadline)
+            VALUES (:name, :deadline)
+            RETURNING id
+            """,
+            name=name,
+            deadline=deadline,
+        )
+        return inserted_row[0] if inserted_row else None
