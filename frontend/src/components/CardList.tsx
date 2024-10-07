@@ -1,10 +1,10 @@
-import { SimpleGrid } from "@chakra-ui/react";
+import { SimpleGrid } from '@chakra-ui/react'
 
-import ProjectCard, { ProjectCardInfo } from "./ProjectCard";
+import ProjectCard, { ProjectCardInfo } from './ProjectCard'
 
 type CardInfoList = {
-  infoList: ProjectCardInfo[];
-};
+  infoList: ProjectCardInfo[]
+}
 
 export default function CardList({ infoList }: CardInfoList) {
   return (
@@ -14,9 +14,9 @@ export default function CardList({ infoList }: CardInfoList) {
       p={10}
       width="100%"
     >
-      {infoList.map((cardInfo) => (
-        <ProjectCard {...cardInfo} />
+      {infoList.map((cardInfo, index) => (
+        <ProjectCard key={index} {...cardInfo} />
       ))}
     </SimpleGrid>
-  );
+  )
 }
