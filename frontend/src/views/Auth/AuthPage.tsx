@@ -27,6 +27,7 @@ export default function AuthPage() {
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
   const [confirmedPassword, setConfirmedPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
   const toast = useToast()
@@ -44,6 +45,7 @@ export default function AuthPage() {
     }
 
     try {
+      setLoading(true)
       const response = await axios.post(`${BACKEND_URL}/login`, {
         email: email,
         password: password,
@@ -62,6 +64,8 @@ export default function AuthPage() {
         duration: 2000,
         isClosable: true,
       })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -79,6 +83,7 @@ export default function AuthPage() {
     }
 
     try {
+      setLoading(true);
       const response = await axios.post(`${BACKEND_URL}/signup`, {
         email: email,
         password: password,
@@ -99,6 +104,8 @@ export default function AuthPage() {
         duration: 2000,
         isClosable: true,
       })
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -137,7 +144,7 @@ export default function AuthPage() {
                   onChange={e => setPassword(e.target.value)}
                 />
               </FormControl>
-              <Button colorScheme="blue" width="100px" onClick={submitLogin}>
+              <Button colorScheme="blue" width="100px" onClick={submitLogin} isLoading={loading}>
                 Login
               </Button>
             </VStack>
@@ -196,7 +203,7 @@ export default function AuthPage() {
                   <FormErrorMessage>Passwords do not match</FormErrorMessage>
                 }
               </FormControl>
-              <Button colorScheme="blue" width="100px" onClick={submitSignup}>
+              <Button colorScheme="blue" width="100px" onClick={submitSignup} isLoading={loading}>
                 Sign Up
               </Button>
             </VStack>
