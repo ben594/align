@@ -19,7 +19,7 @@ export default function Header() {
   };
 
   return (
-    <Box width="100%" position="fixed" height="70px" backgroundColor="white" zIndex={1}>
+    <Box width="100%" position="fixed" height="70px" backgroundColor="white" zIndex={1} top="0px">
       <Flex padding="15px" justify="space-between">
         <Heading marginLeft="40px" size="lg" cursor="pointer" onClick={goToLanding}>
           align
