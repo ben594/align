@@ -7,6 +7,7 @@ import LabelingInterface from './views/Labeling/LabelingInterface'
 import ProfilePage from './views/Profile/ProfilePage'
 import ReviewingInterface from './views/Labeling/ReviewingInterface'
 import ProjectCreationPage from './views/Project/ProjectCreationPage.tsx'
+import Leaderboard from './views/Leaderboard/Leaderboard'
 
 const router = createBrowserRouter([
   {
@@ -34,9 +35,15 @@ const router = createBrowserRouter([
     element: <ReviewingInterface />,
   },
   {
+<<<<<<< HEAD
     path: '/project/:createProject',
     element: <ProjectCreationPage />,
   },
+=======
+    path: '/leaderboard',
+    element: <Leaderboard/>
+  }
+>>>>>>> 81792dbd61bc8ccb1651c40a14b8f0dd8f2eeade
 ])
 
 function App() {
