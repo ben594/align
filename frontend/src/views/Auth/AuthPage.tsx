@@ -107,7 +107,7 @@ export default function AuthPage() {
       justifyContent="center"
       alignItems="center"
     >
-      <Tabs variant="soft-rounded" align="center">
+      <Tabs variant="soft-rounded" align="center" onChange={() => {setEmail(''); setPassword('');}}>
         <TabList>
           <Tab margin="10px">Login</Tab>
           <Tab margin="10px">Sign Up</Tab>
