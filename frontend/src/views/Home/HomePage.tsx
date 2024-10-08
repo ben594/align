@@ -1,5 +1,6 @@
 import { Box, Button, Image, Heading, Text, VStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/Header";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function HomePage() {
       justifyContent="center"
       alignItems="center"
     >
+      <Header />
       <Box flex="1" display="flex" justifyContent="center" alignItems="center">
         <VStack spacing={10} align="flex-start">
           <Heading size="3xl">

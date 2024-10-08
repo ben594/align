@@ -2,6 +2,7 @@ import { Box } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ImageScroller from './ImageScroller'
+import Header from '../../components/Header'
 
 export default function LabelingInterface() {
   const { projectId } = useParams()
@@ -14,6 +15,7 @@ export default function LabelingInterface() {
       justifyContent="center"
       alignItems="center"
     >
+      <Header />
       <ImageScroller
         interface_type="label"
         images={[

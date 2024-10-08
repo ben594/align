@@ -1,8 +1,5 @@
 from backend.app.models.project import Project
-from flask import blueprint, jsonify, request
-from werkzeug.urls import url_parse
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from flask import jsonify, request
 
 
 project_bp = Blueprint('projects', __name__)
@@ -25,7 +22,7 @@ def create_project():
     deadline = data.get('deadline')
 
     if not name:
-        return jsonify({'error': 'Name is required'}), 400
+        return jsonify({'error': 'No project name found'}), 400
 
     new_project = Project.create(name, deadline)
 
