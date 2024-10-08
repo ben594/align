@@ -6,6 +6,7 @@ import HomePage from './views/Home/HomePage'
 import LabelingInterface from './views/Labeling/LabelingInterface'
 import ProfilePage from './views/Profile/ProfilePage'
 import ReviewingInterface from './views/Labeling/ReviewingInterface'
+import Leaderboard from './views/Leaderboard/Leaderboard'
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
     path: '/review/:projectId',
     element: <ReviewingInterface />,
   },
+  {
+    path: '/leaderboard',
+    element: <Leaderboard/>
+  }
 ])
 
 function App() {
