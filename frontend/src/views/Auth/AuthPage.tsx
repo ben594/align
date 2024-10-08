@@ -13,6 +13,8 @@ import {
   Tabs,
   useToast,
   VStack,
+  FormErrorMessage,
+  Text,
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'
@@ -26,6 +28,7 @@ export default function AuthPage() {
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
   const [confirmedPassword, setConfirmedPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
   const toast = useToast()
@@ -39,9 +42,11 @@ export default function AuthPage() {
         duration: 2000,
         isClosable: true,
       })
+      return;
     }
 
     try {
+      setLoading(true)
       const response = await axios.post(`${BACKEND_URL}/login`, {
         email: email,
         password: password,
@@ -60,11 +65,13 @@ export default function AuthPage() {
         duration: 2000,
         isClosable: true,
       })
+    } finally {
+      setLoading(false)
     }
   }
 
   const submitSignup = async () => {
-    if (email == '' || password == '' || firstname == '' || lastname == '') {
+    if (email == '' || password == '' || firstname == '' || lastname == '' || password !== confirmedPassword) {
       toast({
         title: 'Error',
         description:
@@ -73,9 +80,11 @@ export default function AuthPage() {
         duration: 2000,
         isClosable: true,
       })
+      return;
     }
 
     try {
+      setLoading(true);
       const response = await axios.post(`${BACKEND_URL}/signup`, {
         email: email,
         password: password,
@@ -96,6 +105,8 @@ export default function AuthPage() {
         duration: 2000,
         isClosable: true,
       })
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -114,7 +125,7 @@ export default function AuthPage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <VStack width="500px" height="500px">
+            <VStack width="500px" height="300px">
               <Heading>Login</Heading>
               <FormControl margin="10px">
                 <FormLabel>Email</FormLabel>
@@ -134,15 +145,16 @@ export default function AuthPage() {
                   onChange={e => setPassword(e.target.value)}
                 />
               </FormControl>
-              <Button colorScheme="blue" width="100px" onClick={submitLogin}>
+              <Button colorScheme="blue" width="100px" onClick={submitLogin} isLoading={loading}>
                 Login
               </Button>
             </VStack>
           </TabPanel>
           <TabPanel>
-            <VStack width="500px" height="500px">
-              <Heading>Get Started with Align</Heading>
-              <FormControl margin="10px">
+            <VStack width="500px" height="550px">
+              <Heading>Get Started</Heading>
+              <Text fontSize='lg' color='gray'>Start setting up your account</Text>
+              <FormControl margin="10px" isRequired>
                 <FormLabel>Email Address</FormLabel>
                 <Input
                   type="email"
@@ -152,7 +164,7 @@ export default function AuthPage() {
                 />
               </FormControl>
               <HStack width="100%" margin="10px">
-                <FormControl>
+                <FormControl isRequired>
                   <FormLabel>First Name</FormLabel>
                   <Input
                     type="text"
@@ -161,7 +173,7 @@ export default function AuthPage() {
                     onChange={e => setFirstname(e.target.value)}
                   />
                 </FormControl>
-                <FormControl>
+                <FormControl isRequired>
                   <FormLabel>Last Name</FormLabel>
                   <Input
                     type="text"
@@ -171,7 +183,7 @@ export default function AuthPage() {
                   />
                 </FormControl>
               </HStack>
-              <FormControl margin="10px">
+              <FormControl margin="10px" isRequired>
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
@@ -180,16 +192,20 @@ export default function AuthPage() {
                   onChange={e => setPassword(e.target.value)}
                 />
               </FormControl>
-              <FormControl margin="10px">
+              <FormControl margin="10px" isRequired isInvalid={confirmedPassword !== '' && confirmedPassword !== password}>
                 <FormLabel>Confirm Password</FormLabel>
                 <Input
                   type="password"
-                  placeholder="Password"
+                  placeholder="Confirm Password"
                   value={confirmedPassword}
                   onChange={e => setConfirmedPassword(e.target.value)}
                 />
+                {
+                  (confirmedPassword !== '' && confirmedPassword !== password) &&
+                  <FormErrorMessage>Passwords do not match</FormErrorMessage>
+                }
               </FormControl>
-              <Button colorScheme="blue" width="100px" onClick={submitSignup}>
+              <Button colorScheme="blue" width="100px" onClick={submitSignup} isLoading={loading}>
                 Sign Up
               </Button>
             </VStack>
