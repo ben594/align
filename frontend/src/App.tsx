@@ -6,6 +6,7 @@ import HomePage from './views/Home/HomePage'
 import LabelingInterface from './views/Labeling/LabelingInterface'
 import ProfilePage from './views/Profile/ProfilePage'
 import ReviewingInterface from './views/Labeling/ReviewingInterface'
+import ProjectCreationPage from './views/Project/ProjectCreationPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: '/review/:projectId',
     element: <ReviewingInterface />,
+  },
+  {
+    path: '/project/:createProject',
+    element: <ProjectCreationPage />,
   },
 ])
 
