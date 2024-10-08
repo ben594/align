@@ -14,6 +14,7 @@ import {
   useToast,
   VStack,
   FormErrorMessage,
+  Text,
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'
@@ -124,7 +125,7 @@ export default function AuthPage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <VStack width="500px" height="500px">
+            <VStack width="500px" height="300px">
               <Heading>Login</Heading>
               <FormControl margin="10px">
                 <FormLabel>Email</FormLabel>
@@ -150,8 +151,9 @@ export default function AuthPage() {
             </VStack>
           </TabPanel>
           <TabPanel>
-            <VStack width="500px" height="500px">
-              <Heading>Get Started with Align</Heading>
+            <VStack width="500px" height="550px">
+              <Heading>Get Started</Heading>
+              <Text fontSize='lg' color='gray'>Start setting up your account</Text>
               <FormControl margin="10px" isRequired>
                 <FormLabel>Email Address</FormLabel>
                 <Input
@@ -194,7 +196,7 @@ export default function AuthPage() {
                 <FormLabel>Confirm Password</FormLabel>
                 <Input
                   type="password"
-                  placeholder="Password"
+                  placeholder="Confirm Password"
                   value={confirmedPassword}
                   onChange={e => setConfirmedPassword(e.target.value)}
                 />
