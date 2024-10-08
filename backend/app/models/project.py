@@ -25,7 +25,6 @@ class Project:
             """
             INSERT INTO Projects (name, deadline)
             VALUES (:name, :deadline)
-            RETURNING id
             """,
             name=name,
             deadline=deadline,
