@@ -27,7 +27,7 @@ export default function HomePage() {
           <Text color="gray">
             Earn as you help vendors train their AI models.
             <br />
-            The end-all solution to your date labeling needs.
+            The end-all solution to your data labeling needs.
           </Text>
           <Button colorScheme="blue" onClick={goToAuth}>
             Get Started
