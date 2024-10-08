@@ -7,9 +7,10 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import CardList from "../../components/CardList";
-import { useState } from "react";
+
+import CardList from '../../components/CardList'
 import Header from "../../components/Header";
+import { useState } from 'react'
 
 const testCardInfo = [
   { name: "abc", description: "This is a sample project.", deadline: null },
@@ -65,7 +66,7 @@ export default function HomePage() {
           <Divider position="fixed" zIndex={1} />
           <TabPanels paddingTop="20px">
             <TabPanel>
-              <CardList infoList={myProjectsCards} />
+              <CardList infoList={myProjectsCards} includeAddCard={true} />
             </TabPanel>
             <TabPanel>
               <CardList infoList={labelProjectsCards} />
@@ -80,5 +81,5 @@ export default function HomePage() {
         </Tabs>
       </Box>
     </Box>
-  );
+  )
 }
