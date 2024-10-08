@@ -17,6 +17,7 @@ import {
 import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Header from '../../components/Header'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
@@ -107,6 +108,7 @@ export default function AuthPage() {
       justifyContent="center"
       alignItems="center"
     >
+      <Header />
       <Tabs variant="soft-rounded" align="center" onChange={() => {setEmail(''); setPassword('');}}>
         <TabList>
           <Tab margin="10px">Login</Tab>
