@@ -125,9 +125,9 @@ export default function AuthPage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <VStack width="500px" height="300px">
+            <VStack width="500px" height="500px" spacing="15px">
               <Heading>Login</Heading>
-              <FormControl margin="10px">
+              <FormControl>
                 <FormLabel>Email</FormLabel>
                 <Input
                   type="email"
@@ -136,7 +136,7 @@ export default function AuthPage() {
                   onChange={e => setEmail(e.target.value)}
                 />
               </FormControl>
-              <FormControl margin="10px">
+              <FormControl>
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
@@ -145,16 +145,16 @@ export default function AuthPage() {
                   onChange={e => setPassword(e.target.value)}
                 />
               </FormControl>
-              <Button colorScheme="blue" width="100px" onClick={submitLogin} isLoading={loading}>
+              <Button colorScheme="blue" pl="25px" pr="25px" marginTop="5px" onClick={submitLogin} isLoading={loading}>
                 Login
               </Button>
             </VStack>
           </TabPanel>
           <TabPanel>
-            <VStack width="500px" height="550px">
+            <VStack width="500px" height="500px" spacing="10px">
               <Heading>Get Started</Heading>
               <Text fontSize='lg' color='gray'>Start setting up your account</Text>
-              <FormControl margin="10px" isRequired>
+              <FormControl isRequired>
                 <FormLabel>Email Address</FormLabel>
                 <Input
                   type="email"
@@ -163,7 +163,7 @@ export default function AuthPage() {
                   onChange={e => setEmail(e.target.value)}
                 />
               </FormControl>
-              <HStack width="100%" margin="10px">
+              <HStack width="100%" spacing="5px">
                 <FormControl isRequired>
                   <FormLabel>First Name</FormLabel>
                   <Input
@@ -183,7 +183,7 @@ export default function AuthPage() {
                   />
                 </FormControl>
               </HStack>
-              <FormControl margin="10px" isRequired>
+              <FormControl isRequired>
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
@@ -192,7 +192,7 @@ export default function AuthPage() {
                   onChange={e => setPassword(e.target.value)}
                 />
               </FormControl>
-              <FormControl margin="10px" isRequired isInvalid={confirmedPassword !== '' && confirmedPassword !== password}>
+              <FormControl isRequired isInvalid={confirmedPassword !== '' && confirmedPassword !== password}>
                 <FormLabel>Confirm Password</FormLabel>
                 <Input
                   type="password"
@@ -205,8 +205,8 @@ export default function AuthPage() {
                   <FormErrorMessage>Passwords do not match</FormErrorMessage>
                 }
               </FormControl>
-              <Button colorScheme="blue" width="100px" onClick={submitSignup} isLoading={loading}>
-                Sign Up
+              <Button colorScheme="blue" marginTop="5px" onClick={submitSignup} isLoading={loading}>
+                Create Account
               </Button>
             </VStack>
           </TabPanel>
