@@ -13,6 +13,7 @@ import {
   Tabs,
   useToast,
   VStack,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'
@@ -39,6 +40,7 @@ export default function AuthPage() {
         duration: 2000,
         isClosable: true,
       })
+      return;
     }
 
     try {
@@ -64,7 +66,7 @@ export default function AuthPage() {
   }
 
   const submitSignup = async () => {
-    if (email == '' || password == '' || firstname == '' || lastname == '') {
+    if (email == '' || password == '' || firstname == '' || lastname == '' || password !== confirmedPassword) {
       toast({
         title: 'Error',
         description:
@@ -73,6 +75,7 @@ export default function AuthPage() {
         duration: 2000,
         isClosable: true,
       })
+      return;
     }
 
     try {
@@ -142,7 +145,7 @@ export default function AuthPage() {
           <TabPanel>
             <VStack width="500px" height="500px">
               <Heading>Get Started with Align</Heading>
-              <FormControl margin="10px">
+              <FormControl margin="10px" isRequired>
                 <FormLabel>Email Address</FormLabel>
                 <Input
                   type="email"
@@ -152,7 +155,7 @@ export default function AuthPage() {
                 />
               </FormControl>
               <HStack width="100%" margin="10px">
-                <FormControl>
+                <FormControl isRequired>
                   <FormLabel>First Name</FormLabel>
                   <Input
                     type="text"
@@ -161,7 +164,7 @@ export default function AuthPage() {
                     onChange={e => setFirstname(e.target.value)}
                   />
                 </FormControl>
-                <FormControl>
+                <FormControl isRequired>
                   <FormLabel>Last Name</FormLabel>
                   <Input
                     type="text"
@@ -171,7 +174,7 @@ export default function AuthPage() {
                   />
                 </FormControl>
               </HStack>
-              <FormControl margin="10px">
+              <FormControl margin="10px" isRequired>
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
@@ -180,7 +183,7 @@ export default function AuthPage() {
                   onChange={e => setPassword(e.target.value)}
                 />
               </FormControl>
-              <FormControl margin="10px">
+              <FormControl margin="10px" isRequired isInvalid={confirmedPassword !== '' && confirmedPassword !== password}>
                 <FormLabel>Confirm Password</FormLabel>
                 <Input
                   type="password"
@@ -188,6 +191,10 @@ export default function AuthPage() {
                   value={confirmedPassword}
                   onChange={e => setConfirmedPassword(e.target.value)}
                 />
+                {
+                  (confirmedPassword !== '' && confirmedPassword !== password) &&
+                  <FormErrorMessage>Passwords do not match</FormErrorMessage>
+                }
               </FormControl>
               <Button colorScheme="blue" width="100px" onClick={submitSignup}>
                 Sign Up
