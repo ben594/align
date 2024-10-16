@@ -27,4 +27,7 @@ def create_app():
     from .controllers.label_controller import label_bp
     app.register_blueprint(label_bp)
 
+    from .controllers.leaderboard_controller import bp as leaderboard_bp
+    app.register_blueprint(leaderboard_bp)
+
     return app
