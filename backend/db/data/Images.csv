@@ -1,7 +1,7 @@
-image_url,project_id,labeled_status,accepted_status,labeler_uid,label_text
-"/path/to/image_1.png", 0, FALSE,FALSE,0,"Label A"
+"/path/to/image_1.png", 0, TRUE,FALSE,0,"Label A"
 "/path/to/image_2.png", 0, TRUE,FALSE,0,"Label B"
 "/path/to/image_3.png", 0, TRUE,TRUE,0,"Label C"
-"/path/to/image_4.png", 0, FALSE,FALSE,NULL,NULL
-"/path/to/image_5.png", 0, TRUE,FALSE,0,"Label D"
-"/path/to/image_6.png", 0, FALSE,FALSE,NULL,NULL
+"/path/to/image_4.png", 1, TRUE,FALSE,1,"Label D"
+"/path/to/image_5.png", 1, TRUE,FALSE,1,"Label E"
+"/path/to/image_6.png", 2, TRUE,FALSE,2,"Label F"
+"/path/to/image_7.png", 2, TRUE,FALSE,2,"Label G"
