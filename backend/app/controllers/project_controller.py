@@ -1,6 +1,8 @@
-from backend.app.models.project import Project
-from flask import jsonify, request
+# from backend.app.models.project import Project
+# from flask import jsonify, request
 
+from app.models.project import Project
+from flask import jsonify, request, Blueprint
 
 project_bp = Blueprint('projects', __name__)
 

@@ -1,4 +1,5 @@
-from backend.app.models.label import Label
+# from backend.app.models.label import Label
+from app.models.label import Label
 from flask import Blueprint, jsonify, request
 
 
