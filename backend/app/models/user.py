@@ -6,8 +6,8 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
-        self.id = id
+    def __init__(self, user_id, email, firstname, lastname):
+        self.user_id = user_id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
@@ -41,6 +41,7 @@ WHERE email = :email
     @staticmethod
     def register(email, password, firstname, lastname):
         try:
+            print("hi")
             rows = app.db.execute("""
 INSERT INTO Users(email, password, firstname, lastname)
 VALUES(:email, :password, :firstname, :lastname)
