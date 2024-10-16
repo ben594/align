@@ -52,3 +52,20 @@ class Image:
             # Process the rows and return them as a list of dictionaries
             return [{"name": f"{row[0]} {row[1]}", "labeled_count": row[2]} for row in labelers]
         else: return none
+    
+    @staticmethod
+    def get_top_projects():
+        projects = app.db.execute(
+            """
+            SELECT p.project_name, COUNT(DISTINCT i.labeler_uid) AS unique_contributors
+            FROM Projects p
+            JOIN Images i ON p.project_id = i.project_id
+            GROUP BY p.project_id, p.project_name
+            ORDER BY COUNT(DISTINCT i.labeler_uid) DESC
+            LIMIT 3;
+            """
+        )
+        if projects:
+            # Process the rows and return them as a list of dictionaries
+            return [{"name": row[0], "unique_contributers": row[1]} for row in projects]
+        else: return none
