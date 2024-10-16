@@ -41,7 +41,6 @@ WHERE email = :email
     @staticmethod
     def register(email, password, firstname, lastname):
         try:
-            print("hi")
             rows = app.db.execute("""
 INSERT INTO Users(email, password, firstname, lastname)
 VALUES(:email, :password, :firstname, :lastname)
