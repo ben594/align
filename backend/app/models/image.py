@@ -13,7 +13,7 @@ class Image:
     def get(id):
         rows = app.db.execute(
             """
-            SELECT id, name, image_type, image
+            SELECT id, name, image_type, image, project_id
             FROM Images
             WHERE id = :id
             """,
@@ -34,3 +34,17 @@ class Image:
             project_id=project_id,
         )
         return inserted_row[0] if inserted_row else None
+
+    @staticmethod
+    def get_by_project(project_id):
+        rows = app.db.execute(
+            """
+            SELECT id, name, image_type, image, project_id
+            FROM Images
+            WHERE project_id = :project_id
+            """,
+            project_id=project_id,
+        )
+
+        # TODO return list
+        return Image(*(rows[0])) if rows else None

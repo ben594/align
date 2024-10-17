@@ -25,3 +25,7 @@ def create_label():
     if new_label:
         return jsonify({'message': 'Label created', 'label': new_label}), 201
     return jsonify({'error': 'Failed to create label'}), 500
+
+@label_bp.route("/labels/<int:image_id>", methods=['GET'])
+def get_labels_for_image(image_id):
+    

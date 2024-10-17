@@ -30,3 +30,8 @@ class Project:
             deadline=deadline,
         )
         return inserted_row[0] if inserted_row else None
+
+    @staticmethod
+    def get_user_projects_by_role(user_id, role):
+        pass
+    
