@@ -37,3 +37,15 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for("index.index"))
+
+@bp.route("/stats", methods=['GET'])
+def get_user_stats():
+    uid = request.args.get('uid')
+    num_accepted_labels = User.get_accepted_label_count(uid)
+    return jsonify(num_accepted_labels), 200
+
+@bp.route("/username", methods=['GET'])
+def get_user_name(): 
+    uid = request.args.get('uid')
+    user_name = User.get_user_name(uid)
+    return jsonify(user_name), 200

@@ -6,8 +6,8 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
-        self.id = id
+    def __init__(self, user_id, email, firstname, lastname):
+        self.user_id = user_id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
@@ -69,14 +69,38 @@ class User(UserMixin):
     def get(id):
         rows = app.db.execute(
             """
-            SELECT id, email, firstname, lastname
+            SELECT user_id, email, firstname, lastname
             FROM Users
-            WHERE id = :id
+            WHERE user_id = :id
             """,
             id=id,
         )
         return User(*(rows[0])) if rows else None
-    
+
     @staticmethod
-    def get_project_owner(project_id):
-        pass
+    def get_accepted_label_count(uid):
+        result = app.db.execute(
+            """
+            SELECT COUNT(*) 
+            FROM Images 
+            WHERE labeler_uid = :uid 
+            AND accepted_status = TRUE
+            """,
+            uid=uid,
+        )
+        return result[0][0] if result else None
+
+    @staticmethod
+    def get_user_name(user_id):
+        name = app.db.execute(
+            """
+            SELECT firstname, lastname
+            FROM Users
+            WHERE user_id = :user_id
+            """,
+            user_id=user_id,
+        )
+        if name:
+            return f"{name[0][0]} {name[0][1]}"
+        else:
+            return None

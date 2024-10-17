@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 from backend.app.models.project import Project
 from flask import jsonify, request, Blueprint
 
+=======
+#from backend.app.models.project import Project
+from flask import jsonify, request, Blueprint
+from app.models.project import Project
+>>>>>>> 5221faf2d23536a54caf7f3b7e773102d515685b
 
 project_bp = Blueprint('projects', __name__)
 

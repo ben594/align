@@ -9,11 +9,33 @@ import {
     TableContainer,
     Heading,
     Progress,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 import Header from "../../components/Header";
+import { useState, useEffect } from 'react';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 export default function Leaderboard() {
-    return ( 
+    const [topLabelers, setTopLabelers] = useState<{ name: string; labeled_count: number; accepted_rate: number }[]>([]);
+    const [topProjects, setTopProjects] = useState<{ name: string; unique_contributers: number; progress: number }[]>([]);
+
+    // Fetch top 3 labelers
+    useEffect(() => {
+        fetch(`${BACKEND_URL}/labeler_leaderboard`)
+            .then(response => response.json())
+            .then(data => setTopLabelers(data))  // Store the result in the state
+            .catch(error => console.error('Error fetching top leaderboard:', error));
+    }, []);
+
+    // Fetch top 3 projects
+    useEffect(() => {
+        fetch(`${BACKEND_URL}/project_leaderboard`)
+            .then(response => response.json())
+            .then(data => setTopProjects(data))  // Store the result in the state
+            .catch(error => console.error('Error fetching top projects:', error));
+    }, []);
+
+
+    return (
         <Box
             width="100vw"
             height="100vh"
@@ -23,82 +45,62 @@ export default function Leaderboard() {
             alignItems="center"
             gap={8}
         >
-        <Header/>
-        <TableContainer
-            width="80vw"
-            height="80vh"
-            shadow="lg"
-            borderRadius="md"
-            mt={100}>
-            <Heading size="lg" mb={4} textAlign="center">Labeling Leaderboard</Heading> {/* Header for the first table */}
-        <Table variant='simple'>
-            <Thead>
-            <Tr>
-                <Th>Vendor</Th>
-                <Th># Upvotes</Th>
-                <Th isNumeric>Accepted Rate %</Th>
-            </Tr>
-            </Thead>
-            <Tbody>
-            <Tr>
-                <Td>Labeler 1</Td>
-                <Td>500</Td>
-                <Td isNumeric>25.4</Td>
-            </Tr>
-            <Tr>
-                <Td>Labeler 2</Td>
-                <Td>200</Td>
-                <Td isNumeric>30.48</Td>
-            </Tr>
-            <Tr>
-                <Td>Labeler 3</Td>
-                <Td>100</Td>
-                <Td isNumeric>0.91444</Td>
-            </Tr>
-            </Tbody>
-        </Table>
-        </TableContainer>
+            <Header />
+            <TableContainer
+                width="80vw"
+                height="80vh"
+                shadow="lg"
+                borderRadius="md"
+                mt={100}>
+                <Heading size="lg" mb={4} textAlign="center">Labeling Leaderboard</Heading> {/* Header for the first table */}
+                <Table variant='simple'>
+                    <Thead>
+                        <Tr>
+                            <Th>Labeler</Th>
+                            <Th># Images Labeled</Th>
+                            <Th isNumeric>Accepted Rate %</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {topLabelers.map((labeler, index) => (
+                            <Tr key={index}>
+                                <Td>{labeler.name}</Td>
+                                <Td>{labeler.labeled_count}</Td>
+                                <Td>{labeler.accepted_rate}</Td>
+                            </Tr>
+                        ))}
+                    </Tbody>
+                </Table>
+            </TableContainer>
 
-        <TableContainer
-            width="80vw"
-            height="80vh"
-            shadow="lg"
-            borderRadius="md">
-        <Heading size="lg" mb={4} textAlign="center">Project Leaderboard</Heading> {/* Header for the first table */}
+            <TableContainer
+                width="80vw"
+                height="80vh"
+                shadow="lg"
+                borderRadius="md">
+                <Heading size="lg" mb={4} textAlign="center">Most Popular Projects</Heading> {/* Header for the first table */}
 
-        <Table variant='simple'>
-            <Thead>
-            <Tr>
-                <Th>Name</Th>
-                <Th># Images Labeled</Th>
-                <Th isNumeric>Progress</Th>
-            </Tr>
-            </Thead>
-            <Tbody>
-            <Tr>
-                <Td>Project 1</Td>
-                <Td>100</Td>
-                <Td>
-                <Progress value={25.4} max={100} size="sm" colorScheme="blue" />
-                </Td>
-            </Tr>
-            <Tr>
-                <Td>Project 2</Td>
-                <Td>300</Td>
-                <Td>
-                    <Progress value={25.4} max={100} size="sm" colorScheme="blue" />
-                </Td>
-            </Tr>
-            <Tr>
-                <Td>Project 3</Td>
-                <Td>400</Td>
-                <Td>
-                <Progress value={25.4} max={100} size="sm" colorScheme="blue" />
-                </Td>
-            </Tr>
-            </Tbody>
-        </Table>
-        </TableContainer>
+                <Table variant='simple'>
+                    <Thead>
+                        <Tr>
+                            <Th>Project Name</Th>
+                            <Th># Labelers</Th>
+                            <Th isNumeric>Progress</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {topProjects.map((project, index) => (
+                            <Tr key={index}>
+                                <Td>{project.name}</Td>
+                                <Td>{project.unique_contributers}</Td>
+                                <Td>
+                                    <Progress value={project.progress} max={100} size="sm" colorScheme="blue" />
+                                </Td>
+                            </Tr>
+                        ))}
+                    </Tbody>
+                </Table>
+            </TableContainer>
         </Box>
     )
 }
