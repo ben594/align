@@ -12,9 +12,33 @@ import {
   StatNumber,
   Text,
   VStack,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 
 export default function HomePage() {
+  const { userId } = useParams();
+  const [acceptedLabelCount, setAcceptedLabelCount] = useState<0>();
+  const [userName, setUserName] = useState<string>('');
+
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/stats?uid=${userId}`)
+      .then(response => response.json())
+      .then(data => setAcceptedLabelCount(data))
+      .catch(error => console.error('Error fetching user\'s accepted label count:', error));
+  }, [userId]);
+  console.log(acceptedLabelCount)
+
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/username?uid=${userId}`)
+      .then(response => response.json())
+      .then(data => setUserName(data))
+      .catch(error => console.error('Error fetching user\'s name:', error));
+  }, [userId]);
+
   return (
     <Box
       width="100vw"
@@ -36,14 +60,15 @@ export default function HomePage() {
 
         <Stat>
           <StatLabel>Accepted Label Count</StatLabel>
-          <StatNumber>534,200</StatNumber>
+          <StatNumber>{acceptedLabelCount}</StatNumber>
           <StatHelpText>
             <StatArrow type="increase" />
             34.22%
           </StatHelpText>
         </Stat>
-
-        <Button colorScheme="blue">Compare</Button>
+        <Link to="/leaderboard">
+          <Button colorScheme="blue">Compare</Button>
+        </Link>
       </VStack>
 
       {/* Right section for profile */}
@@ -53,7 +78,7 @@ export default function HomePage() {
           size="2xl"
           src="https://bit.ly/sage-adebayo"
         />
-        <Heading size="md">John Smith</Heading>
+        <Heading size="md">{userName}</Heading>
         <Text color="gray.500">johnsmith@duke.edu</Text>
 
         {/* Achievements section */}
