@@ -67,3 +67,32 @@ WHERE user_id = :id
 """,
                               id=id)
         return User(*(rows[0])) if rows else None
+    
+    @staticmethod
+    def get_accepted_label_count(uid):
+        result = app.db.execute(
+            """
+            SELECT COUNT(*) 
+            FROM Images 
+            WHERE labeler_uid = :uid 
+            AND accepted_status = TRUE
+            """,
+            uid=uid
+        )
+        return result[0][0] if result else None
+
+    @staticmethod
+    def get_user_name(user_id):
+        name = app.db.execute(
+            """
+            SELECT firstname, lastname
+            FROM Users
+            WHERE user_id = :user_id
+            """,
+            user_id=user_id
+        )
+        if name:
+            return f"{name[0][0]} {name[0][1]}"
+        else:
+            return None
+        
