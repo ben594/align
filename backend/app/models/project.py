@@ -2,36 +2,72 @@ from flask import current_app as app
 
 
 class Project:
-    def __init__(self, id, name, deadline):
-        self.id = id
-        self.name = name
+    def __init__(
+        self,
+        vendor_uid,
+        project_id,
+        project_name,
+        description,
+        price_per_image,
+        total_num_images,
+        deadline,
+    ):
+        self.vendor_uid = vendor_uid
+        self.project_id = project_id
+        self.project_name = project_name
+        self.description = description
+        self.price_per_image = price_per_image
+        self.total_num_images = total_num_images
         self.deadline = deadline
 
     @staticmethod
-    def get(id):
+    def get(project_id):
         rows = app.db.execute(
             """
-            SELECT id, name, deadline
+            SELECT *
             FROM Projects
-            WHERE id = :id
+            WHERE project_id = :project_id
             """,
-            id=id,
+            project_id=project_id,
         )
         return Project(*(rows[0])) if rows else None
 
     @staticmethod
-    def create(name, deadline):
+    def create(
+        vendor_uid,
+        project_name,
+        description,
+        price_per_image,
+        total_num_images,
+        deadline,
+    ):
         inserted_row = app.db.execute(
             """
-            INSERT INTO Projects (name, deadline)
-            VALUES (:name, :deadline)
+            INSERT INTO Projects (vendor_uid,
+            project_name,
+            description,
+            price_per_image,
+            total_num_images,
+            deadline)
+            VALUES (:vendor_uid, :project_name, :description, :price_per_image, :total_num_images, :deadline)
             """,
-            name=name,
+            vendor_uid=vendor_uid,
+            project_name=project_name,
+            description=description,
+            price_per_image=price_per_image,
+            total_num_images=total_num_images,
             deadline=deadline,
         )
         return inserted_row[0] if inserted_row else None
 
     @staticmethod
-    def get_user_projects_by_role(user_id, role):
-        pass
-    
+    def get_vendor_projects(user_id):
+        rows = app.db.execute(
+            """
+            SELECT *
+            FROM Projects
+            WHERE vendor_uid = :user_id
+            """,
+            user_id=user_id,
+        )
+        return [Project(*row) for row in rows] if rows else []

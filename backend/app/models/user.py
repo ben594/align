@@ -16,7 +16,7 @@ class User(UserMixin):
     def get_by_auth(email, password):
         rows = app.db.execute(
             """
-            SELECT password, id, email, firstname, lastname
+            SELECT password, user_id, email, firstname, lastname
             FROM Users
             WHERE email = :email
             """,
@@ -49,7 +49,7 @@ class User(UserMixin):
                 """
                 INSERT INTO Users(email, password, firstname, lastname)
                 VALUES(:email, :password, :firstname, :lastname)
-                RETURNING id
+                RETURNING user_id
                 """,
                 email=email,
                 password=generate_password_hash(password),

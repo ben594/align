@@ -6,26 +6,52 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-} from "@chakra-ui/react";
+  useToast,
+} from '@chakra-ui/react'
 
 import CardList from '../../components/CardList'
-import Header from "../../components/Header";
-import { useState } from 'react'
+import Header from '../../components/Header'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import { BACKEND_URL } from '../../constants'
 
 const testCardInfo = [
-  { name: "abc", description: "This is a sample project.", deadline: null },
-  { name: "abc2", description: "This is a sample project", deadline: null },
-  { name: "abc2", description: "This is a sample project", deadline: null },
-  { name: "abc2", description: "This is a sample project", deadline: null },
-  { name: "abc2", description: "This is a sample project", deadline: null },
-];
+  { name: 'abc', description: 'This is a sample project.', deadline: null },
+  { name: 'abc2', description: 'This is a sample project', deadline: null },
+  { name: 'abc2', description: 'This is a sample project', deadline: null },
+  { name: 'abc2', description: 'This is a sample project', deadline: null },
+  { name: 'abc2', description: 'This is a sample project', deadline: null },
+]
 
 export default function HomePage() {
-  const [myProjectsCards, setMyProjectsCards] = useState(testCardInfo);
-  const [labelProjectsCards, setLabelProjectsCards] = useState(testCardInfo);
-  const [reviewProjectsCards, setReviewProjectsCards] = useState(testCardInfo);
-  const [exploreProjectsCards, setExploreProjectsCards] =
-    useState(testCardInfo);
+  const toast = useToast()
+
+  const [myProjectsCards, setMyProjectsCards] = useState([])
+  const [labelProjectsCards, setLabelProjectsCards] = useState(testCardInfo)
+  const [reviewProjectsCards, setReviewProjectsCards] = useState(testCardInfo)
+  const [exploreProjectsCards, setExploreProjectsCards] = useState(testCardInfo)
+
+  const getVendorProjects = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/projects/vendor`, {
+        withCredentials: true,
+      })
+      setMyProjectsCards(response.data.projects)
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: 'Unable to get vendor projects.',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      })
+      return
+    }
+  }
+
+  useEffect(() => {
+    getVendorProjects()
+  }, [])
 
   return (
     <Box

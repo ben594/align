@@ -32,5 +32,7 @@ def create_app():
 
     from .controllers.leaderboard_controller import bp as leaderboard_bp
     app.register_blueprint(leaderboard_bp)
+    
+    app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 
     return app

@@ -1,4 +1,4 @@
-from backend.app.models.image import Image
+from app.models.image import Image
 from flask import jsonify, request, Blueprint
 
 
