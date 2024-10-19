@@ -1,11 +1,24 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Button, Textarea } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ImageScroller from './ImageScroller'
 import Header from '../../components/Header'
+import FlexRow from '../../components/FlexRow'
+import ImageViewer from './ImageViewer'
+
+export interface Image {
+  
+}
 
 export default function LabelingInterface() {
   const { projectId } = useParams()
+  const [image, setImage] = useState(null)
+  const [label, setLabel] = useState('')
+
+  const submitLabel = async () => {
+    setLabel('')
+    return
+  }
 
   return (
     <Box
@@ -17,13 +30,24 @@ export default function LabelingInterface() {
       flexDirection="column"
     >
       <Header />
-      <ImageScroller
-        interface_type="label"
-        images={[
-          'https://images.unsplash.com/photo-1612852098516-55d01c75769a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-          'https://images.unsplash.com/photo-1627875764093-315831ac12f7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDJ8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-        ]}
-      />
+      <ImageViewer imageURL={image} />
+      <Box marginTop="50px" width="50vw">
+        <Textarea
+          placeholder="What is this image of?"
+          value={label}
+          onChange={e => setLabel(e.target.value)}
+        />
+        <FlexRow
+          width="100%"
+          columnGap={1}
+          marginTop="20px"
+          justifyContent="center"
+        >
+          <Button width="100px" colorScheme="blue" onClick={submitLabel}>
+            Submit
+          </Button>
+        </FlexRow>
+      </Box>
     </Box>
   )
 }

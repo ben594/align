@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Box,
   Button,
@@ -84,15 +84,6 @@ export default function ImageScroller({ images, interface_type }: ImageList) {
           colorScheme="blue"
         />
 
-        <Textarea placeholder="What is this image of?" />
-
-        {interface_type === 'label' && (
-          <FlexRow width="100%" columnGap={1}>
-            <Button flexGrow={1} colorScheme="blue">
-              Submit
-            </Button>
-          </FlexRow>
-        )}
         {interface_type === 'review' && (
           <FlexRow width="100%" columnGap={1}>
             <Button flexGrow={1} colorScheme="red">

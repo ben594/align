@@ -2,35 +2,45 @@ from flask import current_app as app
 
 
 class Image:
-    def __init__(self, id, name, image_type, image, project_id):
-        self.id = id
-        self.name = name
-        self.image_type = image_type
-        self.image = image
+    def __init__(
+        self,
+        image_url,
+        project_id,
+        labeled_status,
+        accepted_status,
+        labeler_uid,
+        label_text,
+    ):
+        self.image_url = image_url
         self.project_id = project_id
+        self.labeled_status = labeled_status
+        self.accepted_status = accepted_status
+        self.labeler_uid = labeler_uid
+        self.label_text = label_text
 
     @staticmethod
-    def get(id):
+    def get(image_url):
         rows = app.db.execute(
             """
-            SELECT id, name, image_type, image, project_id
+            SELECT *
             FROM Images
-            WHERE id = :id
+            WHERE image_url = :image_url
             """,
-            id=id,
+            image_url=image_url,
         )
         return Image(*(rows[0])) if rows else None
 
     @staticmethod
-    def upload(name, image_type, image, project_id):
+    def upload(
+        image_url,
+        project_id,
+    ):
         inserted_row = app.db.execute(
             """
-            INSERT INTO Images (name, image_type, image, project_id)
-            VALUES (:name, :image_type, :image, :project_id)
+            INSERT INTO Images (image_url, project_id, labeled_status, accepted_status)
+            VALUES (:image_url, :project_id, FALSE, FALSE)
             """,
-            name=name,
-            image_type=image_type,
-            image=image,
+            image_url=image_url,
             project_id=project_id,
         )
         return inserted_row[0] if inserted_row else None
@@ -39,7 +49,7 @@ class Image:
     def get_by_project(project_id):
         rows = app.db.execute(
             """
-            SELECT id, name, image_type, image, project_id
+            SELECT *
             FROM Images
             WHERE project_id = :project_id
             """,
@@ -48,7 +58,7 @@ class Image:
 
         # TODO return list
         return Image(*(rows[0])) if rows else None
-    
+
     @staticmethod
     def get_top_labelers():
         labelers = app.db.execute(
@@ -73,9 +83,17 @@ class Image:
         )
         if labelers:
             # Process the rows and return them as a list of dictionaries
-            return [{"name": f"{row[0]} {row[1]}", "labeled_count": row[2], "accepted_rate": row[3]} for row in labelers]
-        else: return none
-    
+            return [
+                {
+                    "name": f"{row[0]} {row[1]}",
+                    "labeled_count": row[2],
+                    "accepted_rate": row[3],
+                }
+                for row in labelers
+            ]
+        else:
+            return none
+
     @staticmethod
     def get_top_projects():
         projects = app.db.execute(
@@ -97,5 +115,9 @@ class Image:
         )
         if projects:
             # Process the rows and return them as a list of dictionaries
-            return [{"name": row[0], "unique_contributers": row[1], "progress": row[2]} for row in projects]
-        else: return none
+            return [
+                {"name": row[0], "unique_contributers": row[1], "progress": row[2]}
+                for row in projects
+            ]
+        else:
+            return none

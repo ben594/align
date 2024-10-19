@@ -18,7 +18,7 @@ CREATE TABLE Projects (
 );
 
 CREATE TABLE Images (
-    image_url VARCHAR(255),
+    image_url VARCHAR(255) NOT NULL PRIMARY KEY,
     project_id INT NOT NULL,
     labeled_status BOOLEAN NOT NULL DEFAULT FALSE,
     accepted_status BOOLEAN NOT NULL DEFAULT FALSE,
