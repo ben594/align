@@ -45,6 +45,29 @@ def get_vendor_projects():
     return jsonify(projects=projects_list), 200
 
 
+@project_bp.route("/projects/role", methods=["GET"])
+@jwt_required()
+def get_projects_by_role():
+    user_id = get_jwt_identity()
+    role = request.args.get("role")
+    projects = Project.get_projects_by_role(user_id, role)
+
+    projects_list = [
+        {
+            "id": project.project_id,
+            "name": project.project_name,
+            "description": project.description,
+            "vendorUID": project.vendor_uid,
+            "totalNumImages": project.total_num_images,
+            "pricePerImage": project.price_per_image,
+            "deadline": project.deadline,
+        }
+        for project in projects
+    ]
+
+    return jsonify(projects=projects_list), 200
+
+
 @project_bp.route("/projects", methods=["POST"])
 @jwt_required()
 def create_project():

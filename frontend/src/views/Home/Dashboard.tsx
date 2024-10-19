@@ -1,6 +1,5 @@
 import {
   Box,
-  Divider,
   Tab,
   TabList,
   TabPanel,
@@ -28,6 +27,16 @@ export default function HomePage() {
     []
   )
 
+  const parseProjectInfo = (projectListRaw: Project[]): Project[] => {
+    const projectList: Project[] = []
+
+    projectListRaw.forEach((projectRaw: Project) => {
+      projectList.push(projectRaw as Project)
+    })
+
+    return projectList
+  }
+
   const getVendorProjects = async () => {
     const token = sessionStorage.getItem('jwt')
     try {
@@ -37,21 +46,44 @@ export default function HomePage() {
         },
         withCredentials: true,
       })
-      const projectList: Project[] = []
-
-      const projectListRaw = response.data.projects
-
-      projectListRaw.forEach((projectRaw: Project) => {
-        projectList.push(projectRaw as Project)
-      })
+      const projectList: Project[] = parseProjectInfo(response.data.projects)
       setMyProjectsCards(projectList)
     } catch (error) {
       console.error('Error fetching vendor projects:', error)
+      if (error.response.status === 401) {
+        navigate('/auth')
+        return
+      }
+    }
+  }
+
+  const getProjectsByRole = async (role: String) => {
+    const token = sessionStorage.getItem('jwt')
+    try {
+      const response = await axios.get(`${BACKEND_URL}/projects/role`, {
+        params: {
+          role: role,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      })
+      const projectList: Project[] = parseProjectInfo(response.data.projects)
+      if (role === 'labeler') {
+        setLabelProjectsCards(projectList)
+      } else if (role === 'reviewer') {
+        setReviewProjectsCards(projectList)
+      }
+    } catch (error) {
+      console.error(`Error fetching ${role} projects:`, error)
     }
   }
 
   useEffect(() => {
     getVendorProjects()
+    getProjectsByRole('labeler')
+    getProjectsByRole('reviewer')
   }, [])
 
   return (

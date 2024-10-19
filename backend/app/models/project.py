@@ -73,3 +73,19 @@ class Project:
             user_id=user_id,
         )
         return [Project(*row) for row in rows] if rows else []
+
+    @staticmethod
+    def get_projects_by_role(user_id, role):
+        rows = app.db.execute(
+            """
+            SELECT *
+            FROM Projects p
+            JOIN Roles r
+            ON p.project_id = r.project_id
+            WHERE r.user_id = :user_id
+            AND r.role_name = :role
+            """,
+            user_id=user_id,
+            role=role,
+        )
+        return [Project(*row) for row in rows] if rows else []

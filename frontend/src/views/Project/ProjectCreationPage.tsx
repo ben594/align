@@ -26,13 +26,13 @@ import { BACKEND_URL } from '../../constants'
 import Header from '../../components/Header'
 
 export interface Project {
-  name: string;
-  description: string;
-  deadline: string | null;
-  id: number;
-  vendorUID: number;
-  pricePerImage: number;
-  totalNumImages: number;
+  name: string
+  description: string
+  deadline: string | null
+  id: number
+  vendorUID: number
+  pricePerImage: number
+  totalNumImages: number
 }
 
 export default function ProjectCreationPage() {
@@ -50,7 +50,7 @@ export default function ProjectCreationPage() {
   }
 
   const submitProject = async () => {
-    if (projectName === '' || description === '' || deadline === '') {
+    if (projectName === '' || description === '') {
       toast({
         title: 'Error',
         description: 'Please fill out all required fields.',

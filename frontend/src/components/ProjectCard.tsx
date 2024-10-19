@@ -26,7 +26,7 @@ export default function ProjectCard({
           <Heading size="xl" textAlign="left">
             {name}
           </Heading>
-          <Text textAlign="left" overflow="hidden" textOverflow="ellipsis">
+          <Text textAlign="left" overflow="hidden" textOverflow="ellipsis" height="100px">
             {description}
           </Text>
         </Stack>
