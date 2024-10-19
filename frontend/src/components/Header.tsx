@@ -1,43 +1,73 @@
+import { ArrowForwardIcon, HamburgerIcon } from '@chakra-ui/icons'
 import {
   Avatar,
   Box,
   Flex,
   Heading,
   IconButton,
-} from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+} from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
 
 export default function Header() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const goToLanding = () => {
-    navigate("/");
-  };
+    navigate('/')
+  }
 
   const goToProfile = () => {
-    navigate("/profile");
-  };
+    navigate('/profile')
+  }
+
+  const logout = () => {
+    sessionStorage.removeItem('jwt')
+    navigate('/auth')
+  }
 
   return (
-    <Box width="100%" position="sticky" height="70px" backgroundColor="white" zIndex={1} top="0px">
+    <Box
+      width="100%"
+      position="sticky"
+      height="70px"
+      backgroundColor="white"
+      zIndex={10}
+      top="0px"
+    >
       <Flex padding="15px" justify="space-between">
-        <Heading marginLeft="40px" size="lg" cursor="pointer" onClick={goToLanding}>
+        <Heading
+          marginLeft="40px"
+          size="lg"
+          cursor="pointer"
+          onClick={goToLanding}
+        >
           align
         </Heading>
         <Flex align="center" paddingRight="10px">
-          <IconButton
-            aria-label="Profile"
-            icon={
-              <Avatar
-                size="sm"
-              />
-            }
-            variant="outline"
-            size="lg"
-            onClick={goToProfile}
-          />
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Options"
+              icon={<HamburgerIcon />}
+              variant="outline"
+            />
+            <MenuList>
+              <MenuItem icon={<Avatar boxSize="25px" />} onClick={goToProfile}>
+                Profile
+              </MenuItem>
+              <MenuItem
+                icon={<ArrowForwardIcon boxSize="24px" />}
+                onClick={logout}
+              >
+                Logout
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </Flex>
       </Flex>
     </Box>
-  );
+  )
 }

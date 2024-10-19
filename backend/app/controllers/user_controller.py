@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, redirect, url_for, request, make_response
 from flask_login import logout_user
-from flask_jwt_extended import create_access_token, get_jwt_identity, set_access_cookies
+from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies
 
 from ..models.user import User
 
@@ -35,10 +35,11 @@ def register():
     return jsonify(access_token=access_token), 200
 
 
-@bp.route("/logout")
+@bp.route("/logout", methods=["POST"])
+@jwt_required()
 def logout():
     logout_user()
-    return redirect(url_for("index.index"))
+    return jsonify({"message": "User logged out successfully"}), 200
 
 
 @bp.route("/stats", methods=["GET"])
