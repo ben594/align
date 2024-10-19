@@ -72,8 +72,29 @@ class Project:
             """,
             user_id=user_id,
         )
-        return [Project(*row) for row in rows] if rows else []
+        return [Project(*row) for row in rows] if rows else []    
 
+    @staticmethod
+    def get_all_image_urls(project_id):
+        print("in model")
+        image_urls = app.db.execute(
+            """
+            SELECT * 
+            FROM Images
+            """,
+            # note to self is it an issue that i'm selecting from images but in project controller
+            # """
+            # SELECT image_url
+            # FROM Images
+            # WHERE project_id = :project_id
+            # """,
+            # project_id=project_id,
+        )
+        print(project_id)
+        print("image urls incoming")
+        print(image_urls)
+        return [url[0] for url in image_urls] if image_urls else []
+ 
     @staticmethod
     def get_projects_by_role(user_id, role):
         rows = app.db.execute(

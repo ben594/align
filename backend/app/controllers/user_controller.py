@@ -42,13 +42,14 @@ def logout():
     return jsonify({"message": "User logged out successfully"}), 200
 
 
+# TODO @Jamie: update function & route to take in id & authentication
 @bp.route("/stats", methods=["GET"])
 def get_user_stats():
     uid = request.args.get("uid")
     num_accepted_labels = User.get_accepted_label_count(uid)
     return jsonify(num_accepted_labels), 200
 
-
+# TODO @Jamie: update function & route to take in id & authentication
 @bp.route("/username", methods=["GET"])
 def get_user_name():
     uid = request.args.get("uid")

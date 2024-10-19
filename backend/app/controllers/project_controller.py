@@ -3,6 +3,8 @@ from app.models.role import Role
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from ..models.project import Project
+from ..models.image import Image
 
 project_bp = Blueprint("projects", __name__)
 
@@ -87,3 +89,10 @@ def create_project():
     if project_id:
         return jsonify({"message": "Project created", "project_id": project_id}), 201
     return jsonify({"error": "Failed to create project"}), 500
+
+@project_bp.route("/project/<int:project_id>/images", methods=["GET"])
+def get_all_project_images_url(project_id):
+    print("in controller")
+    project_image_urls = Image.get_all_image_urls(project_id)
+    return jsonify(project_image_urls), 200
+    
