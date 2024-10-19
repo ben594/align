@@ -66,35 +66,31 @@ export default function HomePage() {
       overflowY="auto"
     >
       <Header />
-      <Box width="100%" paddingTop="70px">
-        <Tabs align="center" width="100%" variant="soft-rounded">
-          <TabList
-            width="100%"
-            position="fixed"
-            backgroundColor="white"
-            zIndex={1}
-            justifyContent="flex-start"
-            paddingLeft="30px"
-            paddingTop="5px"
-            paddingBottom="5px"
-          >
-            <Tab margin="10px" fontSize="sm">
-              My Projects
-            </Tab>
-            <Tab margin="10px" fontSize="sm">
-              Explore
-            </Tab>
-          </TabList>
-          <TabPanels paddingTop="20px">
-            <TabPanel>
-              <CardList infoList={myProjectsCards} includeAddCard={true} />
-            </TabPanel>
-            <TabPanel>
-              <CardList infoList={exploreProjectsCards} />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
+      <Tabs align="center" width="100%" variant="soft-rounded">
+        <TabList
+          position="sticky"
+          top="70px"
+          zIndex="2"
+          backgroundColor="white"
+          justifyContent="flex-start"
+          paddingLeft="30px"
+        >
+          <Tab margin="10px" fontSize="sm">
+            My Projects
+          </Tab>
+          <Tab margin="10px" fontSize="sm">
+            Explore
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <CardList infoList={myProjectsCards} includeAddCard={true} />
+          </TabPanel>
+          <TabPanel>
+            <CardList infoList={exploreProjectsCards} />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Box>
   )
 }

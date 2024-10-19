@@ -123,7 +123,7 @@ export default function ProjectCreationPage() {
       overflowY="auto"
     >
       <Header />
-      <Box paddingTop="70px">
+      <Box>
         <Heading alignSelf="flex-start" paddingLeft="40px" paddingTop="20px">
           Create a New Project
         </Heading>

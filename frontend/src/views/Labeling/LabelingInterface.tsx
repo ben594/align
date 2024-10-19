@@ -12,8 +12,9 @@ export default function LabelingInterface() {
       width="100vw"
       height="100vh"
       display="flex"
-      justifyContent="center"
+      justifyContent="flex-start"
       alignItems="center"
+      flexDirection="column"
     >
       <Header />
       <ImageScroller

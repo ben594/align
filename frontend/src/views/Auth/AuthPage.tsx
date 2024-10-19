@@ -134,7 +134,8 @@ export default function AuthPage() {
       width="100vw"
       height="100vh"
       display="flex"
-      justifyContent="center"
+      flexDirection="column"
+      justifyContent="flex-start"
       alignItems="center"
     >
       <Header />

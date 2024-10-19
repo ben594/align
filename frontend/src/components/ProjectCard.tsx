@@ -6,11 +6,13 @@ import {
   CardFooter,
   Heading,
   Stack,
+  Tag,
   Text,
 } from '@chakra-ui/react'
 import { Project } from '../views/Project/ProjectCreationPage'
 
 export default function ProjectCard({
+  role,
   name,
   description,
   deadline,
@@ -26,9 +28,15 @@ export default function ProjectCard({
           <Heading size="xl" textAlign="left">
             {name}
           </Heading>
-          <Text textAlign="left" overflow="hidden" textOverflow="ellipsis" height="100px">
+          <Text
+            textAlign="left"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            height="100px"
+          >
             {description}
           </Text>
+          <Tag width="fit-content">{role}</Tag>
         </Stack>
       </CardBody>
       <CardFooter>
