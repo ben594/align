@@ -112,6 +112,8 @@ export default function AuthPage() {
       })
 
       if (response.status === 201 || response.status === 200) {
+        const token = response.data.access_token
+        sessionStorage.setItem('jwt', token)
         navigate('/dashboard')
       } else {
         throw new Error('Failed to create account.')
