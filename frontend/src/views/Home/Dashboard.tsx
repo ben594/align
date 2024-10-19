@@ -34,7 +34,7 @@ export default function HomePage() {
   const [exploreProjectsCards, setExploreProjectsCards] = useState(testCardInfo)
 
   const getVendorProjects = async () => {
-    const token = localStorage.getItem('jwt')
+    const token = sessionStorage.getItem('jwt')
     try {
       const response = await axios.get(`${BACKEND_URL}/projects/vendor`, {
         headers: {
@@ -45,15 +45,10 @@ export default function HomePage() {
       console.log(response.data)
     } catch (error) {
       console.error('Error fetching vendor projects:', error)
-      if (error.response && error.response.status === 401) {
-        navigate('/auth')
-      }
     }
   }
 
   useEffect(() => {
-    axios.defaults.baseURL = BACKEND_URL
-    axios.defaults.withCredentials = true
     getVendorProjects()
   }, [])
 

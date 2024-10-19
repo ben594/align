@@ -17,7 +17,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import axios from 'axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../components/Header'
 import { BACKEND_URL } from '../../constants'
@@ -32,6 +32,13 @@ export default function AuthPage() {
 
   const navigate = useNavigate()
   const toast = useToast()
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwt')
+    if (token) {
+      navigate('/dashboard')
+    }
+  }, [])
 
   const submitLogin = async () => {
     if (email == '' || password == '') {
