@@ -90,7 +90,6 @@ export default function HomePage() {
               Explore
             </Tab>
           </TabList>
-          <Divider position="fixed" zIndex={1} />
           <TabPanels paddingTop="20px">
             <TabPanel>
               <CardList infoList={myProjectsCards} includeAddCard={true} />
