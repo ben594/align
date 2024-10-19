@@ -41,7 +41,7 @@ class Project:
         total_num_images,
         deadline,
     ):
-        inserted_row = app.db.execute(
+        project_id = app.db.execute(
             """
             INSERT INTO Projects (vendor_uid,
             project_name,
@@ -50,6 +50,7 @@ class Project:
             total_num_images,
             deadline)
             VALUES (:vendor_uid, :project_name, :description, :price_per_image, :total_num_images, :deadline)
+            RETURNING project_id
             """,
             vendor_uid=vendor_uid,
             project_name=project_name,
@@ -58,7 +59,8 @@ class Project:
             total_num_images=total_num_images,
             deadline=deadline,
         )
-        return inserted_row[0] if inserted_row else None
+
+        return project_id[0][0] if project_id else None
 
     @staticmethod
     def get_vendor_projects(user_id):

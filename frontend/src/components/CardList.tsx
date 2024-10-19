@@ -1,10 +1,11 @@
-import ProjectCard, { ProjectCardInfo } from './ProjectCard'
+import ProjectCard from './ProjectCard'
 
 import AddCard from './AddCard'
 import { SimpleGrid } from '@chakra-ui/react'
+import { Project } from '../views/Project/ProjectCreationPage'
 
 type CardInfoList = {
-  infoList: ProjectCardInfo[]
+  infoList: Project[]
   includeAddCard?: boolean
 }
 

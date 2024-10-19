@@ -15,23 +15,18 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { BACKEND_URL } from '../../constants'
 import { useNavigate } from 'react-router-dom'
-
-const testCardInfo = [
-  { name: 'abc', description: 'This is a sample project.', deadline: null },
-  { name: 'abc2', description: 'This is a sample project', deadline: null },
-  { name: 'abc2', description: 'This is a sample project', deadline: null },
-  { name: 'abc2', description: 'This is a sample project', deadline: null },
-  { name: 'abc2', description: 'This is a sample project', deadline: null },
-]
+import { Project } from '../Project/ProjectCreationPage'
 
 export default function HomePage() {
   const toast = useToast()
   const navigate = useNavigate()
 
-  const [myProjectsCards, setMyProjectsCards] = useState([])
-  const [labelProjectsCards, setLabelProjectsCards] = useState(testCardInfo)
-  const [reviewProjectsCards, setReviewProjectsCards] = useState(testCardInfo)
-  const [exploreProjectsCards, setExploreProjectsCards] = useState(testCardInfo)
+  const [myProjectsCards, setMyProjectsCards] = useState<Project[]>([])
+  const [labelProjectsCards, setLabelProjectsCards] = useState<Project[]>([])
+  const [reviewProjectsCards, setReviewProjectsCards] = useState<Project[]>([])
+  const [exploreProjectsCards, setExploreProjectsCards] = useState<Project[]>(
+    []
+  )
 
   const getVendorProjects = async () => {
     const token = sessionStorage.getItem('jwt')
@@ -42,7 +37,14 @@ export default function HomePage() {
         },
         withCredentials: true,
       })
-      console.log(response.data)
+      const projectList: Project[] = []
+
+      const projectListRaw = response.data.projects
+
+      projectListRaw.forEach((projectRaw: Project) => {
+        projectList.push(projectRaw as Project)
+      })
+      setMyProjectsCards(projectList)
     } catch (error) {
       console.error('Error fetching vendor projects:', error)
     }

@@ -25,11 +25,22 @@ import { useNavigate } from 'react-router-dom'
 import { BACKEND_URL } from '../../constants'
 import Header from '../../components/Header'
 
+export interface Project {
+  name: string;
+  description: string;
+  deadline: string | null;
+  id: number;
+  vendorUID: number;
+  pricePerImage: number;
+  totalNumImages: number;
+}
+
 export default function ProjectCreationPage() {
   const [projectName, setProjectName] = useState('')
   const [description, setDescription] = useState('')
   const [deadline, setDeadline] = useState('')
   const [uploadedFiles, setUploadedFiles] = useState([])
+  const [pricePerImage, setPricePerImage] = useState(0)
 
   const navigate = useNavigate()
   const toast = useToast()
@@ -66,20 +77,17 @@ export default function ProjectCreationPage() {
       formData.append('projectName', projectName)
       formData.append('description', description)
       formData.append('deadline', deadline)
+      formData.append('totalNumImages', uploadedFiles.length.toString())
+      formData.append('pricePerImage', pricePerImage.toString())
 
-      uploadedFiles.forEach(file => {
-        formData.append('images', file)
+      const token = sessionStorage.getItem('jwt')
+
+      const response = await axios.post(`${BACKEND_URL}/projects`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
       })
-
-      const response = await axios.post(
-        `${BACKEND_URL}/create-project`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      )
 
       if (response.status === 201 || response.status === 200) {
         toast({
@@ -108,59 +116,86 @@ export default function ProjectCreationPage() {
       width="100vw"
       height="100vh"
       display="flex"
-      justifyContent="center"
-      alignItems="center"
+      flexDirection="column"
+      justifyContent="flex-start"
+      alignItems="flex-start"
+      overflowY="auto"
     >
       <Header />
-      <Tabs variant="soft-rounded" align="start">
-        <Heading>Create a New Project</Heading>
-        <TabPanels>
-          <TabPanel>
-            <Card>
-              <CardBody>
-                <VStack width="500px" height="500px">
-                  <FormControl margin="8px">
-                    <FormLabel>Project Name</FormLabel>
-                    <Input
-                      type="text"
-                      placeholder="Project Name"
-                      value={projectName}
-                      onChange={e => setProjectName(e.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl margin="8px">
-                    <FormLabel>Description</FormLabel>
-                    <Textarea
-                      placeholder="Describe your project"
-                      value={description}
-                      onChange={e => setDescription(e.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl margin="8px">
-                    <FormLabel>Deadline</FormLabel>
-                    <Input
-                      type="date"
-                      value={deadline}
-                      onChange={e => setDeadline(e.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl margin="10px">
-                    <FormLabel>Upload Images</FormLabel>
-                    <Input type="file" multiple onChange={handleFileUpload} />
-                  </FormControl>
-                  <Button
-                    colorScheme="blue"
-                    width="150px"
-                    onClick={submitProject}
-                  >
-                    Create Project
-                  </Button>
-                </VStack>
-              </CardBody>
-            </Card>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+      <Box paddingTop="70px">
+        <Heading alignSelf="flex-start" paddingLeft="40px" paddingTop="20px">
+          Create a New Project
+        </Heading>
+      </Box>
+      <VStack
+        spacing={5}
+        width="100%"
+        maxWidth="800px"
+        alignItems="flex-start"
+        padding="40px"
+      >
+        <Card width="100%">
+          <CardBody>
+            <FormControl isRequired>
+              <FormLabel>Project Name</FormLabel>
+              <Input
+                type="text"
+                placeholder="Project Name"
+                value={projectName}
+                onChange={e => setProjectName(e.target.value)}
+              />
+            </FormControl>
+          </CardBody>
+          <CardBody>
+            <FormControl isRequired>
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                placeholder="Describe your project"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
+            </FormControl>
+          </CardBody>
+        </Card>
+
+        <Card width="100%">
+          <CardBody>
+            <FormControl isRequired>
+              <FormLabel>Price per Image (USD)</FormLabel>
+              <Input
+                type="number"
+                value={pricePerImage}
+                onChange={e => setPricePerImage(e.target.value)}
+              />
+            </FormControl>
+          </CardBody>
+          <CardBody>
+            <FormControl>
+              <FormLabel>Deadline</FormLabel>
+              <Input
+                type="date"
+                value={deadline}
+                onChange={e => setDeadline(e.target.value)}
+              />
+            </FormControl>
+          </CardBody>
+        </Card>
+
+        <Card width="100%">
+          <CardBody>
+            <FormControl isRequired>
+              <FormLabel>Upload Images</FormLabel>
+              <Input type="file" multiple onChange={handleFileUpload} />
+            </FormControl>
+          </CardBody>
+        </Card>
+
+        <Box>
+          <Button colorScheme="blue" width="150px" onClick={submitProject}>
+            Create Project
+          </Button>
+        </Box>
+      </VStack>
     </Box>
   )
 }

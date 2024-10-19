@@ -7,19 +7,18 @@ import {
   Heading,
   Stack,
   Text,
-} from "@chakra-ui/react";
-
-export type ProjectCardInfo = {
-  name: string;
-  description: string;
-  deadline: string | null;
-};
+} from '@chakra-ui/react'
+import { Project } from '../views/Project/ProjectCreationPage'
 
 export default function ProjectCard({
   name,
   description,
   deadline,
-}: ProjectCardInfo) {
+  id,
+  vendorUID,
+  pricePerImage,
+  totalNumImages,
+}: Project) {
   return (
     <Card height="300px">
       <CardBody>
@@ -40,5 +39,5 @@ export default function ProjectCard({
         </ButtonGroup>
       </CardFooter>
     </Card>
-  );
+  )
 }

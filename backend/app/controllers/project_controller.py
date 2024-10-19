@@ -1,6 +1,6 @@
 from app.models.project import Project
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 project_bp = Blueprint("projects", __name__)
@@ -12,7 +12,11 @@ def get_project(id):
     if project:
         return (
             jsonify(
-                {"id": project.id, "name": project.name, "deadline": project.deadline}
+                {
+                    "id": project.project_id,
+                    "name": project.project_name,
+                    "deadline": project.deadline,
+                }
             ),
             200,
         )
@@ -27,9 +31,13 @@ def get_vendor_projects():
 
     projects_list = [
         {
-            "project_id": project.project_id,
-            "name": project.name,
+            "id": project.project_id,
+            "name": project.project_name,
             "description": project.description,
+            "vendorUID": project.vendor_uid,
+            "totalNumImages": project.total_num_images,
+            "pricePerImage": project.price_per_image,
+            "deadline": project.deadline,
         }
         for project in vendor_projects
     ]
@@ -40,13 +48,12 @@ def get_vendor_projects():
 @project_bp.route("/projects", methods=["POST"])
 @jwt_required()
 def create_project():
-    data = request.get_json()
     vendor_uid = get_jwt_identity()
-    project_name = data.get("projectName")
-    description = data.get("description")
-    price_per_image = data.get("pricePerImage")
-    total_num_images = data.get("totalNumImages")
-    deadline = data.get("deadline")
+    project_name = request.form.get("projectName")
+    description = request.form.get("description")
+    price_per_image = request.form.get("pricePerImage")
+    total_num_images = request.form.get("totalNumImages")
+    deadline = request.form.get("deadline")
 
     if (
         not vendor_uid
@@ -57,7 +64,7 @@ def create_project():
     ):
         return jsonify({"error": "Invalid project parameters"}), 400
 
-    new_project = Project.create(
+    project_id = Project.create(
         vendor_uid,
         project_name,
         description,
@@ -66,6 +73,6 @@ def create_project():
         deadline,
     )
 
-    if new_project:
-        return jsonify({"message": "Project created", "project": new_project}), 201
+    if project_id:
+        return jsonify({"message": "Project created", "project_id": project_id}), 201
     return jsonify({"error": "Failed to create project"}), 500
