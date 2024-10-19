@@ -9,7 +9,7 @@ class Role:
 
     @staticmethod
     def create(user_id, project_id, role_name):
-        inserted_row = app.db.execute(
+        app.db.execute(
             """
             INSERT INTO Roles (user_id, project_id, role_name)
             VALUES (:user_id, :project_id, :role_name)
@@ -18,7 +18,7 @@ class Role:
             project_id=project_id,
             role_name=role_name,
         )
-        return inserted_row[0] if inserted_row else None
+        return
 
     @staticmethod
     def get(user_id, project_id):

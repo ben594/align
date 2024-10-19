@@ -26,6 +26,7 @@ import { BACKEND_URL } from '../../constants'
 import Header from '../../components/Header'
 
 export interface Project {
+  role: string
   name: string
   description: string
   deadline: string | null

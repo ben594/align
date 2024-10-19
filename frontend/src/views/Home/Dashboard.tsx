@@ -21,8 +21,6 @@ export default function HomePage() {
   const navigate = useNavigate()
 
   const [myProjectsCards, setMyProjectsCards] = useState<Project[]>([])
-  const [labelProjectsCards, setLabelProjectsCards] = useState<Project[]>([])
-  const [reviewProjectsCards, setReviewProjectsCards] = useState<Project[]>([])
   const [exploreProjectsCards, setExploreProjectsCards] = useState<Project[]>(
     []
   )
@@ -37,10 +35,10 @@ export default function HomePage() {
     return projectList
   }
 
-  const getVendorProjects = async () => {
+  const getProjects = async () => {
     const token = sessionStorage.getItem('jwt')
     try {
-      const response = await axios.get(`${BACKEND_URL}/projects/vendor`, {
+      const response = await axios.get(`${BACKEND_URL}/projects`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -49,41 +47,12 @@ export default function HomePage() {
       const projectList: Project[] = parseProjectInfo(response.data.projects)
       setMyProjectsCards(projectList)
     } catch (error) {
-      console.error('Error fetching vendor projects:', error)
-      if (error.response.status === 401) {
-        navigate('/auth')
-        return
-      }
-    }
-  }
-
-  const getProjectsByRole = async (role: String) => {
-    const token = sessionStorage.getItem('jwt')
-    try {
-      const response = await axios.get(`${BACKEND_URL}/projects/role`, {
-        params: {
-          role: role,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      })
-      const projectList: Project[] = parseProjectInfo(response.data.projects)
-      if (role === 'labeler') {
-        setLabelProjectsCards(projectList)
-      } else if (role === 'reviewer') {
-        setReviewProjectsCards(projectList)
-      }
-    } catch (error) {
-      console.error(`Error fetching ${role} projects:`, error)
+      console.error(`Error fetching projects:`, error)
     }
   }
 
   useEffect(() => {
-    getVendorProjects()
-    getProjectsByRole('labeler')
-    getProjectsByRole('reviewer')
+    getProjects()
   }, [])
 
   return (
@@ -113,24 +82,12 @@ export default function HomePage() {
               My Projects
             </Tab>
             <Tab margin="10px" fontSize="sm">
-              My Labels
-            </Tab>
-            <Tab margin="10px" fontSize="sm">
-              My Reviews
-            </Tab>
-            <Tab margin="10px" fontSize="sm">
               Explore
             </Tab>
           </TabList>
           <TabPanels paddingTop="20px">
             <TabPanel>
               <CardList infoList={myProjectsCards} includeAddCard={true} />
-            </TabPanel>
-            <TabPanel>
-              <CardList infoList={labelProjectsCards} />
-            </TabPanel>
-            <TabPanel>
-              <CardList infoList={reviewProjectsCards} />
             </TabPanel>
             <TabPanel>
               <CardList infoList={exploreProjectsCards} />

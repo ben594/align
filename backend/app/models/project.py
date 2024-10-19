@@ -78,7 +78,13 @@ class Project:
     def get_projects_by_role(user_id, role):
         rows = app.db.execute(
             """
-            SELECT *
+            SELECT p.vendor_uid,
+            p.project_id,
+            p.project_name,
+            p.description,
+            p.price_per_image,
+            p.total_num_images,
+            p.deadline
             FROM Projects p
             JOIN Roles r
             ON p.project_id = r.project_id

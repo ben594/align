@@ -1,4 +1,5 @@
 from app.models.project import Project
+from app.models.role import Role
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -23,37 +24,22 @@ def get_project(id):
     return jsonify({"error": "Project not found"}), 404
 
 
-@project_bp.route("/projects/vendor", methods=["GET"])
-@jwt_required()
-def get_vendor_projects():
-    user_id = get_jwt_identity()
-    vendor_projects = Project.get_vendor_projects(user_id)
-
-    projects_list = [
-        {
-            "id": project.project_id,
-            "name": project.project_name,
-            "description": project.description,
-            "vendorUID": project.vendor_uid,
-            "totalNumImages": project.total_num_images,
-            "pricePerImage": project.price_per_image,
-            "deadline": project.deadline,
-        }
-        for project in vendor_projects
-    ]
-
-    return jsonify(projects=projects_list), 200
-
-
-@project_bp.route("/projects/role", methods=["GET"])
+@project_bp.route("/projects", methods=["GET"])
 @jwt_required()
 def get_projects_by_role():
     user_id = get_jwt_identity()
     role = request.args.get("role")
-    projects = Project.get_projects_by_role(user_id, role)
+
+    if role:
+        projects = Project.get_projects_by_role(user_id, role)
+    else:
+        projects = []
+        for role in ["labeler", "reviewer", "owner"]:
+            projects.extend(Project.get_projects_by_role(user_id, role))
 
     projects_list = [
         {
+            "role": role,
             "id": project.project_id,
             "name": project.project_name,
             "description": project.description,
@@ -95,6 +81,8 @@ def create_project():
         total_num_images,
         deadline,
     )
+
+    role = Role.create(vendor_uid, project_id, "owner")
 
     if project_id:
         return jsonify({"message": "Project created", "project_id": project_id}), 201

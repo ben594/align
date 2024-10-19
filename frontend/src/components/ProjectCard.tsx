@@ -34,7 +34,7 @@ export default function ProjectCard({
       <CardFooter>
         <ButtonGroup spacing="2">
           <Button variant="solid" colorScheme="blue">
-            Join Project
+            View Info
           </Button>
         </ButtonGroup>
       </CardFooter>
