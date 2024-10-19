@@ -57,7 +57,7 @@ class User(UserMixin):
                 lastname=lastname,
             )
             id = rows[0][0]
-            return User.get(id)
+            return id
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:

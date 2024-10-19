@@ -14,6 +14,7 @@ import Header from '../../components/Header'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { BACKEND_URL } from '../../constants'
+import { useNavigate } from 'react-router-dom'
 
 const testCardInfo = [
   { name: 'abc', description: 'This is a sample project.', deadline: null },
@@ -25,6 +26,7 @@ const testCardInfo = [
 
 export default function HomePage() {
   const toast = useToast()
+  const navigate = useNavigate()
 
   const [myProjectsCards, setMyProjectsCards] = useState([])
   const [labelProjectsCards, setLabelProjectsCards] = useState(testCardInfo)
@@ -32,24 +34,26 @@ export default function HomePage() {
   const [exploreProjectsCards, setExploreProjectsCards] = useState(testCardInfo)
 
   const getVendorProjects = async () => {
+    const token = localStorage.getItem('jwt')
     try {
       const response = await axios.get(`${BACKEND_URL}/projects/vendor`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         withCredentials: true,
       })
-      setMyProjectsCards(response.data.projects)
-    } catch (err: any) {
-      toast({
-        title: 'Error',
-        description: 'Unable to get vendor projects.',
-        status: 'error',
-        duration: 2000,
-        isClosable: true,
-      })
-      return
+      console.log(response.data)
+    } catch (error) {
+      console.error('Error fetching vendor projects:', error)
+      if (error.response && error.response.status === 401) {
+        navigate('/auth')
+      }
     }
   }
 
   useEffect(() => {
+    axios.defaults.baseURL = BACKEND_URL
+    axios.defaults.withCredentials = true
     getVendorProjects()
   }, [])
 
