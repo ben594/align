@@ -34,7 +34,6 @@ class Image:
             project_id=project_id,
         )
         return inserted_row[0] if inserted_row else None
-<<<<<<< HEAD
 
     @staticmethod
     def get_by_project(project_id):
@@ -49,7 +48,6 @@ class Image:
 
         # TODO return list
         return Image(*(rows[0])) if rows else None
-=======
     
     @staticmethod
     def get_top_labelers():
@@ -101,4 +99,3 @@ class Image:
             # Process the rows and return them as a list of dictionaries
             return [{"name": row[0], "unique_contributers": row[1], "progress": row[2]} for row in projects]
         else: return none
->>>>>>> 5221faf2d23536a54caf7f3b7e773102d515685b

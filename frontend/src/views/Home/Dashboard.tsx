@@ -6,26 +6,56 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-} from "@chakra-ui/react";
+  useToast,
+} from '@chakra-ui/react'
 
 import CardList from '../../components/CardList'
-import Header from "../../components/Header";
-import { useState } from 'react'
+import Header from '../../components/Header'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import { BACKEND_URL } from '../../constants'
+import { useNavigate } from 'react-router-dom'
 
 const testCardInfo = [
-  { name: "abc", description: "This is a sample project.", deadline: null },
-  { name: "abc2", description: "This is a sample project", deadline: null },
-  { name: "abc2", description: "This is a sample project", deadline: null },
-  { name: "abc2", description: "This is a sample project", deadline: null },
-  { name: "abc2", description: "This is a sample project", deadline: null },
-];
+  { name: 'abc', description: 'This is a sample project.', deadline: null },
+  { name: 'abc2', description: 'This is a sample project', deadline: null },
+  { name: 'abc2', description: 'This is a sample project', deadline: null },
+  { name: 'abc2', description: 'This is a sample project', deadline: null },
+  { name: 'abc2', description: 'This is a sample project', deadline: null },
+]
 
 export default function HomePage() {
-  const [myProjectsCards, setMyProjectsCards] = useState(testCardInfo);
-  const [labelProjectsCards, setLabelProjectsCards] = useState(testCardInfo);
-  const [reviewProjectsCards, setReviewProjectsCards] = useState(testCardInfo);
-  const [exploreProjectsCards, setExploreProjectsCards] =
-    useState(testCardInfo);
+  const toast = useToast()
+  const navigate = useNavigate()
+
+  const [myProjectsCards, setMyProjectsCards] = useState([])
+  const [labelProjectsCards, setLabelProjectsCards] = useState(testCardInfo)
+  const [reviewProjectsCards, setReviewProjectsCards] = useState(testCardInfo)
+  const [exploreProjectsCards, setExploreProjectsCards] = useState(testCardInfo)
+
+  const getVendorProjects = async () => {
+    const token = localStorage.getItem('jwt')
+    try {
+      const response = await axios.get(`${BACKEND_URL}/projects/vendor`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      })
+      console.log(response.data)
+    } catch (error) {
+      console.error('Error fetching vendor projects:', error)
+      if (error.response && error.response.status === 401) {
+        navigate('/auth')
+      }
+    }
+  }
+
+  useEffect(() => {
+    axios.defaults.baseURL = BACKEND_URL
+    axios.defaults.withCredentials = true
+    getVendorProjects()
+  }, [])
 
   return (
     <Box

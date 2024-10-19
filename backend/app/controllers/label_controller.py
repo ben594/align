@@ -1,4 +1,3 @@
-#from backend.app.models.label import Label
 from flask import Blueprint, jsonify, request
 from app.models.label import Label
 
@@ -29,4 +28,4 @@ def create_label():
 
 @label_bp.route("/labels/<int:image_id>", methods=['GET'])
 def get_labels_for_image(image_id):
-    
+    pass

@@ -35,13 +35,13 @@ const router = createBrowserRouter([
     element: <ReviewingInterface />,
   },
   {
-    path: '/project/:createProject',
+    path: '/new-project',
     element: <ProjectCreationPage />,
   },
   {
     path: '/leaderboard',
-    element: <Leaderboard/>
-  }
+    element: <Leaderboard />,
+  },
 ])
 
 function App() {

@@ -1,4 +1,3 @@
-\COPY Users FROM 'Users.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Projects FROM 'Projects.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Payments FROM 'Payments.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Roles FROM 'Roles.csv' WITH DELIMITER ',' NULL '' CSV
