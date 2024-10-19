@@ -41,6 +41,8 @@ export default function HomePage() {
       .catch(error => console.error("Error fetching user's name:", error))
   }, [userId])
 
+  // TODO: get account balance
+
   return (
     <Box
       flexDirection="column"

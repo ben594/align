@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import Header from "../../components/Header";
 import { useState, useEffect } from 'react';
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+import { BACKEND_URL } from '../../constants'
 
 export default function Leaderboard() {
     const [topLabelers, setTopLabelers] = useState<{ name: string; labeled_count: number; accepted_rate: number }[]>([]);

@@ -9,6 +9,7 @@ import ReviewingInterface from './views/Labeling/ReviewingInterface'
 import ProjectCreationPage from './views/Project/ProjectCreationPage.tsx'
 import Leaderboard from './views/Leaderboard/Leaderboard'
 import AuthRoute from './components/AuthRoute.tsx'
+import ProjectDisplayPage from './views/Project/ProjectDisplayPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
     path: '/leaderboard',
     element: <Leaderboard />,
   },
+  {
+    path: '/project/:projectId/images',
+    element: <ProjectDisplayPage />,
+  }
 ])
 
 function App() {
