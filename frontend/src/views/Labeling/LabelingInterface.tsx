@@ -1,5 +1,5 @@
 import { Box, Button, Textarea, useToast } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../../components/Header'
 import FlexRow from '../../components/FlexRow'
@@ -19,11 +19,15 @@ export interface Image {
 
 export default function LabelingInterface() {
   const { projectId } = useParams()
-  const [imageURL, setImageURL] = useState(null)
+  const [imageURL, setImageURL] = useState<string | null>(null)
   const [label, setLabel] = useState('')
 
   const toast = useToast()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    getNextImage()
+  }, [])
 
   const submitLabel = async () => {
     if (label === '') {
@@ -37,8 +41,8 @@ export default function LabelingInterface() {
 
     try {
       const formData = new FormData()
-      formData.append('projectID', projectId??'')
-      formData.append('imageURL', imageURL??'')
+      formData.append('projectID', projectId ?? '')
+      formData.append('imageURL', imageURL ?? '')
       formData.append('label', label)
 
       const token = sessionStorage.getItem('jwt')
@@ -55,6 +59,7 @@ export default function LabelingInterface() {
           title: 'Label submitted successfully!',
           status: 'success',
         })
+        getNextImage()
       } else {
         throw new Error('Failed to submit label.')
       }
@@ -81,6 +86,7 @@ export default function LabelingInterface() {
 
     if (response.status === 201 || response.status === 200) {
       setImageURL(response.data.imageURL)
+      setLabel('')
       return
     } else {
       toast({
