@@ -95,7 +95,6 @@ def create_project():
 
 @project_bp.route("/project/<int:project_id>/images", methods=["GET"])
 def get_all_project_images_url(project_id):
-    print("in controller")
     project_image_urls = Image.get_all_image_urls_per_project(project_id)
     return jsonify(project_image_urls), 200
     
