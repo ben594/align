@@ -65,7 +65,7 @@ class Project:
             """,
             user_id=user_id,
         )
-        return [Project(*row) for row in rows] if rows else []    
+        return [Project(*row) for row in rows] if rows else []
 
     @staticmethod
     def get_all_image_urls(project_id):
@@ -87,7 +87,7 @@ class Project:
         print("image urls incoming")
         print(image_urls)
         return [url[0] for url in image_urls] if image_urls else []
- 
+
     @staticmethod
     def get_projects_by_role(user_id, role):
         rows = app.db.execute(
@@ -97,7 +97,7 @@ class Project:
             p.project_name,
             p.description,
             p.price_per_image,
-            p.total_num_images,
+            p.total_num_images
             FROM Projects p
             JOIN Roles r
             ON p.project_id = r.project_id
