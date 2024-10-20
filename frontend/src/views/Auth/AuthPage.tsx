@@ -2,25 +2,26 @@ import {
   Box,
   Button,
   FormControl,
+  FormErrorMessage,
   FormLabel,
-  Heading,
   HStack,
+  Heading,
   Input,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  useToast,
-  VStack,
-  FormErrorMessage,
   Text,
+  VStack,
+  useToast,
 } from '@chakra-ui/react'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Header from '../../components/Header'
+
 import { BACKEND_URL } from '../../constants'
+import Header from '../../components/Header'
+import { useNavigate } from 'react-router-dom'
 
 export default function AuthPage() {
   const [email, setEmail] = useState('')
@@ -111,20 +112,21 @@ export default function AuthPage() {
         lastname: lastname,
       })
 
-      if (response.status === 201 || response.status === 200) {
-        const token = response.data.access_token
-        sessionStorage.setItem('jwt', token)
-        navigate('/dashboard')
-      } else {
-        throw new Error('Failed to create account.')
-      }
+      const token = response.data.access_token
+      sessionStorage.setItem('jwt', token)
+      navigate('/dashboard')
     } catch (error) {
+      const errorMessage =
+        error instanceof AxiosError && error.response?.data?.error
+          ? error.response.data.error
+          : 'Failed to create account.'
+
       toast({
         title: 'Error',
-        description: 'Failed to create account.',
+        description: errorMessage,
         status: 'error',
-        duration: 2000,
         isClosable: true,
+        duration: 2000,
       })
     } finally {
       setLoading(false)

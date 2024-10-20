@@ -28,7 +28,7 @@ def register():
     firstname = data.get("firstname")
     lastname = data.get("lastname")
     if User.email_exists(email):
-        return jsonify({"error": "Account with email already exists"}), 400
+        return jsonify({"error": "Account with email already exists."}), 400
 
     user_id = User.register(email, password, firstname, lastname)
     access_token = create_access_token(identity=user_id)
