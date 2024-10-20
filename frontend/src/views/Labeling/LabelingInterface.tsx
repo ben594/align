@@ -26,9 +26,45 @@ export default function LabelingInterface() {
   const navigate = useNavigate()
 
   const submitLabel = async () => {
-    setLabel('')
-    getNextImage()
-    return
+    if (label === '') {
+      toast({
+        title: 'Error',
+        description: 'Please fill out all required fields.',
+        status: 'error',
+      })
+      return
+    }
+
+    try {
+      const formData = new FormData()
+      formData.append('projectID', projectId??'')
+      formData.append('imageURL', imageURL??'')
+      formData.append('label', label)
+
+      const token = sessionStorage.getItem('jwt')
+
+      const response = await axios.post(`${BACKEND_URL}/projects`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.status === 201 || response.status === 200) {
+        toast({
+          title: 'Label submitted successfully!',
+          status: 'success',
+        })
+      } else {
+        throw new Error('Failed to submit label.')
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to submit label.',
+        status: 'error',
+      })
+    }
   }
 
   const getNextImage = async () => {
