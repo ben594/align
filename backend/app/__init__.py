@@ -27,10 +27,6 @@ def create_app():
 
     app.register_blueprint(project_bp)
 
-    from .controllers.label_controller import label_bp
-
-    app.register_blueprint(label_bp)
-
     from .controllers.image_controller import image_bp
 
     app.register_blueprint(image_bp)

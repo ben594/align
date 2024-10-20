@@ -32,7 +32,6 @@ export default function HomePage() {
         console.error("Error fetching user's accepted label count:", error)
       )
   }, [userId])
-  console.log(acceptedLabelCount)
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/username?uid=${userId}`)

@@ -123,22 +123,14 @@ class Image:
             return none    
 
     @staticmethod
-    def get_all_image_urls(project_id):
-        print("in model")
+    def get_all_image_urls_per_project(project_id):
         image_urls = app.db.execute(
             """
-            SELECT * 
+            SELECT image_url
             FROM Images
+            WHERE project_id = :project_id
             """,
-            # """
-            # SELECT image_url
-            # FROM Images
-            # WHERE project_id = :project_id
-            # """,
-            # project_id=project_id,
+            project_id=project_id,
         )
-        print(project_id)
-        print("image urls incoming")
-        print(image_urls)
         return [url[0] for url in image_urls] if image_urls else []
  

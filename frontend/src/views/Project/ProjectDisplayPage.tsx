@@ -8,10 +8,11 @@ import Header from '../../components/Header'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { BACKEND_URL } from '../../constants'
-import { useParams } from 'react-router-dom'
 
 export default function ProjectDisplayPage() {
-  const projectID = Number(useParams().projectID);
+  const path = window.location.pathname;
+  const parts = path.split('/');
+  const projectID = parseInt(parts[2], 10);
   if (isNaN(projectID)) {
     console.error("Invalid projectID:", projectID);
   }
@@ -22,9 +23,7 @@ export default function ProjectDisplayPage() {
     useEffect(() => {
       const fetchImages = async () => {
         try {
-          console.log("in frontend")
           const response = await axios.get(`${BACKEND_URL}/project/${projectID}/images`);
-          console.log("fetch request completed")
           setProjectImages(response.data);
         } catch (error) {
           console.error(error);
@@ -35,9 +34,9 @@ export default function ProjectDisplayPage() {
 
     return (
       <SimpleGrid columns={[2, null, 4]} spacing="40px">
-        {projectImages.map((image: any) => (
-          <Box key={image.id}>
-            <Image src={image.image_url} alt={image.label_text} />
+        {projectImages.map((image_url: any, index: number) => (
+          <Box key={index}>
+            <Image src={image_url} w="100%" h="200%"/>
           </Box>
         ))}
       </SimpleGrid>
