@@ -4,10 +4,10 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from ..models.label import Label
 
-bp = Blueprint("label", __name__)
+label_bp = Blueprint("label", __name__)
 
 
-@bp.route("/label", methods=["POST"])
+@label_bp.route("/label", methods=["POST"])
 @jwt_required()
 def submit_label():
     labeler_uid = get_jwt_identity()

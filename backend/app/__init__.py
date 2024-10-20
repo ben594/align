@@ -35,6 +35,10 @@ def create_app():
 
     app.register_blueprint(leaderboard_bp)
 
+    from .controllers.label_controller import label_bp
+
+    app.register_blueprint(label_bp)
+
     app.config["JWT_SECRET_KEY"] = "secret_key"
 
     return app
