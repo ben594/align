@@ -37,13 +37,12 @@ class Image:
     ):
         inserted_row = app.db.execute(
             """
-            INSERT INTO Images (image_url, project_id, labeled_status, accepted_status)
-            VALUES (:image_url, :project_id, FALSE, FALSE)
+            INSERT INTO Images (image_url, project_id, labeled_status, accepted_status, labeler_uid, label_text)
+            VALUES (:image_url, :project_id, FALSE, FALSE, NULL, NULL)
             """,
             image_url=image_url,
             project_id=project_id,
         )
-        return inserted_row[0] if inserted_row else None
 
     @staticmethod
     def get_by_project(project_id):
