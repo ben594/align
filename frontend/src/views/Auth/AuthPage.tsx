@@ -67,7 +67,6 @@ export default function AuthPage() {
         const user_id = response.data.user_id
         sessionStorage.setItem('jwt', token)
         sessionStorage.setItem('user_id', user_id)
-        console.log(user_id)
         navigate('/dashboard')
       } else {
         throw new Error('Failed to login.')
