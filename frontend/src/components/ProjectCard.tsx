@@ -9,13 +9,13 @@ import {
   Tag,
   Text,
 } from '@chakra-ui/react'
+
 import { Project } from '../views/Project/ProjectCreationPage'
 
 export default function ProjectCard({
   role,
   name,
   description,
-  deadline,
   id,
   vendorUID,
   pricePerImage,

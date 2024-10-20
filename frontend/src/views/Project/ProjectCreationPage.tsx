@@ -22,7 +22,6 @@ export interface Project {
   role: string
   name: string
   description: string
-  deadline: string | null
   id: number
   vendorUID: number
   pricePerImage: number
@@ -31,7 +30,6 @@ export interface Project {
 export default function ProjectCreationPage() {
   const [projectName, setProjectName] = useState('')
   const [description, setDescription] = useState('')
-  const [deadline, setDeadline] = useState('')
   const [pricePerImage, setPricePerImage] = useState(0)
 
   const navigate = useNavigate()
@@ -51,7 +49,6 @@ export default function ProjectCreationPage() {
       const formData = new FormData()
       formData.append('projectName', projectName)
       formData.append('description', description)
-      formData.append('deadline', deadline)
       formData.append('pricePerImage', pricePerImage.toString())
 
       const token = sessionStorage.getItem('jwt')
@@ -138,16 +135,6 @@ export default function ProjectCreationPage() {
                 onChange={e =>
                   setPricePerImage(e.target.value as unknown as number)
                 }
-              />
-            </FormControl>
-          </CardBody>
-          <CardBody>
-            <FormControl>
-              <FormLabel>Deadline</FormLabel>
-              <Input
-                type="date"
-                value={deadline}
-                onChange={e => setDeadline(e.target.value)}
               />
             </FormControl>
           </CardBody>
