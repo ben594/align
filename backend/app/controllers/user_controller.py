@@ -32,7 +32,8 @@ def register():
 
     user_id = User.register(email, password, firstname, lastname)
     access_token = create_access_token(identity=user_id, expires_delta=False)
-    return jsonify(access_token=access_token), 200
+    print(user_id)
+    return jsonify(access_token=access_token, user_id=user_id), 200
 
 
 @bp.route("/logout", methods=["POST"])

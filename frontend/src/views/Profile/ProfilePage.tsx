@@ -51,7 +51,7 @@ export default function ProfilePage() {
       alignItems="center"
       justifyContent="flex-start"
     >
-      <Header />
+      <Header user_id = {user_id ?? ""}/>
       <Box
         width="100vw"
         height="100vh"
