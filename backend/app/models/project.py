@@ -41,7 +41,7 @@ class Project:
             project_name,
             description,
             price_per_image)
-            VALUES (:vendor_uid, :project_name, :description, :price_per_image, 0)
+            VALUES (:vendor_uid, :project_name, :description, :price_per_image)
             RETURNING project_id
             """,
             vendor_uid=vendor_uid,
