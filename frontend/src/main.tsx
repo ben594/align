@@ -8,7 +8,7 @@ import { createRoot } from 'react-dom/client'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ChakraProvider
-      toastOptions={{ defaultOptions: { duration: 2000, isClosable: true } }}
+      toastOptions={{ defaultOptions: { duration: 3000, isClosable: true } }}
     >
       <App />
     </ChakraProvider>
