@@ -74,7 +74,6 @@ def create_project():
     project_name = request.form.get("projectName")
     description = request.form.get("description")
     price_per_image = request.form.get("pricePerImage")
-    total_num_images = request.form.get("totalNumImages")
     deadline = request.form.get("deadline")
 
     if (
@@ -82,7 +81,6 @@ def create_project():
         or not project_name
         or not description
         or not price_per_image
-        or not total_num_images
     ):
         return jsonify({"error": "Invalid project parameters"}), 400
 
@@ -91,7 +89,6 @@ def create_project():
         project_name,
         description,
         price_per_image,
-        total_num_images,
         deadline,
     )
 

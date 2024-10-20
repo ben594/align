@@ -38,7 +38,6 @@ class Project:
         project_name,
         description,
         price_per_image,
-        total_num_images,
         deadline,
     ):
         project_id = app.db.execute(
@@ -49,14 +48,13 @@ class Project:
             price_per_image,
             total_num_images,
             deadline)
-            VALUES (:vendor_uid, :project_name, :description, :price_per_image, :total_num_images, :deadline)
+            VALUES (:vendor_uid, :project_name, :description, :price_per_image, 0, :deadline)
             RETURNING project_id
             """,
             vendor_uid=vendor_uid,
             project_name=project_name,
             description=description,
             price_per_image=price_per_image,
-            total_num_images=total_num_images,
             deadline=deadline,
         )
 
