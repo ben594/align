@@ -36,12 +36,14 @@ export default function ProjectDisplayPage() {
       <SimpleGrid columns={[2, null, 4]} spacing="40px">
         {projectImages.map((image_url: any, index: number) => (
           <Box key={index}>
-            <Image src={image_url} w="100%" h="200%"/>
+            <Image src={image_url} w="100%" h="100%" />
           </Box>
         ))}
       </SimpleGrid>
     );
   }
+
+  // TODO @jamie: make the grid look nicer and add onclick images direct to labeling page
 
   return (
     <Box

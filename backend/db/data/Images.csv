@@ -2,7 +2,7 @@
 "https://fastly.picsum.photos/id/1/5000/3333.jpg?hmac=Asv2DU3rA_5D1xSe22xZK47WEAN0wjWeFOhzd13ujW4",0,TRUE,FALSE,0,"Label B"
 "https://fastly.picsum.photos/id/2/5000/3333.jpg?hmac=_KDkqQVttXw_nM-RyJfLImIbafFrqLsuGO5YuHqD-qQ",0,TRUE,FALSE,0,"Label A"
 "https://fastly.picsum.photos/id/3/5000/3333.jpg?hmac=GDjZ2uNWE3V59PkdDaOzTOuV3tPWWxJSf4fNcxu4S2g",0,TRUE,FALSE,0,"Label B"
-"/path/to/image_3.png",0,TRUE,TRUE,0,"Label C"
+"/path/to/image_3.png",1,TRUE,TRUE,0,"Label C"
 "/path/to/image_4.png",1,TRUE,FALSE,1,"Label D"
 "/path/to/image_5.png",1,TRUE,FALSE,1,"Label E"
 "/path/to/image_6.png",2,TRUE,FALSE,2,"Label F"
