@@ -17,7 +17,7 @@ const ClickableOpacity: React.FC<ClickableOpacityProps> = ({
       cursor={isDisabled ? 'not-allowed' : 'default'}
       opacity={isDisabled ? 0.6 : 1}
       _hover={isDisabled ? {} : { opacity: 0.6 }}
-      _active={isDisabled ? {} : { opacity: 0.3 }}
+      _active={isDisabled ? {} : { opacity: 0.4 }}
     >
       {children}
     </Box>
