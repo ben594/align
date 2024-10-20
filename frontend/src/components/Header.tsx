@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Header() {
   const user_id = sessionStorage.getItem('user_id')
-  console.log(user_id)
 
   const navigate = useNavigate()
 
