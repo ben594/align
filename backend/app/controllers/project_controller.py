@@ -95,15 +95,19 @@ def create_project():
 
 @project_bp.route("/project/<int:project_id>/images", methods=["GET"])
 def get_all_project_images_url(project_id):
-    project_image_urls = Image.get_all_image_urls_per_project(project_id)
-    return jsonify(project_image_urls), 200
+    images = Image.get_all_images_per_project(project_id)
+    image_urls = [image.image_url for image in images]
+    return jsonify(image_urls), 200
     
 # Route to upload multiple images to azure blob storage
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])
 @jwt_required()
 def upload_images(project_id):
-    # TODO: ensure that vendor_uid is the owner/admin of the project
-    vendor_uid = get_jwt_identity()
+    # TODO: ensure that user_id is the owner/admin of the project
+    user_id = get_jwt_identity()
+
+    if not Project.is_owner(user_id, project_id):
+        return jsonify({"error": "You are not authorized to upload images to this project"}), 403
 
     files = request.files.getlist("images")
     if not files:

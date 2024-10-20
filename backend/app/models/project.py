@@ -17,6 +17,20 @@ class Project:
         self.price_per_image = price_per_image
 
     @staticmethod
+    def is_owner(user_id, project_id):
+        rows = app.db.execute(
+            """
+            SELECT *
+            FROM Projects
+            WHERE vendor_uid = :user_id
+            AND project_id = :project_id
+            """,
+            user_id=user_id,
+            project_id=project_id,
+        )
+        return True if rows else False
+
+    @staticmethod
     def get(project_id):
         rows = app.db.execute(
             """
