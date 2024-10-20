@@ -7,7 +7,7 @@ image_bp = Blueprint("images", __name__)
 
 
 @image_bp.route("/images/<int:image_id>", methods=["GET"])
-@jwt_required
+@jwt_required()
 def get_image(image_id):
     image = Image.get(image_id)
     if image:
@@ -29,7 +29,7 @@ def get_image(image_id):
 
 
 @image_bp.route("/images/project/<int:project_id>", methods=["GET"])
-@jwt_required
+@jwt_required()
 def get_images_by_project(project_id):
     images = Image.get_all_images_per_project(project_id)
     if images:
@@ -51,6 +51,7 @@ def get_images_by_project(project_id):
 
 
 @image_bp.route("/images/next/<int:project_id>", methods=["GET"])
+@jwt_required()
 def get_next_image(project_id):
     image = Image.get_next_image(project_id)
     if image:
