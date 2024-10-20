@@ -2,28 +2,23 @@ from flask import Blueprint, jsonify, redirect, url_for, request, make_response
 from flask_login import logout_user
 from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies
 
-from ..models.user import User
+from ..models.label import Label
 
 bp = Blueprint("label", __name__)
 
 
-@bp.route("/label/projectId", methods=["POST"])
+@bp.route("/label", methods=["POST"])
 @jwt_required()
 def submit_label():
     labeler_uid = get_jwt_identity()
     projectID = request.form.get("projectID")
     imageURL = request.form.get("imageURL")
     label = request.form.get("label")
-    
-    if (
-        not labeler_uid
-        or not projectID
-        or not imageURL
-        or not label
-    ):
+
+    if not labeler_uid or not projectID or not imageURL or not label:
         return jsonify({"error": "Invalid image label parameters"}), 400
 
-    #connect to models
+    # connect to models
     label_id = Label.create(
         labeler_uid,
         projectID,

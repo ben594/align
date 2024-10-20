@@ -47,7 +47,7 @@ export default function LabelingInterface() {
 
       const token = sessionStorage.getItem('jwt')
 
-      const response = await axios.post(`${BACKEND_URL}/projects`, formData, {
+      const response = await axios.post(`${BACKEND_URL}/label`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
