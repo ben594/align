@@ -18,17 +18,17 @@ def submit_label():
     if (
         not labeler_uid
         or not projectID
-        or not image
+        or not imageURL
         or not label
     ):
         return jsonify({"error": "Invalid image label parameters"}), 400
 
     #connect to models
     label_id = Label.create(
-        vendor_uid,
-        project_name,
-        description,
-        price_per_image,
+        labeler_uid,
+        projectID,
+        imageURL,
+        label,
     )
 
     if label_id:
