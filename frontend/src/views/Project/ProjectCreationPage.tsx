@@ -2,28 +2,21 @@ import {
   Box,
   Button,
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
   FormControl,
   FormLabel,
   Heading,
-  HStack,
   Input,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
   Textarea,
-  useToast,
   VStack,
+  useToast,
 } from '@chakra-ui/react'
-import axios from 'axios'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+
 import { BACKEND_URL } from '../../constants'
 import Header from '../../components/Header'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 export interface Project {
   role: string
@@ -33,22 +26,16 @@ export interface Project {
   id: number
   vendorUID: number
   pricePerImage: number
-  totalNumImages: number
 }
 
 export default function ProjectCreationPage() {
   const [projectName, setProjectName] = useState('')
   const [description, setDescription] = useState('')
   const [deadline, setDeadline] = useState('')
-  const [uploadedFiles, setUploadedFiles] = useState([])
   const [pricePerImage, setPricePerImage] = useState(0)
 
   const navigate = useNavigate()
   const toast = useToast()
-
-  const handleFileUpload = e => {
-    setUploadedFiles(Array.from(e.target.files))
-  }
 
   const submitProject = async () => {
     if (projectName === '' || description === '') {
@@ -62,23 +49,11 @@ export default function ProjectCreationPage() {
       return
     }
 
-    if (!uploadedFiles.length) {
-      toast({
-        title: 'Error',
-        description: 'Please upload at least one image.',
-        status: 'error',
-        duration: 2000,
-        isClosable: true,
-      })
-      return
-    }
-
     try {
       const formData = new FormData()
       formData.append('projectName', projectName)
       formData.append('description', description)
       formData.append('deadline', deadline)
-      formData.append('totalNumImages', uploadedFiles.length.toString())
       formData.append('pricePerImage', pricePerImage.toString())
 
       const token = sessionStorage.getItem('jwt')
@@ -166,7 +141,9 @@ export default function ProjectCreationPage() {
               <Input
                 type="number"
                 value={pricePerImage}
-                onChange={e => setPricePerImage(e.target.value)}
+                onChange={e =>
+                  setPricePerImage(e.target.value as unknown as number)
+                }
               />
             </FormControl>
           </CardBody>
@@ -178,15 +155,6 @@ export default function ProjectCreationPage() {
                 value={deadline}
                 onChange={e => setDeadline(e.target.value)}
               />
-            </FormControl>
-          </CardBody>
-        </Card>
-
-        <Card width="100%">
-          <CardBody>
-            <FormControl isRequired>
-              <FormLabel>Upload Images</FormLabel>
-              <Input type="file" multiple onChange={handleFileUpload} />
             </FormControl>
           </CardBody>
         </Card>
