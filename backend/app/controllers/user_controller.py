@@ -43,16 +43,17 @@ def logout():
 
 
 # TODO @Jamie: update function & route to take in id & authentication
-@bp.route("/stats", methods=["GET"])
-def get_user_stats():
-    uid = request.args.get("uid")
+@bp.route("/<int:user_id>/stats", methods=["GET"])
+@jwt_required()
+def get_user_stats(user_id):
+    uid = request.args.get(user_id)
     num_accepted_labels = User.get_accepted_label_count(uid)
     return jsonify(num_accepted_labels), 200
 
-
 # TODO @Jamie: update function & route to take in id & authentication
-@bp.route("/username", methods=["GET"])
-def get_user_name():
-    uid = request.args.get("uid")
-    user_name = User.get_user_name(uid)
+@bp.route("/<int:user_id>/user_name", methods=["GET"])
+@jwt_required()
+def get_user_name(user_id):
+    uid = request.args.get(user_id)
+    user_name = User.get_user_name(user_id)
     return jsonify(user_name), 200

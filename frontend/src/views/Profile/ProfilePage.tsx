@@ -21,11 +21,13 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 export default function HomePage() {
   const { userId } = useParams()
+  console.log("userID");
+  console.log(userId)
   const [acceptedLabelCount, setAcceptedLabelCount] = useState<0>()
   const [userName, setUserName] = useState<string>('')
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/stats?uid=${userId}`)
+    fetch(`${BACKEND_URL}/${userId}/stats`)
       .then(response => response.json())
       .then(data => setAcceptedLabelCount(data))
       .catch(error =>
@@ -34,7 +36,7 @@ export default function HomePage() {
   }, [userId])
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/username?uid=${userId}`)
+    fetch(`${BACKEND_URL}/${userId}/user_name`)
       .then(response => response.json())
       .then(data => setUserName(data))
       .catch(error => console.error("Error fetching user's name:", error))
