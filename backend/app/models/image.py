@@ -66,7 +66,7 @@ class Image:
             FROM Images
             WHERE project_id = :project_id
             AND labeled_status = FALSE
-            AND reviewed_status = FALSE
+            AND accepted_status = FALSE
             LIMIT 1
             """,
             project_id=project_id,
