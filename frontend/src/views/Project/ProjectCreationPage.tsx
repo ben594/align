@@ -43,8 +43,6 @@ export default function ProjectCreationPage() {
         title: 'Error',
         description: 'Please fill out all required fields.',
         status: 'error',
-        duration: 2000,
-        isClosable: true,
       })
       return
     }
@@ -69,8 +67,6 @@ export default function ProjectCreationPage() {
         toast({
           title: 'Project created successfully!',
           status: 'success',
-          duration: 2000,
-          isClosable: true,
         })
         navigate('/dashboard')
       } else {
@@ -81,8 +77,6 @@ export default function ProjectCreationPage() {
         title: 'Error',
         description: 'Failed to create project.',
         status: 'error',
-        duration: 2000,
-        isClosable: true,
       })
     }
   }

@@ -47,8 +47,6 @@ export default function AuthPage() {
         title: 'Error',
         description: 'Please enter your email and password.',
         status: 'error',
-        duration: 2000,
-        isClosable: true,
       })
       return
     }
@@ -76,8 +74,6 @@ export default function AuthPage() {
         title: 'Error',
         description: 'Failed to login.',
         status: 'error',
-        duration: 2000,
-        isClosable: true,
       })
     } finally {
       setLoading(false)
@@ -97,8 +93,6 @@ export default function AuthPage() {
         description:
           'Please enter your email and password, and confirm your password.',
         status: 'error',
-        duration: 2000,
-        isClosable: true,
       })
       return
     }
@@ -125,8 +119,6 @@ export default function AuthPage() {
         title: 'Error',
         description: errorMessage,
         status: 'error',
-        isClosable: true,
-        duration: 2000,
       })
     } finally {
       setLoading(false)

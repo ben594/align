@@ -2,9 +2,9 @@ import { Box, Button, Input, Text, useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
 
 import { BACKEND_URL } from '../../constants'
+import FlexColumn from '../../components/FlexColumn'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
-import FlexColumn from '../../components/FlexColumn'
 
 const UploadImages: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | undefined>(

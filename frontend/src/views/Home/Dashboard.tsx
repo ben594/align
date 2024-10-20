@@ -1,25 +1,14 @@
-import {
-  Box,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useToast,
-} from '@chakra-ui/react'
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 
+import { BACKEND_URL } from '../../constants'
 import CardList from '../../components/CardList'
 import Header from '../../components/Header'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-import { BACKEND_URL } from '../../constants'
-import { useNavigate } from 'react-router-dom'
 import { Project } from '../Project/ProjectCreationPage'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 export default function HomePage() {
-  const toast = useToast()
-  const navigate = useNavigate()
-
   const [myProjectsCards, setMyProjectsCards] = useState<Project[]>([])
   const [exploreProjectsCards, setExploreProjectsCards] = useState<Project[]>(
     []
