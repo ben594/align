@@ -4,6 +4,7 @@ from flask import current_app as app
 class Image:
     def __init__(
         self,
+        image_id,
         image_url,
         project_id,
         labeled_status,
@@ -11,6 +12,7 @@ class Image:
         labeler_uid,
         label_text,
     ):
+        self.image_id = image_id
         self.image_url = image_url
         self.project_id = project_id
         self.labeled_status = labeled_status
@@ -19,14 +21,14 @@ class Image:
         self.label_text = label_text
 
     @staticmethod
-    def get(image_url):
+    def get(image_id):
         rows = app.db.execute(
             """
             SELECT *
             FROM Images
-            WHERE image_url = :image_url
+            WHERE image_id = :image_id
             """,
-            image_url=image_url,
+            image_id=image_id,
         )
         return Image(*(rows[0])) if rows else None
 
@@ -35,7 +37,7 @@ class Image:
         image_url,
         project_id,
     ):
-        inserted_row = app.db.execute(
+        app.db.execute(
             """
             INSERT INTO Images (image_url, project_id, labeled_status, accepted_status, labeler_uid, label_text)
             VALUES (:image_url, :project_id, FALSE, FALSE, NULL, NULL)
@@ -45,7 +47,7 @@ class Image:
         )
 
     @staticmethod
-    def get_by_project(project_id):
+    def get_all_images_per_project(project_id):
         rows = app.db.execute(
             """
             SELECT *
@@ -54,8 +56,22 @@ class Image:
             """,
             project_id=project_id,
         )
+        return [Image(*row) for row in rows] if rows else []
 
-        # TODO return list
+    @staticmethod
+    def get_next_image(project_id):
+        rows = app.db.execute(
+            """
+            SELECT *
+            FROM Images
+            WHERE project_id = :project_id
+            AND labeled_status = FALSE
+            AND reviewed_status = FALSE
+            LIMIT 1
+            """,
+            project_id=project_id,
+        )
+
         return Image(*(rows[0])) if rows else None
 
     @staticmethod
@@ -91,7 +107,7 @@ class Image:
                 for row in labelers
             ]
         else:
-            return none
+            return None
 
     @staticmethod
     def get_top_projects():
@@ -119,17 +135,4 @@ class Image:
                 for row in projects
             ]
         else:
-            return none    
-
-    @staticmethod
-    def get_all_image_urls_per_project(project_id):
-        image_urls = app.db.execute(
-            """
-            SELECT image_url
-            FROM Images
-            WHERE project_id = :project_id
-            """,
-            project_id=project_id,
-        )
-        return [url[0] for url in image_urls] if image_urls else []
- 
+            return None

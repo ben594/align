@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react'
 
 import { Project } from '../views/Project/ProjectCreationPage'
+import { useNavigate } from 'react-router-dom'
 
 export default function ProjectCard({
   role,
@@ -21,6 +22,8 @@ export default function ProjectCard({
   pricePerImage,
   totalNumImages,
 }: Project) {
+  const navigate = useNavigate()
+
   return (
     <Card height="300px">
       <CardBody>
@@ -41,7 +44,13 @@ export default function ProjectCard({
       </CardBody>
       <CardFooter>
         <ButtonGroup spacing="2">
-          <Button variant="solid" colorScheme="blue">
+          <Button
+            variant="solid"
+            colorScheme="blue"
+            onClick={() => {
+              navigate(`/project/${id}/images`)
+            }}
+          >
             View Info
           </Button>
         </ButtonGroup>
