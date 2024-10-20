@@ -93,7 +93,7 @@ class Project:
             p.project_id,
             p.project_name,
             p.description,
-            p.price_per_image,
+            p.price_per_image
             FROM Projects p
             JOIN Roles r
             ON p.project_id = r.project_id
