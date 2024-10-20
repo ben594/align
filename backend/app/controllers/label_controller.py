@@ -24,7 +24,7 @@ def submit_label():
         return jsonify({"error": "Invalid image label parameters"}), 400
 
     #connect to models
-    label_id = label.create(
+    label_id = Label.create(
         vendor_uid,
         project_name,
         description,
