@@ -1,14 +1,15 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import AuthPage from './views/Auth/AuthPage'
+import AuthRoute from './components/AuthRoute.tsx'
 import Dashboard from './views/Home/Dashboard'
 import HomePage from './views/Home/HomePage'
 import LabelingInterface from './views/Labeling/LabelingInterface'
-import ProfilePage from './views/Profile/ProfilePage'
-import ReviewingInterface from './views/Labeling/ReviewingInterface'
-import ProjectCreationPage from './views/Project/ProjectCreationPage.tsx'
 import Leaderboard from './views/Leaderboard/Leaderboard'
-import AuthRoute from './components/AuthRoute.tsx'
+import ProfilePage from './views/Profile/ProfilePage'
+import ProjectCreationPage from './views/Project/ProjectCreationPage.tsx'
+import ProjectUploadPage from './views/Project/ProjectUploadPage.tsx'
+import ReviewingInterface from './views/Labeling/ReviewingInterface'
 import ProjectDisplayPage from './views/Project/ProjectDisplayPage.tsx'
 
 const router = createBrowserRouter([
@@ -63,7 +64,11 @@ const router = createBrowserRouter([
   {
     path: '/project/:projectId/images',
     element: <ProjectDisplayPage />,
-  }
+  },
+  {
+    path: 'project/:projectId/upload',
+    element: <ProjectUploadPage />,
+  },
 ])
 
 function App() {
