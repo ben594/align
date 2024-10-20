@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, redirect, url_for, request, make_response
 from flask_login import logout_user
-from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from ..models.label import Label
 
