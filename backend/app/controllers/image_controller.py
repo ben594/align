@@ -11,7 +11,6 @@ def get_image(id):
         return jsonify({
             'id': project.id,
             'name': project.name,
-            'deadline': project.deadline
         }), 200
     return jsonify({'error': 'Project not found'}), 404
 

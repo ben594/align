@@ -13,7 +13,6 @@ CREATE TABLE Projects (
     description VARCHAR(1023) NOT NULL,
     price_per_image DECIMAL(10, 2) NOT NULL,
     total_num_images INT NOT NULL,
-    deadline TIMESTAMP,
     FOREIGN KEY (vendor_uid) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 

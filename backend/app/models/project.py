@@ -10,7 +10,6 @@ class Project:
         description,
         price_per_image,
         total_num_images,
-        deadline,
     ):
         self.vendor_uid = vendor_uid
         self.project_id = project_id
@@ -18,7 +17,6 @@ class Project:
         self.description = description
         self.price_per_image = price_per_image
         self.total_num_images = total_num_images
-        self.deadline = deadline
 
     @staticmethod
     def get(project_id):
@@ -38,7 +36,6 @@ class Project:
         project_name,
         description,
         price_per_image,
-        deadline,
     ):
         project_id = app.db.execute(
             """
@@ -46,16 +43,14 @@ class Project:
             project_name,
             description,
             price_per_image,
-            total_num_images,
-            deadline)
-            VALUES (:vendor_uid, :project_name, :description, :price_per_image, 0, :deadline)
+            total_num_images)
+            VALUES (:vendor_uid, :project_name, :description, :price_per_image, 0)
             RETURNING project_id
             """,
             vendor_uid=vendor_uid,
             project_name=project_name,
             description=description,
             price_per_image=price_per_image,
-            deadline=deadline,
         )
 
         return project_id[0][0] if project_id else None
@@ -103,7 +98,6 @@ class Project:
             p.description,
             p.price_per_image,
             p.total_num_images,
-            p.deadline
             FROM Projects p
             JOIN Roles r
             ON p.project_id = r.project_id

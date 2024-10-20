@@ -29,7 +29,6 @@ def get_project(id):
                 {
                     "id": project.project_id,
                     "name": project.project_name,
-                    "deadline": project.deadline,
                 }
             ),
             200,
@@ -59,7 +58,6 @@ def get_projects_by_role():
             "vendorUID": project.vendor_uid,
             "totalNumImages": project.total_num_images,
             "pricePerImage": project.price_per_image,
-            "deadline": project.deadline,
         }
         for project in projects
     ]
@@ -74,7 +72,6 @@ def create_project():
     project_name = request.form.get("projectName")
     description = request.form.get("description")
     price_per_image = request.form.get("pricePerImage")
-    deadline = request.form.get("deadline")
 
     if (
         not vendor_uid
@@ -89,7 +86,6 @@ def create_project():
         project_name,
         description,
         price_per_image,
-        deadline,
     )
 
     role = Role.create(vendor_uid, project_id, "owner")
