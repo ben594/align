@@ -12,7 +12,6 @@ CREATE TABLE Projects (
     project_name VARCHAR(255) NOT NULL,
     description VARCHAR(1023) NOT NULL,
     price_per_image DECIMAL(10, 2) NOT NULL,
-    total_num_images INT NOT NULL,
     FOREIGN KEY (vendor_uid) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 

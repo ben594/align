@@ -56,7 +56,6 @@ def get_projects_by_role():
             "name": project.project_name,
             "description": project.description,
             "vendorUID": project.vendor_uid,
-            "totalNumImages": project.total_num_images,
             "pricePerImage": project.price_per_image,
         }
         for project in projects
