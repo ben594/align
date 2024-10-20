@@ -1,36 +1,34 @@
-import {
-  Box,
-  SimpleGrid,
-  Image,
-} from '@chakra-ui/react'
+import { Box, Image, SimpleGrid } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 
-import Header from '../../components/Header'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { BACKEND_URL } from '../../constants'
+import Header from '../../components/Header'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
+
+interface ProjectDisplayPageProps {
+  projectId: string | undefined
+}
 
 export default function ProjectDisplayPage() {
-  const path = window.location.pathname;
-  const parts = path.split('/');
-  const projectID = parseInt(parts[2], 10);
-  if (isNaN(projectID)) {
-    console.error("Invalid projectID:", projectID);
-  }
+  const { projectId } = useParams()
 
-  const ImageGrid = ({ projectID }: { projectID: number }) => {
-    const [projectImages, setProjectImages] = useState([]);
+  const ImageGrid = ({ projectId }: ProjectDisplayPageProps) => {
+    const [projectImages, setProjectImages] = useState([])
 
     useEffect(() => {
       const fetchImages = async () => {
         try {
-          const response = await axios.get(`${BACKEND_URL}/project/${projectID}/images`);
-          setProjectImages(response.data);
+          const response = await axios.get(
+            `${BACKEND_URL}/project/${projectId}/images`
+          )
+          setProjectImages(response.data)
         } catch (error) {
-          console.error(error);
+          console.error(error)
         }
-      };
-      fetchImages();
-    }, [projectID]);
+      }
+      fetchImages()
+    }, [projectId])
 
     return (
       <SimpleGrid columns={[2, null, 4]} spacing="40px">
@@ -40,7 +38,7 @@ export default function ProjectDisplayPage() {
           </Box>
         ))}
       </SimpleGrid>
-    );
+    )
   }
 
   // TODO @jamie: make the grid look nicer and add onclick images direct to labeling page
@@ -56,8 +54,7 @@ export default function ProjectDisplayPage() {
       overflowY="auto"
     >
       <Header />
-      <ImageGrid projectID={projectID} />
+      <ImageGrid projectId={projectId} />
     </Box>
-  );
-
+  )
 }
