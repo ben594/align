@@ -16,7 +16,7 @@ def login():
     if user is None:
         return jsonify({"error": "Failed to login"}), 400
 
-    access_token = create_access_token(identity=user.user_id)
+    access_token = create_access_token(identity=user.user_id, expires_delta=False)
     return jsonify(access_token=access_token), 200
 
 
@@ -31,7 +31,7 @@ def register():
         return jsonify({"error": "Account with email already exists."}), 400
 
     user_id = User.register(email, password, firstname, lastname)
-    access_token = create_access_token(identity=user_id)
+    access_token = create_access_token(identity=user_id, expires_delta=False)
     return jsonify(access_token=access_token), 200
 
 
@@ -48,6 +48,7 @@ def get_user_stats():
     uid = request.args.get("uid")
     num_accepted_labels = User.get_accepted_label_count(uid)
     return jsonify(num_accepted_labels), 200
+
 
 # TODO @Jamie: update function & route to take in id & authentication
 @bp.route("/username", methods=["GET"])
