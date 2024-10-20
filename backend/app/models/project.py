@@ -9,14 +9,12 @@ class Project:
         project_name,
         description,
         price_per_image,
-        total_num_images,
     ):
         self.vendor_uid = vendor_uid
         self.project_id = project_id
         self.project_name = project_name
         self.description = description
         self.price_per_image = price_per_image
-        self.total_num_images = total_num_images
 
     @staticmethod
     def get(project_id):
@@ -42,8 +40,7 @@ class Project:
             INSERT INTO Projects (vendor_uid,
             project_name,
             description,
-            price_per_image,
-            total_num_images)
+            price_per_image)
             VALUES (:vendor_uid, :project_name, :description, :price_per_image, 0)
             RETURNING project_id
             """,
@@ -97,7 +94,6 @@ class Project:
             p.project_name,
             p.description,
             p.price_per_image,
-            p.total_num_images
             FROM Projects p
             JOIN Roles r
             ON p.project_id = r.project_id
