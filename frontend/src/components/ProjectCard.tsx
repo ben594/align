@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  CardProps,
   Heading,
   Stack,
   Tag,
@@ -13,6 +14,16 @@ import {
 import { Project } from '../views/Project/ProjectCreationPage'
 import { useNavigate } from 'react-router-dom'
 
+interface ProjectCardProps extends Omit<CardProps, 'id'> {
+  role: string
+  name: string
+  description: string
+  id: number
+  vendorUID: number
+  pricePerImage: number
+  hideButton?: boolean
+}
+
 export default function ProjectCard({
   role,
   name,
@@ -20,12 +31,13 @@ export default function ProjectCard({
   id,
   vendorUID,
   pricePerImage,
-  totalNumImages,
-}: Project) {
+  hideButton,
+  ...cardProps
+}: ProjectCardProps) {
   const navigate = useNavigate()
 
   return (
-    <Card height="300px">
+    <Card height="300px" {...cardProps}>
       <CardBody>
         <Stack>
           <Heading size="xl" textAlign="left">
@@ -33,7 +45,7 @@ export default function ProjectCard({
           </Heading>
           <Text
             textAlign="left"
-            overflow="hidden"
+            overflow="scroll"
             textOverflow="ellipsis"
             height="100px"
           >
@@ -42,19 +54,21 @@ export default function ProjectCard({
           <Tag width="fit-content">{role}</Tag>
         </Stack>
       </CardBody>
-      <CardFooter>
-        <ButtonGroup spacing="2">
-          <Button
-            variant="solid"
-            colorScheme="blue"
-            onClick={() => {
-              navigate(`/project/${id}/images`)
-            }}
-          >
-            View Info
-          </Button>
-        </ButtonGroup>
-      </CardFooter>
+      {!hideButton && (
+        <CardFooter>
+          <ButtonGroup spacing="2">
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              onClick={() => {
+                navigate(`/project/${id}/images`)
+              }}
+            >
+              View Info
+            </Button>
+          </ButtonGroup>
+        </CardFooter>
+      )}
     </Card>
   )
 }
