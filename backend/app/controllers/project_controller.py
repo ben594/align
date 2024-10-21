@@ -12,6 +12,7 @@ from werkzeug.utils import secure_filename
 import uuid
 
 from ..models.project import Project
+from ..models.role import Role
 from ..models.image import Image
 
 project_bp = Blueprint("projects", __name__)
@@ -20,13 +21,18 @@ AZURE_CONNECTION_STRING = os.getenv("AZURE_CONNECTION_STRING")
 AZURE_CONTAINER_NAME = os.getenv("AZURE_CONTAINER_NAME")
 blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
 
-@project_bp.route("/projects/<int:id>", methods=["GET"])
-def get_project(id):
-    project = Project.get(id)
+@project_bp.route("/projects/<int:project_id>", methods=["GET"])
+@jwt_required()
+def get_project(project_id):
+    project = Project.get(project_id)
+    user_id = get_jwt_identity()
+    role = Role.get(user_id, project_id)
+
     if project:
         return (
             jsonify(
                 {
+                    "role": role.role_name,
                     "vendorUid": project.vendor_uid,
                     "id": project.project_id,
                     "name": project.project_name,
