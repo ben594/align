@@ -13,6 +13,8 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 export default function Header() {
+  const user_id = sessionStorage.getItem('user_id')
+
   const navigate = useNavigate()
 
   const goToLanding = () => {
@@ -20,7 +22,7 @@ export default function Header() {
   }
 
   const goToProfile = () => {
-    navigate('/profile')
+    navigate(`/profile/${user_id}`)
   }
 
   const logout = () => {

@@ -43,7 +43,7 @@ export default function Leaderboard() {
             flexDirection="column"
             justifyContent="flex-start"
             alignItems="center"
-            gap={8}
+            gap={10}
         >
             <Header />
             <TableContainer
@@ -51,7 +51,7 @@ export default function Leaderboard() {
                 height="80vh"
                 shadow="lg"
                 borderRadius="md"
-                mt={100}>
+            >
                 <Heading size="lg" mb={4} textAlign="center">Labeling Leaderboard</Heading> {/* Header for the first table */}
                 <Table variant='simple'>
                     <Thead>

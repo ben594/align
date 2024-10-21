@@ -1,19 +1,33 @@
-import { Box, Button, Input, Text, useToast } from '@chakra-ui/react'
+import {
+  Button,
+  Card,
+  CardBody,
+  Heading,
+  Input,
+  Spacer,
+  useToast,
+} from '@chakra-ui/react'
 import React, { useState } from 'react'
 
 import { BACKEND_URL } from '../../constants'
 import FlexColumn from '../../components/FlexColumn'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
 
-const UploadImages: React.FC = () => {
+interface ImageUploadWidgetProps {
+  projectId: string | undefined
+  setProjectImages?: React.Dispatch<React.SetStateAction<String[]>>
+}
+
+const ImageUploadWidget = ({
+  projectId,
+  setProjectImages,
+}: ImageUploadWidgetProps) => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | undefined>(
     undefined
   )
   const toast = useToast()
 
   // TODO: confirm current user has permission to upload images to this projectId
-  const { projectId } = useParams()
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -51,6 +65,11 @@ const UploadImages: React.FC = () => {
         }
       )
 
+      setProjectImages?.(oldImages => [
+        ...oldImages,
+        ...response.data.imageUrls,
+      ])
+
       toast({
         title: 'Images uploaded successfully!',
         status: 'success',
@@ -65,27 +84,31 @@ const UploadImages: React.FC = () => {
   }
 
   return (
-    <Box p={8} borderWidth="1px" boxShadow="lg" maxW="lg">
-      <Text fontSize="xl" fontWeight="semibold" mb={6} textAlign="center">
-        Upload Images
-      </Text>
+    <Card>
+      <CardBody>
+        <Heading fontSize="xl" mb={6} textAlign="center">
+          Upload Images
+        </Heading>
 
-      <FlexColumn rowGap={2}>
-        <Input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleFileChange}
-          size="lg"
-          pt={2}
-        />
+        <FlexColumn rowGap={2}>
+          <Input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleFileChange}
+            size="md"
+            pt={1}
+          />
 
-        <Button colorScheme="teal" size="lg" onClick={submitImages}>
-          Upload
-        </Button>
-      </FlexColumn>
-    </Box>
+          <Spacer />
+
+          <Button colorScheme="blue" size="md" onClick={submitImages}>
+            Upload
+          </Button>
+        </FlexColumn>
+      </CardBody>
+    </Card>
   )
 }
 
-export default UploadImages
+export default ImageUploadWidget

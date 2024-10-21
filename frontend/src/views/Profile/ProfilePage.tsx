@@ -19,28 +19,26 @@ import Header from '../../components/Header'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
-export default function HomePage() {
-  const { userId } = useParams()
-  console.log("userID");
-  console.log(userId)
+export default function ProfilePage() {
+  const { user_id } = useParams()
   const [acceptedLabelCount, setAcceptedLabelCount] = useState<0>()
   const [userName, setUserName] = useState<string>('')
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/${userId}/stats`)
+    fetch(`${BACKEND_URL}/profile/${user_id}/stats`)
       .then(response => response.json())
       .then(data => setAcceptedLabelCount(data))
       .catch(error =>
         console.error("Error fetching user's accepted label count:", error)
       )
-  }, [userId])
+  }, [user_id])
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/${userId}/user_name`)
+    fetch(`${BACKEND_URL}/profile/${user_id}/user_name`)
       .then(response => response.json())
       .then(data => setUserName(data))
       .catch(error => console.error("Error fetching user's name:", error))
-  }, [userId])
+  }, [user_id])
 
   // TODO: get account balance
 

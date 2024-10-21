@@ -8,9 +8,8 @@ import LabelingInterface from './views/Labeling/LabelingInterface'
 import Leaderboard from './views/Leaderboard/Leaderboard'
 import ProfilePage from './views/Profile/ProfilePage'
 import ProjectCreationPage from './views/Project/ProjectCreationPage.tsx'
-import ProjectUploadPage from './views/Project/ProjectUploadPage.tsx'
-import ReviewingInterface from './views/Labeling/ReviewingInterface'
 import ProjectDisplayPage from './views/Project/ProjectDisplayPage.tsx'
+import ReviewingInterface from './views/Labeling/ReviewingInterface'
 
 const router = createBrowserRouter([
   {
@@ -64,10 +63,6 @@ const router = createBrowserRouter([
   {
     path: '/project/:projectId/images',
     element: <ProjectDisplayPage />,
-  },
-  {
-    path: 'project/:projectId/upload',
-    element: <ProjectUploadPage />,
   },
 ])
 
