@@ -59,7 +59,6 @@ export default function ProfilePage() {
         alignItems="center"
         justifyContent="center"
       >
-        {/* Left section for stats */}
         <VStack align="flex-start">
           <Stat>
             <StatLabel>Account Balance</StatLabel>

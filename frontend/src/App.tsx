@@ -62,7 +62,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/project/:projectId/images',
-    element: <ProjectDisplayPage />,
+    element: (
+      <AuthRoute>
+        <ProjectDisplayPage />
+      </AuthRoute>
+    ),
   },
 ])
 

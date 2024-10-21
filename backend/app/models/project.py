@@ -118,3 +118,13 @@ class Project:
             role=role,
         )
         return [Project(*row) for row in rows] if rows else []
+
+    @staticmethod
+    def get_all_projects():
+        rows = app.db.execute(
+            """
+            SELECT *
+            FROM Projects p
+            """
+        )
+        return [Project(*row) for row in rows] if rows else []

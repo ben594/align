@@ -77,7 +77,6 @@ export default function Leaderboard() {
         <Heading size="lg" mb={4} textAlign="center">
           Most Popular Projects
         </Heading>{' '}
-        {/* Header for the first table */}
         <Table variant="simple">
           <Thead>
             <Tr>

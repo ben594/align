@@ -6,7 +6,6 @@ import CardList from '../../components/CardList'
 import Header from '../../components/Header'
 import { Project } from '../Project/ProjectCreationPage'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 
 export default function HomePage() {
   const [myProjectsCards, setMyProjectsCards] = useState<Project[]>([])
@@ -36,12 +35,29 @@ export default function HomePage() {
       const projectList: Project[] = parseProjectInfo(response.data.projects)
       setMyProjectsCards(projectList)
     } catch (error) {
-      console.error(`Error fetching projects:`, error)
+      console.error(`Error fetching my projects:`, error)
+    }
+  }
+
+  const getAllProjects = async () => {
+    const token = sessionStorage.getItem('jwt')
+    try {
+      const response = await axios.get(`${BACKEND_URL}/projects/all`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      })
+      const projectList: Project[] = parseProjectInfo(response.data.projects)
+      setExploreProjectsCards(projectList)
+    } catch (error) {
+      console.error(`Error fetching all projects:`, error)
     }
   }
 
   useEffect(() => {
     getProjects()
+    getAllProjects()
   }, [])
 
   return (

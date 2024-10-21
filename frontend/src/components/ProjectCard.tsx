@@ -15,7 +15,7 @@ import { Project } from '../views/Project/ProjectCreationPage'
 import { useNavigate } from 'react-router-dom'
 
 interface ProjectCardProps extends Omit<CardProps, 'id'> {
-  role: string
+  role: string | undefined
   name: string
   description: string
   id: number
@@ -51,7 +51,8 @@ export default function ProjectCard({
           >
             {description}
           </Text>
-          <Tag width="fit-content">{role}</Tag>
+
+          {role && <Tag width="fit-content">{role}</Tag>}
         </Stack>
       </CardBody>
       {!hideButton && (

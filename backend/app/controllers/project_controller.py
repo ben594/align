@@ -21,6 +21,7 @@ AZURE_CONNECTION_STRING = os.getenv("AZURE_CONNECTION_STRING")
 AZURE_CONTAINER_NAME = os.getenv("AZURE_CONTAINER_NAME")
 blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
 
+
 @project_bp.route("/projects/<int:project_id>", methods=["GET"])
 @jwt_required()
 def get_project(project_id):
@@ -38,7 +39,6 @@ def get_project(project_id):
                     "name": project.project_name,
                     "description": project.description,
                     "pricePerImage": project.price_per_image,
-                    
                 }
             ),
             200,
@@ -74,6 +74,25 @@ def get_projects_by_role():
     return jsonify(projects=projects_list), 200
 
 
+@project_bp.route("/projects/all", methods=["GET"])
+@jwt_required()
+def get_all_projects():
+    projects = Project.get_all_projects()
+
+    projects_list = [
+        {
+            "id": project.project_id,
+            "name": project.project_name,
+            "description": project.description,
+            "vendorUID": project.vendor_uid,
+            "pricePerImage": project.price_per_image,
+        }
+        for project in projects
+    ]
+
+    return jsonify(projects=projects_list), 200
+
+
 @project_bp.route("/projects", methods=["POST"])
 @jwt_required()
 def create_project():
@@ -82,12 +101,7 @@ def create_project():
     description = request.form.get("description")
     price_per_image = request.form.get("pricePerImage")
 
-    if (
-        not vendor_uid
-        or not project_name
-        or not description
-        or not price_per_image
-    ):
+    if not vendor_uid or not project_name or not description or not price_per_image:
         return jsonify({"error": "Invalid project parameters"}), 400
 
     project_id = Project.create(
@@ -103,12 +117,14 @@ def create_project():
         return jsonify({"message": "Project created", "project_id": project_id}), 201
     return jsonify({"error": "Failed to create project"}), 500
 
+
 @project_bp.route("/project/<int:project_id>/images", methods=["GET"])
 def get_all_project_images_url(project_id):
     images = Image.get_all_images_per_project(project_id)
     image_urls = [image.image_url for image in images]
     return jsonify(image_urls), 200
-    
+
+
 # Route to upload multiple images to azure blob storage
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])
 @jwt_required()
@@ -117,7 +133,12 @@ def upload_images(project_id):
     user_id = get_jwt_identity()
 
     if not Project.is_owner(user_id, project_id):
-        return jsonify({"error": "You are not authorized to upload images to this project"}), 403
+        return (
+            jsonify(
+                {"error": "You are not authorized to upload images to this project"}
+            ),
+            403,
+        )
 
     files = request.files.getlist("images")
     if not files:
@@ -138,16 +159,19 @@ def upload_images(project_id):
             try:
                 # Upload the image data
                 blob_client.upload_blob(file, overwrite=True)
-                
+
                 # Construct the image URL
                 image_url = f"https://{blob_service_client.account_name}.blob.core.windows.net/{AZURE_CONTAINER_NAME}/{unique_filename}"
-                
+
                 # Insert a new row into the Images table
                 Image.upload(image_url=image_url, project_id=project_id)
                 uploaded_image_urls.append(image_url)
-                
+
             except Exception as e:
                 print(e)
-                return jsonify({"error": f"Failed to upload {file.filename}: {str(e)}"}), 500
+                return (
+                    jsonify({"error": f"Failed to upload {file.filename}: {str(e)}"}),
+                    500,
+                )
 
     return jsonify({"imageUrls": uploaded_image_urls}), 200

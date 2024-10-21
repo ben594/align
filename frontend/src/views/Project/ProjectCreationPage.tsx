@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 export interface Project {
-  role: string
+  role: string | undefined
   name: string
   description: string
   id: number
