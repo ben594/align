@@ -100,7 +100,7 @@ export default function ProjectDisplayPage() {
         <SimpleGrid columns={[2, null, 4]} spacing="40px">
           {projectImages.map((image_url: any, index: number) => (
             <Box key={index}>
-              <Image src={image_url} w="100%" h="100%" />
+              <Image src={image_url} w="100%" h="100%" fit="cover" />
             </Box>
           ))}
         </SimpleGrid>
