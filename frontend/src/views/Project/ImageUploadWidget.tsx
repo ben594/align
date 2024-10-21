@@ -4,16 +4,22 @@ import React, { useState } from 'react'
 import { BACKEND_URL } from '../../constants'
 import FlexColumn from '../../components/FlexColumn'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
 
-const UploadImages: React.FC = () => {
+interface ImageUploadWidgetProps {
+  projectId: string | undefined
+  setProjectImages?: React.Dispatch<React.SetStateAction<String[]>>
+}
+
+const ImageUploadWidget = ({
+  projectId,
+  setProjectImages,
+}: ImageUploadWidgetProps) => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | undefined>(
     undefined
   )
   const toast = useToast()
 
   // TODO: confirm current user has permission to upload images to this projectId
-  const { projectId } = useParams()
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -50,6 +56,11 @@ const UploadImages: React.FC = () => {
           },
         }
       )
+
+      setProjectImages?.(oldImages => [
+        ...oldImages,
+        ...response.data.imageUrls,
+      ])
 
       toast({
         title: 'Images uploaded successfully!',
@@ -88,4 +99,4 @@ const UploadImages: React.FC = () => {
   )
 }
 
-export default UploadImages
+export default ImageUploadWidget

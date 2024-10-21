@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 import { BACKEND_URL } from '../../constants'
 import Header from '../../components/Header'
+import ImageUploadWidget from './ImageUploadWidget'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 
@@ -14,7 +15,7 @@ export default function ProjectDisplayPage() {
   const { projectId } = useParams()
 
   const ImageGrid = ({ projectId }: ProjectDisplayPageProps) => {
-    const [projectImages, setProjectImages] = useState([])
+    const [projectImages, setProjectImages] = useState<String[]>([])
 
     useEffect(() => {
       const fetchImages = async () => {
@@ -31,13 +32,19 @@ export default function ProjectDisplayPage() {
     }, [projectId])
 
     return (
-      <SimpleGrid columns={[2, null, 4]} spacing="40px">
-        {projectImages.map((image_url: any, index: number) => (
-          <Box key={index}>
-            <Image src={image_url} w="100%" h="100%" />
-          </Box>
-        ))}
-      </SimpleGrid>
+      <>
+        <ImageUploadWidget
+          projectId={projectId}
+          setProjectImages={setProjectImages}
+        />
+        <SimpleGrid columns={[2, null, 4]} spacing="40px">
+          {projectImages.map((image_url: any, index: number) => (
+            <Box key={index}>
+              <Image src={image_url} w="100%" h="100%" />
+            </Box>
+          ))}
+        </SimpleGrid>
+      </>
     )
   }
 
