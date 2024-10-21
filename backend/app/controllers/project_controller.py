@@ -27,8 +27,12 @@ def get_project(id):
         return (
             jsonify(
                 {
+                    "vendorUid": project.vendor_uid,
                     "id": project.project_id,
                     "name": project.project_name,
+                    "description": project.description,
+                    "pricePerImage": project.price_per_image,
+                    
                 }
             ),
             200,
