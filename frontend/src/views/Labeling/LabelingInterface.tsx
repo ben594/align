@@ -75,26 +75,30 @@ export default function LabelingInterface() {
   const getNextImage = async () => {
     const token = sessionStorage.getItem('jwt')
 
-    const response = await axios.get(
-      `${BACKEND_URL}/images/next/${projectId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/images/next/${projectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
 
-    if (response.status === 201 || response.status === 200) {
-      setImageURL(response.data.imageURL)
-      setLabel('')
-      return
-    } else {
+      console.log('response: ', response)
+
+      if (response.status === 201 || response.status === 200) {
+        setImageURL(response.data.imageURL)
+        setLabel('')
+        return
+      }
+    } catch {
       toast({
         title: 'Error',
-        description: 'Failed to get next image in this project.',
+        description: 'No more images to label for this project.',
         status: 'error',
       })
-      navigate('/dashboard')
+      navigate(`/project/${projectId}/images`)
       return
     }
   }

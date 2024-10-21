@@ -97,7 +97,6 @@ class Image:
             """
         )
         if labelers:
-            # Process the rows and return them as a list of dictionaries
             return [
                 {
                     "name": f"{row[0]} {row[1]}",
@@ -129,7 +128,6 @@ class Image:
             # TODO: fix this sql query bc idt it's returning the right number for progress rn
         )
         if projects:
-            # Process the rows and return them as a list of dictionaries
             return [
                 {"name": row[0], "unique_contributers": row[1], "progress": row[2]}
                 for row in projects
