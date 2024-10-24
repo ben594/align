@@ -25,7 +25,7 @@ Since the last milestone, each team member successfully implemented backend API 
   - Frontend: [frontend/src/views/Profile/ProfilePage.tsx](https://github.com/ben594/align/blob/main/frontend/src/views/Profile/ProfilePage.tsx)
   - Backend: [backend/app/controllers/user_controller.py](https://github.com/ben594/align/blob/main/backend/app/controllers/user_controller.py)
 - Leaderboard:
-  - Frontend:[frontend/src/views/Leaderboard/Leaderboard.tsx](https://github.com/ben594/align/blob/main/frontend/src/views/Leaderboard/Leaderboard.tsx)
+  - Frontend: [frontend/src/views/Leaderboard/Leaderboard.tsx](https://github.com/ben594/align/blob/main/frontend/src/views/Leaderboard/Leaderboard.tsx)
   - Backend: [backend/app/controllers/leaderboard_controller.py](https://github.com/ben594/align/blob/main/backend/app/controllers/leaderboard_controller.py)
 - Project cards:
   - Frontend: [frontend/src/views/Project/ProjectCreationPage.tsx](https://github.com/ben594/align/blob/main/frontend/src/views/Project/ProjectCreationPage.tsx)
