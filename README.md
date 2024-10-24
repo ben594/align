@@ -11,6 +11,10 @@ Github link: https://github.com/ben594/align
 Since the last milestone, we planned the different components/functionalities of our project and set up our code repository. We also designed a Figma wireframe outlining the possible actions you can take in the app.
 
 ### Milestone 3 Update
+Video demo link: https://drive.google.com/file/d/1ebVQ1A6dVAgmH_OxDSz7WW8lEjIXnRNI/view?usp=sharing
+
+Since the last milestone, each team member successfully implemented backend API endpoints for executing a query, as well as the corresponding frontend widgets for displaying results and interacting with those backend API endpoints. We implemented the following pages:
+
 - Project page:
   - Frontend: [frontend/src/views/Project/ProjectDisplayPage.tsx](https://github.com/ben594/align/blob/main/frontend/src/views/Project/ProjectDisplayPage.tsx)
   - Backend: [backend/app/controllers/project_controller.py](https://github.com/ben594/align/blob/main/backend/app/controllers/project_controller.py)
