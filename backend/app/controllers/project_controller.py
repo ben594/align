@@ -7,9 +7,9 @@ import os
 from azure.storage.blob import BlobServiceClient
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
-import os
 from werkzeug.utils import secure_filename
 import uuid
+import json
 
 from ..models.project import Project
 from ..models.role import Role
@@ -100,15 +100,19 @@ def create_project():
     project_name = request.form.get("projectName")
     description = request.form.get("description")
     price_per_image = request.form.get("pricePerImage")
+    tags = request.form.get("tags")
 
     if not vendor_uid or not project_name or not description or not price_per_image:
         return jsonify({"error": "Invalid project parameters"}), 400
+
+    tags_list = json.loads(tags) if tags else []
 
     project_id = Project.create(
         vendor_uid,
         project_name,
         description,
         price_per_image,
+        tags_list,
     )
 
     role = Role.create(vendor_uid, project_id, "owner")
@@ -124,6 +128,12 @@ def get_all_project_images_url(project_id):
     image_urls = [image.image_url for image in images]
     return jsonify(image_urls), 200
 
+@project_bp.route("/project/<int:project_id>/tags", methods=["GET"])
+@jwt_required()
+def get_project_tags(project_id):
+    tags = Project.get_all_tags(project_id)
+    print(tags)
+    return jsonify(tags=tags), 200
 
 # Route to upload multiple images to azure blob storage
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])

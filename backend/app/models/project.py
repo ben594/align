@@ -48,6 +48,7 @@ class Project:
         project_name,
         description,
         price_per_image,
+        tags_list,
     ):
         project_id = app.db.execute(
             """
@@ -64,6 +65,26 @@ class Project:
             price_per_image=price_per_image,
         )
 
+        for tag in tags_list:
+            app.db.execute(
+                """
+                INSERT INTO Tags (tag_name)
+                VALUES (:tag)
+                ON CONFLICT (tag_name) DO NOTHING
+                """,
+                tag=tag
+            )
+            
+            app.db.execute(
+                """
+                INSERT INTO ProjectTags (project_id, tag_name)
+                VALUES (:project_id, :tag)
+                ON CONFLICT DO NOTHING
+                """,
+                project_id=project_id[0][0],
+                tag=tag
+            )
+        
         return project_id[0][0] if project_id else None
 
     @staticmethod
@@ -77,6 +98,19 @@ class Project:
             user_id=user_id,
         )
         return [Project(*row) for row in rows] if rows else []
+
+    @staticmethod
+    def get_all_tags(project_id): # Move to a separate tag model for modularity
+        tags = app.db.execute(
+            """
+            SELECT t.tag_name
+            FROM ProjectTags pt
+            JOIN Tags t ON pt.tag_name = t.tag_name
+            WHERE pt.project_id = :project_id; 
+            """,
+            project_id=project_id
+        )
+        return [row[0] for row in tags] if tags else []
 
     @staticmethod
     def get_all_image_urls(project_id):

@@ -41,3 +41,15 @@ CREATE TABLE Roles (
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (project_id) REFERENCES Projects(project_id)
 );
+
+CREATE TABLE Tags (
+    tag_name VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE ProjectTags (
+    project_id INT NOT NULL,
+    tag_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (project_id, tag_name),
+    FOREIGN KEY (project_id) REFERENCES Projects(project_id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_name) REFERENCES Tags(tag_name) ON DELETE CASCADE
+);

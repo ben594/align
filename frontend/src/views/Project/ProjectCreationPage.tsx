@@ -10,6 +10,11 @@ import {
   Textarea,
   VStack,
   useToast,
+  Flex,
+  HStack,
+  Tag,
+  TagLabel,
+  TagCloseButton
 } from '@chakra-ui/react'
 
 import { BACKEND_URL } from '../../constants'
@@ -31,9 +36,22 @@ export default function ProjectCreationPage() {
   const [projectName, setProjectName] = useState('')
   const [description, setDescription] = useState('')
   const [pricePerImage, setPricePerImage] = useState(0)
+  const [tag, setTag] = useState('')
+  const [tags, setTags] = useState<string[]>([]);
 
   const navigate = useNavigate()
   const toast = useToast()
+
+  const handleAddTag = () => {
+    if (tag.trim() !== "") {
+      setTags([...tags, tag.toUpperCase()]); 
+      setTag("");               
+    }
+  };
+
+  const handleRemoveTag = (indexToRemove: number) => {
+    setTags(tags.filter((_, index) => index !== indexToRemove));
+  };
 
   const submitProject = async () => {
     if (projectName === '' || description === '') {
@@ -50,6 +68,7 @@ export default function ProjectCreationPage() {
       formData.append('projectName', projectName)
       formData.append('description', description)
       formData.append('pricePerImage', pricePerImage.toString())
+      formData.append('tags', JSON.stringify(tags));
 
       const token = sessionStorage.getItem('jwt')
 
@@ -137,6 +156,37 @@ export default function ProjectCreationPage() {
                 }
               />
             </FormControl>
+          </CardBody>
+        </Card>
+
+        <Card width="100%">
+          <CardBody>
+            <FormControl>
+              <FormLabel>Tags</FormLabel>
+              <Flex>
+                <Input
+                  type="text"
+                  value={tag}
+                  onChange={e => setTag(e.target.value)}
+                  placeholder="Provide a descriptive tag"
+                />
+                <Button colorScheme='blue' ml={2} onClick={handleAddTag}>Add</Button>
+              </Flex>
+            </FormControl>
+
+            <HStack mt={4} spacing={2}>
+              {tags.map((tag, index) => (
+                <Tag
+                  key={index}
+                  variant="solid"
+                  size="sm"
+                >
+                  <TagLabel>{tag}</TagLabel>
+                  <TagCloseButton onClick={() => handleRemoveTag(index)} />
+                </Tag>
+              ))}
+            </HStack>
+
           </CardBody>
         </Card>
 
