@@ -54,14 +54,19 @@ def get_projects_by_role():
 
     if role:
         projects = Project.get_projects_by_role(user_id, role)
+        for project in projects:
+            projects.role = role
     else:
         projects = []
         for role in ["labeler", "reviewer", "owner"]:
-            projects.extend(Project.get_projects_by_role(user_id, role))
+            projects_by_role = Project.get_projects_by_role(user_id, role)
+            for project in projects_by_role:
+                project.role = role
+            projects.extend(projects_by_role)
 
     projects_list = [
         {
-            "role": role,
+            "role": project.role,
             "id": project.project_id,
             "name": project.project_name,
             "description": project.description,
@@ -79,8 +84,13 @@ def get_projects_by_role():
 def get_all_projects():
     projects = Project.get_all_projects()
 
+    for project in projects:
+        role = Role.get(get_jwt_identity(), project.project_id)
+        project.role = role.role_name if role else None
+
     projects_list = [
         {
+            "role": project.role,
             "id": project.project_id,
             "name": project.project_name,
             "description": project.description,
@@ -120,6 +130,15 @@ def create_project():
     if project_id:
         return jsonify({"message": "Project created", "project_id": project_id}), 201
     return jsonify({"error": "Failed to create project"}), 500
+
+@project_bp.route("/project/<int:project_id>/join", methods=["POST"])
+@jwt_required()
+def join_project(project_id):
+    vendor_uid = get_jwt_identity()
+
+    role = Role.create(vendor_uid, project_id, "labeler")
+
+    return jsonify({"message": "Added to project", "project_id": project_id}), 201
 
 
 @project_bp.route("/project/<int:project_id>/images", methods=["GET"])

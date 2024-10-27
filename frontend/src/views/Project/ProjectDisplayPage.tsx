@@ -1,5 +1,5 @@
 import { Box, Button, Image, SimpleGrid, Spinner } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { BACKEND_URL } from '../../constants'
@@ -23,45 +23,66 @@ export default function ProjectDisplayPage() {
     const [projectImages, setProjectImages] = useState<String[]>([])
     const [project, setProject] = useState<Project>()
 
-    useEffect(() => {
-      const fetchImages = async () => {
-        const token = sessionStorage.getItem('jwt')
-        try {
-          const response = await axios.get(
-            `${BACKEND_URL}/project/${projectId}/images`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-          setProjectImages(response.data)
-        } catch (error) {
-          console.error(error)
-        }
+    const fetchImages = useCallback(async () => {
+      const token = sessionStorage.getItem('jwt')
+      try {
+        const response = await axios.get(
+          `${BACKEND_URL}/project/${projectId}/images`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        setProjectImages(response.data)
+      } catch (error) {
+        console.error(error)
       }
+    }, [projectId])
+
+    const fetchProject = useCallback(async () => {
+      const token = sessionStorage.getItem('jwt')
+      try {
+        const response = await axios.get(
+          `${BACKEND_URL}/projects/${projectId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        setProject(response.data)
+      } catch (error) {
+        console.error(error)
+      }
+    }, [projectId])
+
+    useEffect(() => {
       fetchImages()
     }, [projectId])
 
     useEffect(() => {
-      const token = sessionStorage.getItem('jwt')
-      const fetchProject = async () => {
-        try {
-          const response = await axios.get(
-            `${BACKEND_URL}/projects/${projectId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-          setProject(response.data)
-        } catch (error) {
-          console.error(error)
-        }
-      }
       fetchProject()
     }, [projectId])
+
+    const joinProject = async () => {
+      const token = sessionStorage.getItem('jwt')
+      try {
+        await axios.post(
+          `${BACKEND_URL}/project/${projectId}/join`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+      } catch (error) {
+        console.error(error)
+      }
+
+      fetchProject()
+    }
 
     return (
       <FlexColumn rowGap={4} alignItems="center">
@@ -89,14 +110,21 @@ export default function ProjectDisplayPage() {
               isDisabled={project?.role !== 'owner'}
             />
           </FlexRow>
-          <Button
-            colorScheme="green"
-            onClick={() => {
-              navigate(`/label/${projectId}`)
-            }}
-          >
-            Start Labeling!
-          </Button>
+
+          {project?.role == null ? (
+            <Button colorScheme="green" onClick={joinProject}>
+              Join project!
+            </Button>
+          ) : (
+            <Button
+              colorScheme="green"
+              onClick={() => {
+                navigate(`/label/${projectId}`)
+              }}
+            >
+              Start Labeling!
+            </Button>
+          )}
         </FlexColumn>
         <SimpleGrid columns={[2, null, 4]} spacing="40px">
           {projectImages.map((image_url: any, index: number) => (
