@@ -5,17 +5,17 @@ import {
   CardBody,
   CardFooter,
   CardProps,
+  HStack,
   Heading,
   Stack,
   Tag,
-  Text,
-  HStack,
   TagLabel,
+  Text,
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { BACKEND_URL } from '../constants'
 
+import { BACKEND_URL } from '../constants'
+import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 interface ProjectCardProps extends Omit<CardProps, 'id'> {
@@ -51,7 +51,6 @@ export default function ProjectCard({
           },
           withCredentials: true,
         })
-        console.log(response.data)
         if (response.data && response.data.tags) {
           setTags(response.data.tags)
         }
@@ -66,31 +65,26 @@ export default function ProjectCard({
     <Card height="300px" {...cardProps}>
       <CardBody>
         <Stack>
-          {role && <Tag colorScheme='red' width="fit-content">{role}</Tag>}
+          {role && (
+            <Tag colorScheme="red" width="fit-content">
+              {role}
+            </Tag>
+          )}
           <Heading size="xl" textAlign="left">
             {name}
           </Heading>
 
           <HStack spacing={2}>
             {tags.map((tag, index) => (
-              <Tag
-                key={index}
-                variant="solid"
-                size="sm"
-              >
+              <Tag key={index} variant="solid" size="sm">
                 <TagLabel>{tag}</TagLabel>
               </Tag>
             ))}
           </HStack>
 
-          <Text
-            textAlign="left"
-            overflow="scroll"
-            textOverflow="ellipsis"
-          >
+          <Text textAlign="left" overflow="scroll" textOverflow="ellipsis">
             {description}
           </Text>
-
         </Stack>
       </CardBody>
       {!hideButton && (
