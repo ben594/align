@@ -1,4 +1,4 @@
-import { Box, Button, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { Box, Button, Image, SimpleGrid, Spinner } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -9,7 +9,6 @@ import Header from '../../components/Header'
 import ImageUploadWidget from './ImageUploadWidget'
 import { Project } from './ProjectCreationPage'
 import ProjectCard from '../../components/ProjectCard'
-import ZoomableImage from '../../components/ZoomableImage'
 import axios from 'axios'
 
 interface ProjectDisplayPageProps {
@@ -101,7 +100,7 @@ export default function ProjectDisplayPage() {
         <SimpleGrid columns={[2, null, 4]} spacing="40px">
           {projectImages.map((image_url: any, index: number) => (
             <Box key={index}>
-              <ZoomableImage src={image_url} w="100%" h="100%" fit="cover" />
+              <Image src={image_url} w="100%" h="100%" fit="cover" />
             </Box>
           ))}
         </SimpleGrid>
