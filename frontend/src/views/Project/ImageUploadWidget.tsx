@@ -16,9 +16,11 @@ import axios from 'axios'
 interface ImageUploadWidgetProps {
   projectId: string | undefined
   setProjectImages?: React.Dispatch<React.SetStateAction<String[]>>
+  isDisabled?: boolean
 }
 
 const ImageUploadWidget = ({
+  isDisabled,
   projectId,
   setProjectImages,
 }: ImageUploadWidgetProps) => {
@@ -92,6 +94,7 @@ const ImageUploadWidget = ({
 
         <FlexColumn rowGap={2}>
           <Input
+            isDisabled={isDisabled}
             type="file"
             multiple
             accept="image/*"
@@ -102,7 +105,12 @@ const ImageUploadWidget = ({
 
           <Spacer />
 
-          <Button colorScheme="blue" size="md" onClick={submitImages}>
+          <Button
+            isDisabled={isDisabled}
+            colorScheme="blue"
+            size="md"
+            onClick={submitImages}
+          >
             Upload
           </Button>
         </FlexColumn>

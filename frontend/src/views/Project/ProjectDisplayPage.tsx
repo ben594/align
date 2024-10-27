@@ -86,6 +86,7 @@ export default function ProjectDisplayPage() {
             <ImageUploadWidget
               projectId={projectId}
               setProjectImages={setProjectImages}
+              isDisabled={project?.role !== 'owner'}
             />
           </FlexRow>
           <Button
