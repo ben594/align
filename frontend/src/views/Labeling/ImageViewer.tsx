@@ -1,18 +1,12 @@
-import React, { useState } from 'react'
-import {
-  Box,
-  Button,
-  Flex,
-  IconButton,
-  Image,
-  Text,
-  Textarea,
-  VStack,
-} from '@chakra-ui/react'
-import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons'
-import FlexRow from '../../components/FlexRow'
+import { Box, Flex } from '@chakra-ui/react'
 
-export default function ImageViewer({ imageURL }) {
+import ZoomableImage from '../../components/ZoomableImage'
+
+interface ImageViewerProps {
+  imageURL: string
+}
+
+export default function ImageViewer({ imageURL }: ImageViewerProps) {
   return (
     <Box
       width="750px"
@@ -22,7 +16,12 @@ export default function ImageViewer({ imageURL }) {
       alignItems="center"
     >
       <Flex>
-        <Image src={imageURL} width="640px" height="360px" objectFit="cover" />
+        <ZoomableImage
+          src={imageURL}
+          width="640px"
+          height="360px"
+          objectFit="cover"
+        />
       </Flex>
     </Box>
   )
