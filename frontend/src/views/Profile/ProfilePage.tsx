@@ -86,7 +86,6 @@ export default function ProfilePage() {
           <Avatar
             name="Segun Adebayo"
             size="2xl"
-            src="https://bit.ly/sage-adebayo"
           />
           <Heading size="md">{userName}</Heading>
           <Text color="gray.500">johnsmith@duke.edu</Text>

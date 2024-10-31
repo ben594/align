@@ -65,6 +65,7 @@ export default function AuthPage() {
       if (response.status === 201 || response.status === 200) {
         const token = response.data.access_token
         const user_id = response.data.user_id
+        console.log(user_id);
         sessionStorage.setItem('jwt', token)
         sessionStorage.setItem('user_id', user_id)
         navigate('/dashboard')
