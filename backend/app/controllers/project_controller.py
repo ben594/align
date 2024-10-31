@@ -144,8 +144,16 @@ def join_project(project_id):
 @project_bp.route("/project/<int:project_id>/images", methods=["GET"])
 def get_all_project_images_url(project_id):
     images = Image.get_all_images_per_project(project_id)
-    image_urls = [image.image_url for image in images]
-    return jsonify(image_urls), 200
+    image_data = [
+        {
+            "image_url": image.image_url,
+            "label": image.label_text,
+            "labeled_status": image.labeled_status,
+            "accepted_status": image.accepted_status,
+        }
+        for image in images
+    ]
+    return jsonify(image_data), 200
 
 @project_bp.route("/project/<int:project_id>/tags", methods=["GET"])
 @jwt_required()
