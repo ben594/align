@@ -10,6 +10,7 @@ import ImageUploadWidget from './ImageUploadWidget'
 import { Project } from './ProjectCreationPage'
 import ProjectCard from '../../components/ProjectCard'
 import axios from 'axios'
+import ImageCard from '../../components/ImageCard'
 
 interface ProjectDisplayPageProps {
   projectId: string | undefined
@@ -126,13 +127,21 @@ export default function ProjectDisplayPage() {
             </Button>
           )}
         </FlexColumn>
+
         <SimpleGrid columns={[2, null, 4]} spacing="40px">
-          {projectImages.map((image_url: any, index: number) => (
-            <Box key={index}>
-              <Image src={image_url} w="100%" h="100%" fit="cover" />
-            </Box>
-          ))}
-        </SimpleGrid>
+          {projectImages.map((image: any, index: number) => (
+        <ImageCard 
+          key={index} 
+          image_url={image.image_url} 
+          label={image.label} 
+          tags={[
+            image.labeled_status ? "Labeled" : "Not Labeled",
+            image.accepted_status ? "Accepted" : "Not Accepted"
+          ]}
+        />
+        ))}
+       </SimpleGrid>
+  
       </FlexColumn>
     )
   }
