@@ -105,11 +105,13 @@ export default function ProjectDisplayPage() {
               <Spinner />
             )}
 
-            <ImageUploadWidget
-              projectId={projectId}
-              setProjectImages={setProjectImages}
-              isDisabled={project?.role !== 'owner'}
-            />
+            {project?.role == 'owner' && (
+              <ImageUploadWidget
+                projectId={projectId}
+                setProjectImages={setProjectImages}
+                isDisabled={project?.role !== 'owner'}
+              />
+            )}
           </FlexRow>
 
           {project?.role == null ? (
@@ -130,18 +132,17 @@ export default function ProjectDisplayPage() {
 
         <SimpleGrid columns={[2, null, 4]} spacing="40px">
           {projectImages.map((image: any, index: number) => (
-        <ImageCard 
-          key={index} 
-          image_url={image.image_url} 
-          label={image.label} 
-          tags={[
-            image.labeled_status ? "Labeled" : "Not Labeled",
-            image.accepted_status ? "Accepted" : "Not Accepted"
-          ]}
-        />
-        ))}
-       </SimpleGrid>
-  
+            <ImageCard
+              key={index}
+              image_url={image.image_url}
+              label={image.label}
+              tags={[
+                image.labeled_status ? 'Labeled' : 'Not Labeled',
+                image.accepted_status ? 'Accepted' : 'Not Accepted',
+              ]}
+            />
+          ))}
+        </SimpleGrid>
       </FlexColumn>
     )
   }
