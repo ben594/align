@@ -40,6 +40,27 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const navigate = useNavigate()
   const [tags, setTags] = useState<string[]>([])
+  const [vendorName, setVendorName] = useState(null)
+
+  const fetchVendorInfo = async () => {
+    const token = sessionStorage.getItem('jwt')
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/profile/${vendorUID}/user_name`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      )
+      if (response.data) {
+        setVendorName(response.data)
+      }
+    } catch (error) {
+      console.error('Error fetching vendor name:', error)
+    }
+  }
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -59,7 +80,8 @@ export default function ProjectCard({
       }
     }
     fetchTags()
-  }, [id])
+    fetchVendorInfo()
+  }, [id, vendorUID])
 
   return (
     <Card height="300px" {...cardProps}>
@@ -81,7 +103,15 @@ export default function ProjectCard({
               </Tag>
             ))}
           </HStack>
-
+          {vendorName && (
+            <Tag
+              cursor="pointer"
+              onClick={() => navigate(`/profile/${vendorUID}`)}
+              width="fit-content"
+            >
+              <TagLabel>{vendorName}</TagLabel>
+            </Tag>
+          )}
           <Text textAlign="left" overflow="scroll" textOverflow="ellipsis">
             {description}
           </Text>
