@@ -34,7 +34,7 @@ def get_project(project_id):
             jsonify(
                 {
                     "role": role.role_name if role else None,
-                    "vendorUid": project.vendor_uid,
+                    "vendorUID": project.vendor_uid,
                     "id": project.project_id,
                     "name": project.project_name,
                     "description": project.description,
