@@ -10,7 +10,10 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 export default function Header() {
   const user_id = sessionStorage.getItem('user_id')
@@ -29,6 +32,15 @@ export default function Header() {
     sessionStorage.removeItem('jwt')
     navigate('/auth')
   }
+
+  const [avatarSrc, setAvatarSrc] = useState(null);
+
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/profile/${user_id}/profile_image`)
+      .then(response => response.json())
+      .then(data => setAvatarSrc(data))
+      .catch(error => console.error("Error fetching user's name:", error))
+  }, [user_id])
 
   return (
     <Box
@@ -57,7 +69,7 @@ export default function Header() {
               variant="outline"
             />
             <MenuList>
-              <MenuItem icon={<Avatar boxSize="25px" />} onClick={goToProfile}>
+              <MenuItem icon={<Avatar boxSize="25px" src={avatarSrc || undefined} />} onClick={goToProfile}>
                 Profile
               </MenuItem>
               <MenuItem

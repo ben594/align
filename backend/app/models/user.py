@@ -104,3 +104,30 @@ class User(UserMixin):
             return f"{name[0][0]} {name[0][1]}"
         else:
             return None
+    
+    @staticmethod
+    def get_profile_image(user_id):
+        result = app.db.execute(
+            """
+            SELECT profile_image_url
+            FROM Users
+            WHERE user_id = :user_id
+            """,
+            user_id=user_id,
+        )
+        return result[0][0] if result else None
+    
+    @staticmethod
+    def update_profile_image(user_id, new_image_url):
+        print(new_image_url)
+        result = app.db.execute(
+            """
+            UPDATE Users
+            SET profile_image_url = :new_image_url
+            WHERE user_id = :user_id
+            RETURNING user_id
+            """,
+            user_id=user_id,
+            new_image_url=new_image_url
+        )
+        return bool(result)
