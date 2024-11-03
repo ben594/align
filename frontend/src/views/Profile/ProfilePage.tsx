@@ -36,8 +36,8 @@ export default function ProfilePage() {
   const { user_id } = useParams()
   const [acceptedLabelCount, setAcceptedLabelCount] = useState<0>()
   const [userName, setUserName] = useState<string>('')
-  const [avatarSrc, setAvatarSrc] = useState(null);
-  const [tempAvatarSrc, setTempAvatarSrc] = useState(null);
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
+  const [tempAvatarSrc, setTempAvatarSrc] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -69,13 +69,15 @@ export default function ProfilePage() {
 
   /* I apologize for all of this messy profile picture code. I will clean it up at some point */
 
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setTempAvatarSrc(imageUrl); 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setTempAvatarSrc(imageUrl); 
+      }
     }
   };
 
