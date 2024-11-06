@@ -93,7 +93,7 @@ export default function ProfilePage() {
   }
 
   const handleCloseModal = async () => {
-    if (tempAvatarSrc === null) {
+    if (tempAvatarSrc === null && avatarSrc !== null) {
       try {
         await toast.promise(
           axios
