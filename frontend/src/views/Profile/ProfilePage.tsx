@@ -1,10 +1,19 @@
 import {
   Avatar,
+  AvatarBadge,
   Badge,
   Box,
   Button,
   HStack,
   Heading,
+  Icon,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Stat,
   StatArrow,
   StatHelpText,
@@ -12,22 +21,14 @@ import {
   StatNumber,
   Text,
   VStack,
-  AvatarBadge,
-  Icon,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { useEffect, useState, useRef} from 'react'
 import { Link, useParams } from 'react-router-dom'
-import Header from '../../components/Header'
+import { useEffect, useRef, useState } from 'react'
+
 import { EditIcon } from '@chakra-ui/icons'
+import Header from '../../components/Header'
 import axios from 'axios'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
@@ -36,11 +37,11 @@ export default function ProfilePage() {
   const { user_id } = useParams()
   const [acceptedLabelCount, setAcceptedLabelCount] = useState<0>()
   const [userName, setUserName] = useState<string>('')
-  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
-  const [tempAvatarSrc, setTempAvatarSrc] = useState<string | null>(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const toast = useToast();
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null)
+  const [tempAvatarSrc, setTempAvatarSrc] = useState<string | null>(null)
+  const [isHovered, setIsHovered] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/profile/${user_id}/stats`)
@@ -69,91 +70,108 @@ export default function ProfilePage() {
 
   /* I apologize for all of this messy profile picture code. I will clean it up at some point */
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      const file = event.target.files[0];
+      const file = event.target.files[0]
       if (file) {
-        const imageUrl = URL.createObjectURL(file);
-        setTempAvatarSrc(imageUrl); 
+        const imageUrl = URL.createObjectURL(file)
+        setTempAvatarSrc(imageUrl)
       }
     }
-  };
+  }
 
   const handleSelectImageClick = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.click();
+      fileInputRef.current.click()
     }
-  };
+  }
 
   const handleRemoveAvatar = () => {
-    setTempAvatarSrc(null);
+    setTempAvatarSrc(null)
   }
 
   const handleCloseModal = async () => {
-    if(tempAvatarSrc === null){
-      try{
+    if (tempAvatarSrc === null) {
+      try {
         await toast.promise(
-          axios.post(
-            `${BACKEND_URL}/profile/${user_id}/clear_profile_image`,
-            {
+          axios
+            .post(`${BACKEND_URL}/profile/${user_id}/clear_profile_image`, {
               headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
               },
-            }
-          ).then(() => {
-            setAvatarSrc(null);
-          }),
+            })
+            .then(() => {
+              setAvatarSrc(null)
+            }),
           {
-            loading: { title: 'Uploading image', description: 'Please wait...' },
-            success: { title: 'Upload successful', description: 'Profile image changed successfully!' },
-            error: { title: 'Upload failed', description: 'Failed to upload image.' },
+            loading: {
+              title: 'Uploading image',
+              description: 'Please wait...',
+            },
+            success: {
+              title: 'Upload successful',
+              description: 'Profile image changed successfully!',
+            },
+            error: {
+              title: 'Upload failed',
+              description: 'Failed to upload image.',
+            },
           }
-        );
+        )
+      } catch (error) {
+        console.error(error)
       }
-      catch (error) {
-        console.error(error);
-      }
-    }
-    else if (tempAvatarSrc !== avatarSrc){
-      try{
-        const formData = new FormData();
-        const avatarResponse = await fetch(tempAvatarSrc);
-        const blob = await avatarResponse.blob();
-        const file = new File([blob], "profile_image.jpg", { type: blob.type });
-        formData.append("profile_image", file);
+    } else if (tempAvatarSrc !== avatarSrc) {
+      try {
+        const formData = new FormData()
+        const avatarResponse = await fetch(tempAvatarSrc)
+        const blob = await avatarResponse.blob()
+        const file = new File([blob], 'profile_image.jpg', { type: blob.type })
+        formData.append('profile_image', file)
 
         await toast.promise(
-          axios.post(
-            `${BACKEND_URL}/profile/${user_id}/upload_profile_image`,
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
-              },
-            }
-          ).then((uploadResponse) => {
-            setAvatarSrc(uploadResponse.data.avatarUrl);
-          }),
+          axios
+            .post(
+              `${BACKEND_URL}/profile/${user_id}/upload_profile_image`,
+              formData,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
+                },
+              }
+            )
+            .then(uploadResponse => {
+              setAvatarSrc(uploadResponse.data.avatarUrl)
+            }),
           {
-            loading: { title: 'Uploading image', description: 'Please wait...' },
-            success: { title: 'Upload successful', description: 'Profile image changed successfully!' },
-            error: { title: 'Upload failed', description: 'Failed to upload image.' },
+            loading: {
+              title: 'Uploading image',
+              description: 'Please wait...',
+            },
+            success: {
+              title: 'Upload successful',
+              description: 'Profile image changed successfully!',
+            },
+            error: {
+              title: 'Upload failed',
+              description: 'Failed to upload image.',
+            },
           }
-        );
+        )
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
     }
-    onClose();
-  };
+    onClose()
+  }
 
   const handleOpenModal = () => {
-    setTempAvatarSrc(avatarSrc);
-    onOpen();
+    setTempAvatarSrc(avatarSrc)
+    onOpen()
   }
 
   return (
@@ -205,7 +223,12 @@ export default function ProfilePage() {
               cursor="pointer"
               onClick={handleOpenModal}
             >
-              <Avatar key={avatarSrc ? 'image' : 'no-image'} name={userName} size="2xl" src={avatarSrc || undefined}>
+              <Avatar
+                key={avatarSrc ? 'image' : 'no-image'}
+                name={userName}
+                size="2xl"
+                src={avatarSrc || undefined}
+              >
                 <AvatarBadge
                   boxSize="1em"
                   bg={isHovered ? 'blue.600' : 'blue.500'}
@@ -248,20 +271,34 @@ export default function ProfilePage() {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={4} align="center">
-              <Text>A picture helps people recognize you and lets you know when you're signed in to your account</Text>
-              <Avatar key={tempAvatarSrc ? 'image' : 'no-image'} name={userName} size="2xl" src={tempAvatarSrc || undefined} cursor="pointer" onClick={handleSelectImageClick}/>
+              <Text>
+                A picture helps people recognize you and lets you know when
+                you're signed in to your account
+              </Text>
+              <Avatar
+                key={tempAvatarSrc ? 'image' : 'no-image'}
+                name={userName}
+                size="2xl"
+                src={tempAvatarSrc || undefined}
+                cursor="pointer"
+                onClick={handleSelectImageClick}
+              />
             </VStack>
           </ModalBody>
 
           <ModalFooter justifyContent="center">
-          <HStack spacing={4} w="90%">
-            <Button colorScheme="blue" w="50%" onClick={handleSelectImageClick}>
-              Change
-            </Button>
-            <Button variant="ghost" w="50%" onClick={handleRemoveAvatar}>
-              Remove
-            </Button>
-          </HStack>
+            <HStack spacing={4} w="90%">
+              <Button
+                colorScheme="blue"
+                w="50%"
+                onClick={handleSelectImageClick}
+              >
+                Change
+              </Button>
+              <Button variant="ghost" w="50%" onClick={handleRemoveAvatar}>
+                Remove
+              </Button>
+            </HStack>
           </ModalFooter>
         </ModalContent>
 
