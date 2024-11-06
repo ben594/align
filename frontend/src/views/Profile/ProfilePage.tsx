@@ -37,6 +37,7 @@ export default function ProfilePage() {
   const { user_id } = useParams()
   const [acceptedLabelCount, setAcceptedLabelCount] = useState<0>()
   const [balance, setBalance] = useState<0>()
+  const [email, setEmail] = useState<string>('')
   const [userName, setUserName] = useState<string>('')
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null)
   const [tempAvatarSrc, setTempAvatarSrc] = useState<string | null>(null)
@@ -64,13 +65,18 @@ export default function ProfilePage() {
   }, [user_id])
 
   useEffect(() => {
+    fetch(`${BACKEND_URL}/profile/${user_id}/email`)
+      .then(response => response.json())
+      .then(data => setEmail(data))
+      .catch(error => console.error("Error fetching user's email:", error))
+  }, [user_id])
+
+  useEffect(() => {
     fetch(`${BACKEND_URL}/profile/${user_id}/profile_image`)
       .then(response => response.json())
       .then(data => setAvatarSrc(data))
       .catch(error => console.error("Error fetching user's name:", error))
   }, [user_id])
-
-  // TODO: get account balance
 
   /* I apologize for all of this messy profile picture code. I will clean it up at some point */
 
@@ -249,7 +255,7 @@ export default function ProfilePage() {
               </Avatar>
             </Box>
             <Heading size="md">{userName}</Heading>
-            <Text color="gray.500">johnsmith@duke.edu</Text>
+            <Text color="gray.500">{email}</Text>
 
             <HStack spacing={2} wrap="wrap" justify="center">
               <Badge colorScheme="pink" variant="solid">

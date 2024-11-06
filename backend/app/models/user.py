@@ -105,6 +105,18 @@ class User(UserMixin):
             return f"{name[0][0]} {name[0][1]}"
         else:
             return None
+
+    @staticmethod
+    def get_email(user_id):
+        email = app.db.execute(
+            """
+            SELECT email
+            FROM Users
+            WHERE user_id = :user_id
+            """,
+            user_id=user_id,
+        )
+        return email[0][0] if email else None
     
     @staticmethod
     def get_profile_image(user_id):

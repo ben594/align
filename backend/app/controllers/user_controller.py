@@ -62,10 +62,14 @@ def get_user_stats(user_id):
 @bp.route("/profile/<int:user_id>/user_name", methods=["GET"])
 # @jwt_required()
 def get_user_name(user_id):
-    uid = request.args.get(user_id)
     user_name = User.get_user_name(user_id)
-    print(user_name)
     return jsonify(user_name), 200
+
+@bp.route("/profile/<int:user_id>/email", methods=["GET"])
+# @jwt_required() # TODO: why jwt not working?
+def get_email(user_id):
+    email = User.get_email(user_id)
+    return jsonify(email), 200
 
 @bp.route("/profile/<int:user_id>/profile_image", methods=["GET"])
 # @jwt_required()
