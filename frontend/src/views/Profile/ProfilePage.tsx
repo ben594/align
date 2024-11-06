@@ -89,6 +89,10 @@ export default function ProfilePage() {
   }
 
   const handleRemoveAvatar = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '' // Clear the file input so the same file can be selected again
+    }
+
     setTempAvatarSrc(null)
   }
 
@@ -127,7 +131,7 @@ export default function ProfilePage() {
     } else if (tempAvatarSrc !== avatarSrc) {
       try {
         const formData = new FormData()
-        const avatarResponse = await fetch(tempAvatarSrc)
+        const avatarResponse = await fetch(tempAvatarSrc as RequestInfo)
         const blob = await avatarResponse.blob()
         const file = new File([blob], 'profile_image.jpg', { type: blob.type })
         formData.append('profile_image', file)
