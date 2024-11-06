@@ -166,7 +166,6 @@ def get_project_tags(project_id):
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])
 @jwt_required()
 def upload_images(project_id):
-    # TODO: ensure that user_id is the owner/admin of the project
     user_id = get_jwt_identity()
 
     if not Project.is_owner(user_id, project_id):
