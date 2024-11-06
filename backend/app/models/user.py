@@ -6,17 +6,18 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, user_id, email, firstname, lastname):
+    def __init__(self, user_id, email, firstname, lastname, balance):
         self.user_id = user_id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
+        self.balance = balance
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute(
             """
-            SELECT password, user_id, email, firstname, lastname
+            SELECT password, user_id, email, firstname, lastname, balance
             FROM Users
             WHERE email = :email
             """,
@@ -69,7 +70,7 @@ class User(UserMixin):
     def get(id):
         rows = app.db.execute(
             """
-            SELECT user_id, email, firstname, lastname
+            SELECT user_id, email, firstname, lastname, balance
             FROM Users
             WHERE user_id = :id
             """,
@@ -110,6 +111,18 @@ class User(UserMixin):
         result = app.db.execute(
             """
             SELECT profile_image_url
+            FROM Users
+            WHERE user_id = :user_id
+            """,
+            user_id=user_id,
+        )
+        return result[0][0] if result else None
+
+    @staticmethod
+    def get_balance(user_id):
+        result = app.db.execute(
+            """
+            SELECT balance
             FROM Users
             WHERE user_id = :user_id
             """,

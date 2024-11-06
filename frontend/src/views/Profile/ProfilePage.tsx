@@ -36,6 +36,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 export default function ProfilePage() {
   const { user_id } = useParams()
   const [acceptedLabelCount, setAcceptedLabelCount] = useState<0>()
+  const [balance, setBalance] = useState<0>()
   const [userName, setUserName] = useState<string>('')
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null)
   const [tempAvatarSrc, setTempAvatarSrc] = useState<string | null>(null)
@@ -46,7 +47,10 @@ export default function ProfilePage() {
   useEffect(() => {
     fetch(`${BACKEND_URL}/profile/${user_id}/stats`)
       .then(response => response.json())
-      .then(data => setAcceptedLabelCount(data))
+      .then(data => {
+        setAcceptedLabelCount(data.num_accepted_labels)
+        setBalance(data.balance)
+      })
       .catch(error =>
         console.error("Error fetching user's accepted label count:", error)
       )
@@ -199,7 +203,7 @@ export default function ProfilePage() {
           <VStack align="flex-start">
             <Stat>
               <StatLabel>Account Balance</StatLabel>
-              <StatNumber>$768.39</StatNumber>
+              <StatNumber>{balance}</StatNumber>
               <StatHelpText>
                 <StatArrow type="increase" />
                 23.36%

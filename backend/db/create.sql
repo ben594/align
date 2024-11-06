@@ -4,7 +4,8 @@ CREATE TABLE Users (
     password VARCHAR(255) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
-    profile_image_url VARCHAR(255) DEFAULT NULL
+    profile_image_url VARCHAR(255) DEFAULT NULL,
+    balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00
 );
 
 CREATE TABLE Projects (

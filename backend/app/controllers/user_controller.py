@@ -52,9 +52,12 @@ def logout():
 @bp.route("/profile/<int:user_id>/stats", methods=["GET"])
 # @jwt_required()
 def get_user_stats(user_id):
-    uid = request.args.get(user_id)
-    num_accepted_labels = User.get_accepted_label_count(uid)
-    return jsonify(num_accepted_labels), 200
+    num_accepted_labels = User.get_accepted_label_count(user_id)
+    balance = User.get_balance(user_id)
+    return jsonify({
+        'num_accepted_labels': num_accepted_labels,
+        'balance': balance
+        }), 200
 
 @bp.route("/profile/<int:user_id>/user_name", methods=["GET"])
 # @jwt_required()
