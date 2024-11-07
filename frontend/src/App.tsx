@@ -46,6 +46,14 @@ const router = createBrowserRouter([
       <AuthRoute>
         <ReviewingInterface />
       </AuthRoute>
+    )
+  },
+  {
+    path: '/review/:projectId',
+    element: (
+      <AuthRoute>
+        <ReviewingInterface />
+      </AuthRoute>
     ),
   },
   {

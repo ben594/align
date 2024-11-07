@@ -73,6 +73,22 @@ class Image:
         )
 
         return Image(*(rows[0])) if rows else None
+    
+    @staticmethod
+    def get_next_image_review(project_id):
+        rows = app.db.execute(
+            """
+            SELECT *
+            FROM Images
+            WHERE project_id = :project_id
+            AND labeled_status = TRUE
+            AND accepted_status = FALSE
+            LIMIT 1
+            """,
+            project_id=project_id,
+        )
+
+        return Image(*(rows[0])) if rows else None
 
     @staticmethod
     def get_top_labelers():

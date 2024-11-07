@@ -119,14 +119,24 @@ export default function ProjectDisplayPage() {
               Join project!
             </Button>
           ) : (
-            <Button
-              colorScheme="green"
-              onClick={() => {
-                navigate(`/label/${projectId}`)
-              }}
-            >
-              Start Labeling!
-            </Button>
+            <>
+              <Button
+                colorScheme="green"
+                onClick={() => {
+                  navigate(`/label/${projectId}`)
+                }}
+              >
+                Start Labeling!
+              </Button>
+              <Button
+                colorScheme="green"
+                onClick={() => {
+                  navigate(`/review/${projectId}`)
+                }}
+              >
+                Start Reviewing!
+              </Button>
+            </>
           )}
         </FlexColumn>
 

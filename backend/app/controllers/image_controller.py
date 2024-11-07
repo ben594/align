@@ -70,3 +70,25 @@ def get_next_image(project_id):
             200,
         )
     return jsonify({f"error": "Error getting image {image_id}"}), 400
+
+
+@image_bp.route("/images/next/review/<int:project_id>", methods=["GET"])
+@jwt_required()
+def get_next_image_review(project_id):
+    image = Image.get_next_image_review(project_id)
+    if image:
+        return (
+            jsonify(
+                {
+                    "imageID": image.image_id,
+                    "imageURL": image.image_url,
+                    "projectID": image.project_id,
+                    "labeledStatus": image.labeled_status,
+                    "acceptedStatus": image.accepted_status,
+                    "labelerUID": image.labeler_uid,
+                    "labelText": image.label_text,
+                }
+            ),
+            200,
+        )
+    return jsonify({f"error": "Error getting image {image_id}"}), 400
