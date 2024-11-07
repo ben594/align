@@ -24,6 +24,7 @@ const ImageUploadWidget = ({
   projectId,
   setProjectImages,
 }: ImageUploadWidgetProps) => {
+  const user_id = sessionStorage.getItem('user_id')
   const [selectedFiles, setSelectedFiles] = useState<FileList | undefined>(
     undefined
   )
@@ -76,6 +77,18 @@ const ImageUploadWidget = ({
         title: 'Images uploaded successfully!',
         status: 'success',
       })
+
+      // Get price per image for this project
+      const pricePerImage = await axios.get(`${BACKEND_URL}/project/${projectId}/get_project_ppi`)
+      const totalPrice = (selectedFiles?.length ?? 0) * pricePerImage.data
+
+      // User must pay if images successfuly uploaded
+      try {
+        await axios.post(`${BACKEND_URL}/subtract_from_balance/${user_id}/${totalPrice}`);
+        console.log("Balance deducted successfully.");
+      } catch (error) {
+        console.error("Error deducting balance:", error);
+      }
     } catch (error) {
       toast({
         title: 'Error',

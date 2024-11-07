@@ -152,6 +152,18 @@ class Project:
             role=role,
         )
         return [Project(*row) for row in rows] if rows else []
+    
+    @staticmethod
+    def get_project_ppi(project_id):
+        price = app.db.execute(
+            """
+            SELECT price_per_image
+            FROM Projects
+            WHERE project_id = :project_id
+            """,
+            project_id = project_id
+        )
+        return price[0][0] if price else None
 
     @staticmethod
     def get_all_projects():

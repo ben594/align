@@ -48,6 +48,10 @@ def logout():
     logout_user()
     return jsonify({"message": "User logged out successfully"}), 200
 
+@bp.route("/subtract_from_balance/<int:user_id>/<amount>", methods=["POST"])
+def subtract_from_balance(user_id, amount):
+    User.subtract_from_balance(user_id, amount)
+    return jsonify({"message": "Payment received"}), 200
 
 @bp.route("/profile/<int:user_id>/stats", methods=["GET"])
 # @jwt_required()
