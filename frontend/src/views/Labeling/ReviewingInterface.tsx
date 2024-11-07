@@ -30,11 +30,11 @@ export default function ReviewingInterface() {
   }, [])
 
   useEffect(() => {
-    
+
   })
 
   const approveLabel = async () => {
-    try {   
+    try {
       const token = sessionStorage.getItem('jwt')
       const formData = new FormData()
       formData.append('projectID', projectId ?? '')
@@ -66,6 +66,7 @@ export default function ReviewingInterface() {
     }
   }
 
+  // TODO rejectLabel
   const rejectLabel = async () => {
 
   }
@@ -102,6 +103,7 @@ export default function ReviewingInterface() {
     }
   }
 
+  // TODO: in the future we can make the label text editable
   return (
     <Box
       width="100vw"
