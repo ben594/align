@@ -29,3 +29,13 @@ def submit_label():
     if label_id:
         return jsonify({"message": "Label submitted", "label_id": label_id}), 201
     return jsonify({"error": "Failed to submit label"}), 500
+
+@label_bp.route("/approve_label", methods=["POST"])
+@jwt_required()
+def approve_label():
+    imageURL = request.form.get("imageURL")
+    approve_label = Label.approve_label(imageURL)
+    if approve_label:
+        return jsonify({"message": "Label approved", "label_id": label_id}), 201
+    return jsonify({"error": "Failed to approve label"}), 500
+

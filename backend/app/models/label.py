@@ -33,5 +33,17 @@ class Label:
         )
 
         return image_url if image_url else None
+    
+    @staticmethod
+    def approve_label(image_url):
+        const status = app.db.execute(
+            """
+            UPDATE Images
+            SET accepted_status = TRUE
+            WHERE image_url = :image_url
+            """,
+            image_url=image_url
+        )
+        return bool(status)
 
 
