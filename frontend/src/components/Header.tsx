@@ -25,7 +25,9 @@ export default function Header() {
   }
 
   const goToProfile = () => {
-    navigate(`/profile/${user_id}`)
+    if (user_id) {
+      navigate(`/profile/${user_id}`)
+    }
   }
 
   const logout = () => {
