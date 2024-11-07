@@ -36,7 +36,7 @@ class Label:
     
     @staticmethod
     def approve_label(image_url):
-        const status = app.db.execute(
+        status = app.db.execute(
             """
             UPDATE Images
             SET accepted_status = TRUE
