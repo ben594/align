@@ -208,21 +208,13 @@ export default function ProfilePage() {
         >
           <VStack align="flex-start">
             <Stat>
-              <StatLabel>Account Balance</StatLabel>
+              <StatLabel>Account Balance ($USD)</StatLabel>
               <StatNumber>{balance}</StatNumber>
-              <StatHelpText>
-                <StatArrow type="increase" />
-                23.36%
-              </StatHelpText>
             </Stat>
 
             <Stat>
               <StatLabel>Accepted Label Count</StatLabel>
               <StatNumber>{acceptedLabelCount}</StatNumber>
-              <StatHelpText>
-                <StatArrow type="increase" />
-                34.22%
-              </StatHelpText>
             </Stat>
             <Link to="/leaderboard">
               <Button colorScheme="blue">Compare</Button>
