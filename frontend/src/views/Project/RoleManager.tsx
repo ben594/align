@@ -19,6 +19,8 @@ import { CloseIcon } from '@chakra-ui/icons'
 import { Spacing } from '../../components/Spacing'
 import { useState } from 'react'
 
+// TODO: integrate with backend
+
 interface RoleManagerProps {
   projectId: string | undefined
 }
@@ -116,7 +118,7 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
               <Tr>
                 <Td colSpan={2}>
                   <Input
-                    placeholder="Enter email"
+                    placeholder="Email"
                     value={newEmail}
                     onChange={e => setNewEmail(e.target.value)}
                     size="sm"
