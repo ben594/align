@@ -9,6 +9,7 @@ import Leaderboard from './views/Leaderboard/Leaderboard'
 import ProfilePage from './views/Profile/ProfilePage'
 import ProjectCreationPage from './views/Project/ProjectCreationPage.tsx'
 import ProjectDisplayPage from './views/Project/ProjectDisplayPage.tsx'
+import ProjectSettingsPage from './views/Project/ProjectSettingsPage.tsx'
 import ReviewingInterface from './views/Labeling/ReviewingInterface'
 
 const router = createBrowserRouter([
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
       <AuthRoute>
         <ReviewingInterface />
       </AuthRoute>
-    )
+    ),
   },
   {
     path: '/review/:projectId',
@@ -73,6 +74,14 @@ const router = createBrowserRouter([
     element: (
       <AuthRoute>
         <ProjectDisplayPage />
+      </AuthRoute>
+    ),
+  },
+  {
+    path: '/project/:projectId/settings',
+    element: (
+      <AuthRoute>
+        <ProjectSettingsPage />
       </AuthRoute>
     ),
   },
