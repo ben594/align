@@ -1,4 +1,4 @@
-import { Box, Button, Image, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { Box, Button, IconButton, SimpleGrid, Spinner } from '@chakra-ui/react'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -6,11 +6,12 @@ import { BACKEND_URL } from '../../constants'
 import FlexColumn from '../../components/FlexColumn'
 import FlexRow from '../../components/FlexRow'
 import Header from '../../components/Header'
+import ImageCard from '../../components/ImageCard'
 import ImageUploadWidget from './ImageUploadWidget'
 import { Project } from './ProjectCreationPage'
 import ProjectCard from '../../components/ProjectCard'
+import { SettingsIcon } from '@chakra-ui/icons'
 import axios from 'axios'
-import ImageCard from '../../components/ImageCard'
 
 interface ProjectDisplayPageProps {
   projectId: string | undefined
@@ -106,11 +107,22 @@ export default function ProjectDisplayPage() {
             )}
 
             {project?.role == 'owner' && (
-              <ImageUploadWidget
-                projectId={projectId}
-                setProjectImages={setProjectImages}
-                isDisabled={project?.role !== 'owner'}
-              />
+              <>
+                <ImageUploadWidget
+                  projectId={projectId}
+                  setProjectImages={setProjectImages}
+                  isDisabled={project?.role !== 'owner'}
+                />
+                <IconButton
+                  icon={<SettingsIcon />}
+                  aria-label="Settings"
+                  colorScheme="blue"
+                  isRound
+                  onClick={() => {
+                    navigate(`/project/${projectId}/settings`)
+                  }}
+                />
+              </>
             )}
           </FlexRow>
 
