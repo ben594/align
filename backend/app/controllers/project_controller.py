@@ -131,6 +131,7 @@ def create_project():
         return jsonify({"message": "Project created", "project_id": project_id}), 201
     return jsonify({"error": "Failed to create project"}), 500
 
+
 @project_bp.route("/project/<int:project_id>/join", methods=["POST"])
 @jwt_required()
 def join_project(project_id):
@@ -155,6 +156,7 @@ def get_all_project_images_url(project_id):
     ]
     return jsonify(image_data), 200
 
+
 @project_bp.route("/project/<int:project_id>/tags", methods=["GET"])
 @jwt_required()
 def get_project_tags(project_id):
@@ -162,10 +164,12 @@ def get_project_tags(project_id):
     print(tags)
     return jsonify(tags=tags), 200
 
+
 @project_bp.route("/project/<int:project_id>/get_project_ppi", methods=["GET"])
 def get_project_ppi(project_id):
     price_per_image = Project.get_project_ppi(project_id)
     return jsonify(price_per_image), 200
+
 
 # Route to upload multiple images to azure blob storage
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])

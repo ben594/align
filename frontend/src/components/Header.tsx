@@ -57,7 +57,12 @@ export default function Header() {
   const [avatarSrc, setAvatarSrc] = useState(null)
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/profile/${user_id}/profile_image`)
+    const token = sessionStorage.getItem('jwt')
+    fetch(`${BACKEND_URL}/profile/${user_id}/profile_image`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => setAvatarSrc(data))
       .catch(error => console.error("Error fetching user's name:", error))

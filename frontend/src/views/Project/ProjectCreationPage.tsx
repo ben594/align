@@ -38,7 +38,6 @@ export default function ProjectCreationPage() {
   const [pricePerImage, setPricePerImage] = useState(0)
   const [tag, setTag] = useState('')
   const [tags, setTags] = useState<string[]>([]);
-  const user_id = sessionStorage.getItem('user_id')
 
   const navigate = useNavigate()
   const toast = useToast()

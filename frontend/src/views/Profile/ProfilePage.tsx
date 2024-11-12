@@ -30,6 +30,8 @@ import { useEffect, useRef, useState } from 'react'
 import { EditIcon } from '@chakra-ui/icons'
 import Header from '../../components/Header'
 import axios from 'axios'
+import CardList from '../../components/CardList'
+import { Project } from '../Project/ProjectCreationPage'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
@@ -42,11 +44,28 @@ export default function ProfilePage() {
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null)
   const [tempAvatarSrc, setTempAvatarSrc] = useState<string | null>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const [userProjectsCards, setUserProjectsCards] = useState<Project[]>([])
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
 
+  const parseProjectInfo = (projectListRaw: Project[]): Project[] => {
+    const projectList: Project[] = []
+
+    projectListRaw.forEach((projectRaw: Project) => {
+      projectList.push(projectRaw as Project)
+    })
+
+    return projectList
+  }
+
   useEffect(() => {
-    fetch(`${BACKEND_URL}/profile/${user_id}/stats`)
+    const token = sessionStorage.getItem('jwt')
+    fetch(`${BACKEND_URL}/profile/${user_id}/stats`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => {
         setAcceptedLabelCount(data.num_accepted_labels)
@@ -58,24 +77,53 @@ export default function ProfilePage() {
   }, [user_id])
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/profile/${user_id}/user_name`)
+    const token = sessionStorage.getItem('jwt')
+    fetch(`${BACKEND_URL}/profile/${user_id}/user_name`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => setUserName(data))
       .catch(error => console.error("Error fetching user's name:", error))
   }, [user_id])
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/profile/${user_id}/email`)
+    const token = sessionStorage.getItem('jwt')
+    fetch(`${BACKEND_URL}/profile/${user_id}/email`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => setEmail(data))
       .catch(error => console.error("Error fetching user's email:", error))
   }, [user_id])
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/profile/${user_id}/profile_image`)
+    const token = sessionStorage.getItem('jwt')
+    fetch(`${BACKEND_URL}/profile/${user_id}/profile_image`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => setAvatarSrc(data))
       .catch(error => console.error("Error fetching user's name:", error))
+  }, [user_id])
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwt')
+    fetch(`${BACKEND_URL}/user/${user_id}/projects`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        setUserProjectsCards(data.projects)
+      })
+      .catch(error => console.error("Error fetching user's projects:", error))
   }, [user_id])
 
   /* I apologize for all of this messy profile picture code. I will clean it up at some point */
@@ -206,7 +254,7 @@ export default function ProfilePage() {
           alignItems="center"
           justifyContent="center"
         >
-          <VStack align="flex-start">
+          <VStack>
             <Stat>
               <StatLabel>Account Balance ($USD)</StatLabel>
               <StatNumber>{balance}</StatNumber>
@@ -267,6 +315,12 @@ export default function ProfilePage() {
               </Badge>
             </HStack>
           </VStack>
+        </Box>
+        <Box width="80%">
+          <Heading marginTop="80px" textAlign="center">
+            Vendor Projects
+          </Heading>
+          <CardList infoList={userProjectsCards} includeAddCard={false} />
         </Box>
       </Box>
 
