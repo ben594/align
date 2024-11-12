@@ -41,7 +41,7 @@ export default function ReviewingInterface() {
       formData.append('imageURL', imageURL ?? '')
 
       // TODO fix post request bc it's not working
-      const response = await axios.post(`${BACKEND_URL}/approve_label`, {
+      const response = await axios.post(`${BACKEND_URL}/approve_label`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -95,7 +95,7 @@ export default function ReviewingInterface() {
     } catch {
       toast({
         title: 'Error',
-        description: 'No more images to label for this project.',
+        description: 'No more images to review for this project.',
         status: 'error',
       })
       navigate(`/project/${projectId}/images`)
