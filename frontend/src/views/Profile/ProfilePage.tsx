@@ -318,7 +318,7 @@ export default function ProfilePage() {
         </Box>
         <Box width="80%">
           <Heading marginTop="80px" textAlign="center">
-            Vendor Projects
+            Projects You Own
           </Heading>
           <CardList infoList={userProjectsCards} includeAddCard={false} />
         </Box>

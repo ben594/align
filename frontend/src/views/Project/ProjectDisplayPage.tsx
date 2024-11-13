@@ -21,6 +21,8 @@ export default function ProjectDisplayPage() {
   const navigate = useNavigate()
   const { projectId } = useParams()
 
+  // TODO Only display start labeling / reviewing buttons when images have been uploaded
+
   const ImageGrid = ({ projectId }: ProjectDisplayPageProps) => {
     const [projectImages, setProjectImages] = useState<String[]>([])
     const [project, setProject] = useState<Project>()
