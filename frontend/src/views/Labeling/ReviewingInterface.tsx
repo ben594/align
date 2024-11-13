@@ -68,7 +68,35 @@ export default function ReviewingInterface() {
 
   // TODO rejectLabel
   const rejectLabel = async () => {
+    try {
+      const token = sessionStorage.getItem('jwt')
+      const formData = new FormData()
+      formData.append('projectID', projectId ?? '')
+      formData.append('imageURL', imageURL ?? '')
 
+      const response = await axios.post(`${BACKEND_URL}/reject_label`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.status === 201 || response.status === 200) {
+        toast({
+          title: 'Label rejected successfully!',
+          status: 'success',
+        })
+        getNextImage()
+      } else {
+        throw new Error('Failed to reject label.')
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to reject label.',
+        status: 'error',
+      })
+    }
   }
 
   const getNextImage = async () => {
@@ -126,44 +154,12 @@ export default function ReviewingInterface() {
           <Button width="100px" colorScheme="green" onClick={approveLabel}>
             Approve
           </Button>
-          
-          <Box marginTop="50px" width="50vw">
-          <Textarea
-            placeholder="Minor edits to the label needed but approved"
-            value={label}
-            onChange={e => setLabel(e.target.value)}
-          />
-          <FlexRow
-            width="100%"
-            columnGap={1}
-            marginTop="20px"
-            justifyContent="center"
-          >
-            <Button width="100px" colorScheme="green" onClick={approveLabel}>
-              Approve
-            </Button>
-
-          </FlexRow>
-        </Box>
-
-          <Box marginTop="50px" width="50vw">
-          <Textarea
-            placeholder="Please provide rejection feedback"
-            value={reviewFeedback}
-            onChange={e => setFeedback(e.target.value)}
-          />
-          <FlexRow
-            width="100%"
-            columnGap={1}
-            marginTop="20px"
-            justifyContent="center"
-          >
-            <Button width="100px" colorScheme="red" onClick={rejectLabel}>
-              Reject
-            </Button>
-          </FlexRow>
-        </Box>
+          <Button width="100px" colorScheme="red" onClick={rejectLabel}>
+            Reject
+          </Button>
         </FlexRow>
+
+  
       </Box>
     </Box>
   )
