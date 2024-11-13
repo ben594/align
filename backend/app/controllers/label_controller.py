@@ -36,6 +36,15 @@ def approve_label():
     imageURL = request.form.get("imageURL")
     approve_label = Label.approve_label(imageURL)
     if approve_label:
-        return jsonify({"message": "Label approved", "label_id": label_id}), 201
+        return jsonify({"message": "Label approved"}), 201
     return jsonify({"error": "Failed to approve label"}), 500
+
+@label_bp.route("/reject_label", methods=["POST"])
+@jwt_required()
+def reject_label():
+    imageURL = request.form.get("imageURL")
+    reject_label = Label.reject_label(imageURL)
+    if reject_label:
+        return jsonify({"message": "Label rejected"}), 201
+    return jsonify({"error": "Failed to reject label and update image label history"}), 500
 

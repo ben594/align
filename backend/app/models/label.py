@@ -45,5 +45,18 @@ class Label:
             image_url=image_url
         )
         return bool(status)
+    
+    # TODO add rejected label to history
+    @staticmethod
+    def reject_label(image_url):
+        status = app.db.execute(
+            """
+            UPDATE Images
+            SET labeled_status = FALSE
+            WHERE image_url = :image_url
+            """,
+            image_url=image_url
+        )
+        return bool(status)
 
 
