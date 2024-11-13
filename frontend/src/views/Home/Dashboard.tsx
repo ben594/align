@@ -6,12 +6,12 @@ import CardList from '../../components/CardList'
 import Header from '../../components/Header'
 import { Project } from '../Project/ProjectCreationPage'
 import axios from 'axios'
+import FilterBar from '../../components/FilterBar'
 
 export default function HomePage() {
   const [myProjectsCards, setMyProjectsCards] = useState<Project[]>([])
-  const [exploreProjectsCards, setExploreProjectsCards] = useState<Project[]>(
-    []
-  )
+  const [exploreProjectsCards, setExploreProjectsCards] = useState<Project[]>([])
+  const [sortCriteria, setSortCriteria] = useState<string>("")
 
   const parseProjectInfo = (projectListRaw: Project[]): Project[] => {
     const projectList: Project[] = []
@@ -34,6 +34,7 @@ export default function HomePage() {
       })
       const projectList: Project[] = parseProjectInfo(response.data.projects)
       setMyProjectsCards(projectList)
+      console.log(projectList)
     } catch (error) {
       console.error(`Error fetching my projects:`, error)
     }
@@ -54,6 +55,22 @@ export default function HomePage() {
       console.error(`Error fetching all projects:`, error)
     }
   }
+
+  const applySorting = (projects: Project[]): Project[] => {
+    if (sortCriteria) {
+      return [...projects].sort((a, b) => {
+        if (sortCriteria === "projectName") {
+          return a.name.localeCompare(b.name);
+        } else if (sortCriteria === "role") {
+          if (a.role === null) return 1;
+          if (b.role === null) return -1;
+          return a.role!.localeCompare(b.role!);
+        }
+        return 0;
+      });
+    }
+    return projects;
+  };
 
   useEffect(() => {
     getProjects()
@@ -89,10 +106,12 @@ export default function HomePage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <CardList infoList={myProjectsCards} includeAddCard={true} />
+            <FilterBar onSortChange={setSortCriteria} />
+            <CardList infoList={applySorting(myProjectsCards)} includeAddCard={true} />
           </TabPanel>
           <TabPanel>
-            <CardList infoList={exploreProjectsCards} />
+            <FilterBar onSortChange={setSortCriteria} />
+            <CardList infoList={applySorting(exploreProjectsCards)} />
           </TabPanel>
         </TabPanels>
       </Tabs>
