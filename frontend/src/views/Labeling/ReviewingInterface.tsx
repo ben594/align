@@ -20,6 +20,7 @@ export interface Image {
 export default function ReviewingInterface() {
   const { projectId } = useParams()
   const [imageURL, setImageURL] = useState<string | null>(null)
+  const [labelerID, setLabelerID] = useState<number | null>(null)
   const [label, setLabel] = useState('')
   const [reviewFeedback, setFeedback] = useState('')
 
@@ -42,6 +43,21 @@ export default function ReviewingInterface() {
       formData.append('imageURL', imageURL ?? '')
 
       const response = await axios.post(`${BACKEND_URL}/approve_label`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      
+      // Get price per image based on projectID and pay labeler
+      const projectData = await axios.get(`${BACKEND_URL}/projects/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      })
+      const ppi = projectData.data.pricePerImage
+      const paid_labeler = await axios.post(`${BACKEND_URL}/pay_labeler/${labelerID}/${ppi}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -116,6 +132,7 @@ export default function ReviewingInterface() {
 
       if (response.status === 201 || response.status === 200) {
         setImageURL(response.data.imageURL)
+        setLabelerID(response.data.labelerUID)
         setFeedback('')
         // Get this image's pending label
         setLabel(response.data.labelText)

@@ -39,6 +39,14 @@ def approve_label():
         return jsonify({"message": "Label approved"}), 201
     return jsonify({"error": "Failed to approve label"}), 500
 
+@label_bp.route("/pay_labeler/<int:labeler_uid>/<ppi>", methods=["POST"])
+@jwt_required()
+def pay_labeler(labeler_uid, ppi):
+    pay_labeler = Label.pay_labeler(labeler_uid, ppi)
+    if pay_labeler:
+        return jsonify({"message": "Labeler paid"}), 201
+    return jsonify({"error": "Failed to pay labeler"}), 500
+
 @label_bp.route("/reject_label", methods=["POST"])
 @jwt_required()
 def reject_label():
