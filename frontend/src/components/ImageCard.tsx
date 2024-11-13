@@ -4,7 +4,7 @@ import { Box, Image, Text, Tag, VStack, HStack } from '@chakra-ui/react';
 interface ImageCardProps {
   image_url: string;
   tags: string[];
-  label: string;
+  label?: string;
 }
 
 const ImageCard: React.FC<ImageCardProps> = ({ image_url, tags, label }) => {
@@ -26,5 +26,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ image_url, tags, label }) => {
     </Box>
   );
 };
+
+
 
 export default ImageCard;

@@ -21,6 +21,7 @@ export default function ReviewingInterface() {
   const { projectId } = useParams()
   const [imageURL, setImageURL] = useState<string | null>(null)
   const [label, setLabel] = useState('')
+  const [reviewFeedback, setFeedback] = useState('')
 
   const toast = useToast()
   const navigate = useNavigate()
@@ -40,7 +41,6 @@ export default function ReviewingInterface() {
       formData.append('projectID', projectId ?? '')
       formData.append('imageURL', imageURL ?? '')
 
-      // TODO fix post request bc it's not working
       const response = await axios.post(`${BACKEND_URL}/approve_label`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -88,7 +88,7 @@ export default function ReviewingInterface() {
 
       if (response.status === 201 || response.status === 200) {
         setImageURL(response.data.imageURL)
-
+        setFeedback('')
         // Get this image's pending label
         setLabel(response.data.labelText)
       }
@@ -126,9 +126,43 @@ export default function ReviewingInterface() {
           <Button width="100px" colorScheme="green" onClick={approveLabel}>
             Approve
           </Button>
-          <Button width="100px" colorScheme="red" onClick={rejectLabel}>
-            Reject
-          </Button>
+          
+          <Box marginTop="50px" width="50vw">
+          <Textarea
+            placeholder="Minor edits to the label needed but approved"
+            value={label}
+            onChange={e => setLabel(e.target.value)}
+          />
+          <FlexRow
+            width="100%"
+            columnGap={1}
+            marginTop="20px"
+            justifyContent="center"
+          >
+            <Button width="100px" colorScheme="green" onClick={approveLabel}>
+              Approve
+            </Button>
+
+          </FlexRow>
+        </Box>
+
+          <Box marginTop="50px" width="50vw">
+          <Textarea
+            placeholder="Please provide rejection feedback"
+            value={reviewFeedback}
+            onChange={e => setFeedback(e.target.value)}
+          />
+          <FlexRow
+            width="100%"
+            columnGap={1}
+            marginTop="20px"
+            justifyContent="center"
+          >
+            <Button width="100px" colorScheme="red" onClick={rejectLabel}>
+              Reject
+            </Button>
+          </FlexRow>
+        </Box>
         </FlexRow>
       </Box>
     </Box>
