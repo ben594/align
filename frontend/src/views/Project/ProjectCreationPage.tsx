@@ -30,6 +30,7 @@ export interface Project {
   id: number
   vendorUID: number
   pricePerImage: number
+  tags: Array<string>
 }
 
 export default function ProjectCreationPage() {

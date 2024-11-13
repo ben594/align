@@ -2,18 +2,20 @@ import { Menu, MenuButton, Button, MenuList, MenuItemOption, Flex, Input, IconBu
 import { HamburgerIcon } from '@chakra-ui/icons';
 
 type FilterBarProps = {
-    onSortChange: (sortCriteria: string) => void;
+    onSortChange: (sortCriteria: string) => void,
+    sortCriteria: string,
 };  
 
-export default function FilterBar({ onSortChange } : FilterBarProps) {
+export default function FilterBar({ onSortChange, sortCriteria } : FilterBarProps) {
     return (
         <Flex gap={4} paddingLeft={10} paddingRight={10}>
             <Menu closeOnSelect={false}>
                 <MenuButton as={IconButton} icon={<HamburgerIcon />}/>
                 <MenuList>
-                    <MenuOptionGroup defaultValue="projectName" title='Sort By' type='radio'>
+                    <MenuOptionGroup value={sortCriteria} title='Sort By' type='radio'>
                         <MenuItemOption value="projectName" onClick={() => onSortChange("projectName")}>Project Name</MenuItemOption>
                         <MenuItemOption value="role" onClick={() => onSortChange("role")}>Role</MenuItemOption>
+                        <MenuItemOption value="tags" onClick={() => onSortChange("tags")}>Tags</MenuItemOption>
                     </MenuOptionGroup>
                 </MenuList>
             </Menu>
