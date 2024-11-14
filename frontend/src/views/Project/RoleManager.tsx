@@ -15,13 +15,13 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react'
+import axios, { AxiosError } from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 
 import { BACKEND_URL } from '../../constants'
 import { CloseIcon } from '@chakra-ui/icons'
 import FlexRow from '../../components/FlexRow'
 import { Spacing } from '../../components/Spacing'
-import axios from 'axios'
 import useRerender from '../../hooks/useRerender'
 
 interface RoleManagerProps {
@@ -127,6 +127,42 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
     }
   }, [])
 
+  const createRole = useCallback(
+    async (email: string, projectId: string, roleName: string) => {
+      const token = sessionStorage.getItem('jwt')
+      try {
+        const response = await axios.post(
+          `${BACKEND_URL}/roles/create`,
+          {
+            email,
+            project_id: projectId,
+            role_name: roleName,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        if (response.status === 200) {
+          toast({
+            title: 'Role created successfully!',
+            status: 'success',
+          })
+        }
+      } catch (error) {
+        console.error(error)
+
+        const description =
+          error instanceof AxiosError && error.response?.data?.error
+            ? error.response.data.error
+            : 'Failed to create role.'
+        toast({ title: 'Error', description, status: 'error' })
+      }
+    },
+    []
+  )
+
   useEffect(() => {
     fetchUsers()
   }, [projectId, fetchUsersDep])
@@ -145,17 +181,9 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
 
   const handleAddUser = () => {
     // TODO: get from db
-    if (newEmail.trim()) {
-      const newUser = {
-        id: Date.now(),
-        name: newEmail.split('@')[0], // Placeholder name based on email
-        email: newEmail,
-        role: newRole,
-      }
-      setUsers([...users, newUser])
-      setNewEmail('') // Clear the input fields
-      setNewRole(DEFAULT_ROLE)
-    }
+    createRole(newEmail, projectId, newRole).then(fetchUsersTrigger)
+    setNewEmail('') // Clear the input fields
+    setNewRole(DEFAULT_ROLE)
   }
 
   return (
