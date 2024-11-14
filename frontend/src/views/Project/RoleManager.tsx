@@ -88,7 +88,7 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
         )
         if (response.status === 200) {
           toast({
-            title: 'Role updated successfully!',
+            title: 'Updated role.',
             status: 'success',
           })
         } else {
@@ -118,7 +118,7 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
       )
       if (response.status === 200) {
         toast({
-          title: 'Role deleted successfully!',
+          title: 'Removed member.',
           status: 'success',
         })
       } else {
@@ -146,9 +146,9 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
             },
           }
         )
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           toast({
-            title: 'Role created successfully!',
+            title: 'Added member.',
             status: 'success',
           })
         }
