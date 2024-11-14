@@ -26,9 +26,29 @@ def update_role():
     if not user_id or not project_id or not role_name:
         return jsonify({"error": "Missing required parameters"}), 400
 
-    success = Role.update_role(user_id, project_id, role_name)
+    success = Role.update(user_id, project_id, role_name)
 
     if success:
         return jsonify({"message": "Role updated successfully"}), 200
     else:
         return jsonify({"error": "Failed to update role"}), 500
+
+@bp.route("/roles/delete", methods=["POST"])
+@jwt_required()
+def delete_role():
+    data = request.get_json()
+    user_id = data.get("user_id")
+    project_id = data.get("project_id")
+
+    if Role.get(get_jwt_identity(), project_id).role_name not in ("owner", "admin"):
+        return jsonify({"error": "Unauthorized"}), 403
+
+    if not user_id or not project_id:
+        return jsonify({"error": "Missing required parameters"}), 400
+
+    success = Role.delete(user_id, project_id)
+
+    if success:
+        return jsonify({"message": "Role deleted successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to delete role"}), 500

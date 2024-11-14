@@ -99,6 +99,34 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
     []
   )
 
+  const deleteRole = useCallback(async (userId: number, projectId: string) => {
+    const token = sessionStorage.getItem('jwt')
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/roles/delete`,
+        {
+          user_id: userId,
+          project_id: projectId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      if (response.status === 200) {
+        toast({
+          title: 'Role deleted successfully!',
+          status: 'success',
+        })
+      } else {
+        console.error('Failed to delete role')
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }, [])
+
   useEffect(() => {
     fetchUsers()
   }, [projectId, fetchUsersDep])
@@ -112,7 +140,7 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
   }
 
   const handleRemoveUser = (id: number) => {
-    setUsers(prevUsers => prevUsers.filter(user => user.id !== id))
+    deleteRole(id, projectId).then(fetchUsersTrigger)
   }
 
   const handleAddUser = () => {

@@ -35,7 +35,7 @@ class Role:
         return Role(*(rows[0])) if rows else None
 
     @staticmethod
-    def update_role(user_id, project_id, role_name):
+    def update(user_id, project_id, role_name):
         result = app.db.execute(
             """
             UPDATE Roles
@@ -46,5 +46,17 @@ class Role:
             user_id=user_id,
             project_id=project_id,
             role_name=role_name,
+        )
+        return bool(result)
+
+    def delete(user_id, project_id):
+        result = app.db.execute(
+            """
+            DELETE FROM Roles
+            WHERE user_id = :user_id
+            AND project_id = :project_id
+            """,
+            user_id=user_id,
+            project_id=project_id,
         )
         return bool(result)
