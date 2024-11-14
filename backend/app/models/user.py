@@ -14,6 +14,18 @@ class User(UserMixin):
         self.balance = balance
 
     @staticmethod
+    def get_id_from_email(email):
+        result = app.db.execute(
+            """
+            SELECT user_id
+            FROM Users
+            WHERE email = :email
+            """,
+            email=email,
+        )
+        return result[0][0] if result else None
+
+    @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute(
             """
