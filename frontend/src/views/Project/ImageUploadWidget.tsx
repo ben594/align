@@ -15,14 +15,14 @@ import axios from 'axios'
 
 interface ImageUploadWidgetProps {
   projectId: string | undefined
-  rerender?: () => void
+  refetch?: () => void
   isDisabled?: boolean
 }
 
 const ImageUploadWidget = ({
   isDisabled,
   projectId,
-  rerender,
+  refetch,
 }: ImageUploadWidgetProps) => {
   const user_id = sessionStorage.getItem('user_id')
   const [selectedFiles, setSelectedFiles] = useState<FileList | undefined>(
@@ -68,7 +68,7 @@ const ImageUploadWidget = ({
         }
       )
 
-      rerender?.()
+      refetch?.()
 
       toast({
         title: 'Images uploaded successfully!',

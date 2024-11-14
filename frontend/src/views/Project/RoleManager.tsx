@@ -23,7 +23,6 @@ import { CloseIcon } from '@chakra-ui/icons'
 import FlexRow from '../../components/FlexRow'
 import { Role } from '../../accessControl'
 import { Spacing } from '../../components/Spacing'
-import useRerender from '../../hooks/useRerender'
 
 interface RoleManagerProps {
   projectId: string
@@ -43,8 +42,6 @@ interface User {
 
 const RoleManager = ({ projectId }: RoleManagerProps) => {
   const toast = useToast()
-
-  const [fetchUsersDep, fetchUsersTrigger] = useRerender()
 
   // Current list of users on the project
   const [users, setUsers] = useState<User[]>([
@@ -167,23 +164,23 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
 
   useEffect(() => {
     fetchUsers()
-  }, [projectId, fetchUsersDep])
+  }, [projectId])
 
   // State for new user inputs
   const [newEmail, setNewEmail] = useState('')
   const [newRole, setNewRole] = useState<Role>(DEFAULT_ROLE)
 
   const handleRoleChange = (id: number, newRole: Role) => {
-    updateRole(id, projectId, newRole).then(fetchUsersTrigger)
+    updateRole(id, projectId, newRole).then(fetchUsers)
   }
 
   const handleRemoveUser = (id: number) => {
-    deleteRole(id, projectId).then(fetchUsersTrigger)
+    deleteRole(id, projectId).then(fetchUsers)
   }
 
   const handleAddUser = () => {
     // TODO: get from db
-    createRole(newEmail, projectId, newRole).then(fetchUsersTrigger)
+    createRole(newEmail, projectId, newRole).then(fetchUsers)
     setNewEmail('') // Clear the input fields
     setNewRole(DEFAULT_ROLE)
   }

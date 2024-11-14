@@ -13,7 +13,6 @@ import { Project } from './ProjectCreationPage'
 import ProjectCard from '../../components/ProjectCard'
 import { SettingsIcon } from '@chakra-ui/icons'
 import axios from 'axios'
-import useRerender from '../../hooks/useRerender'
 
 interface ProjectDisplayPageProps {
   projectId: string | undefined
@@ -26,8 +25,6 @@ export default function ProjectDisplayPage() {
   // TODO Only display start labeling / reviewing buttons when images have been uploaded
 
   const ImageGrid = ({ projectId }: ProjectDisplayPageProps) => {
-    const [fetchImagesDep, fetchImagesTrigger] = useRerender()
-
     const [projectImages, setProjectImages] = useState([])
     const [project, setProject] = useState<Project>()
 
@@ -67,7 +64,7 @@ export default function ProjectDisplayPage() {
 
     useEffect(() => {
       fetchImages()
-    }, [projectId, fetchImagesDep])
+    }, [projectId])
 
     useEffect(() => {
       fetchProject()
@@ -116,7 +113,7 @@ export default function ProjectDisplayPage() {
               <>
                 <ImageUploadWidget
                   projectId={projectId}
-                  rerender={fetchImagesTrigger}
+                  refetch={fetchImages}
                   isDisabled={!canAdmin(project?.role as Role)}
                 />
                 <IconButton
