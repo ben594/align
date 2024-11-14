@@ -82,6 +82,8 @@ const ImageUploadWidget = ({
       const totalPrice = (selectedFiles?.length ?? 0) * pricePerImage.data
 
       // User must pay if images successfuly uploaded
+
+      // TODO: this doesn't seem safe -- should probably get user_id from the backend using the (signed) jwt instead of from sessionStorage
       try {
         await axios.post(
           `${BACKEND_URL}/subtract_from_balance/${user_id}/${totalPrice}`
