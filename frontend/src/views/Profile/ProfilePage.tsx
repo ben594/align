@@ -48,6 +48,7 @@ export default function ProfilePage() {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
+  const myUserId = sessionStorage.getItem('user_id')
 
   const parseProjectInfo = (projectListRaw: Project[]): Project[] => {
     const projectList: Project[] = []
@@ -232,8 +233,10 @@ export default function ProfilePage() {
   }
 
   const handleOpenModal = () => {
-    setTempAvatarSrc(avatarSrc)
-    onOpen()
+    if (myUserId === user_id) {
+      setTempAvatarSrc(avatarSrc)
+      onOpen()
+    }
   }
 
   return (
@@ -241,7 +244,7 @@ export default function ProfilePage() {
       <Box
         flexDirection="column"
         width="100vw"
-        height="100vh"
+        minHeight="100vh"
         display="flex"
         alignItems="center"
         justifyContent="flex-start"
@@ -249,7 +252,6 @@ export default function ProfilePage() {
         <Header />
         <Box
           width="100vw"
-          height="100vh"
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -283,15 +285,17 @@ export default function ProfilePage() {
                 size="2xl"
                 src={avatarSrc || undefined}
               >
-                <AvatarBadge
-                  boxSize="1em"
-                  bg={isHovered ? 'blue.600' : 'blue.500'}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Icon as={EditIcon} boxSize="0.3em" color="white" />
-                </AvatarBadge>
+                {myUserId === user_id && (
+                  <AvatarBadge
+                    boxSize="1em"
+                    bg={isHovered ? 'blue.600' : 'blue.500'}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Icon as={EditIcon} boxSize="0.3em" color="white" />
+                  </AvatarBadge>
+                )}
               </Avatar>
             </Box>
             <Heading size="md">{userName}</Heading>
@@ -318,7 +322,7 @@ export default function ProfilePage() {
         </Box>
         <Box width="80%">
           <Heading marginTop="80px" textAlign="center">
-            Projects You Own
+            Projects
           </Heading>
           <CardList infoList={userProjectsCards} includeAddCard={false} />
         </Box>
