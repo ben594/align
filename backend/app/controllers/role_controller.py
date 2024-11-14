@@ -69,10 +69,10 @@ def create_role():
 
     user_id = User.get_id_from_email(email)
     if not user_id:
-        return jsonify({"error": "User not found."}), 404
+        return jsonify({"error": "User not found"}), 404
     
     if Role.get(user_id, project_id):
-        return jsonify({"error": "User is already a member of this project."}), 400
+        return jsonify({"error": "User is already a member of this project"}), 400
 
     Role.create(user_id, project_id, role_name)
     return jsonify({"message": "Role created successfully"}), 201
