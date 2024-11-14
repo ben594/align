@@ -12,6 +12,10 @@ export default function HomePage() {
   const [myProjectsCards, setMyProjectsCards] = useState<Project[]>([])
   const [exploreProjectsCards, setExploreProjectsCards] = useState<Project[]>([])
   const [sortCriteria, setSortCriteria] = useState<string>("projectName")
+  const [myTagSet, setMyTagSet] = useState<string[]>([])
+  const [exploreTagSet, setExploreTagSet] = useState<string[]>([])
+  const [myProjectCardsView, setMyProjectsCardsView] = useState<Project[]>([])
+  const [exploreProjectsCardsView, setExploreProjectsCardsView] = useState<Project[]>([])
 
   const parseProjectInfo = (projectListRaw: Project[]): Project[] => {
     const projectList: Project[] = []
@@ -21,6 +25,16 @@ export default function HomePage() {
     })
 
     return projectList
+  }
+
+  const onFilterChange = (filters : string[]) => {
+    console.log(filters);
+    setMyProjectsCardsView(myProjectsCards.filter((project) => {
+      return filters.some((tag) => project.tags.includes(tag));
+    }));
+    setExploreProjectsCardsView(exploreProjectsCards.filter((project) => {
+      return filters.some((tag) => project.tags.includes(tag));
+    }));
   }
 
   const getProjects = async () => {
@@ -34,6 +48,11 @@ export default function HomePage() {
       })
       const projectList: Project[] = parseProjectInfo(response.data.projects)
       setMyProjectsCards(projectList)
+      setMyProjectsCardsView(projectList)
+      projectList.forEach((project) => {
+          setMyTagSet((prevTagSet) => Array.from(new Set([...prevTagSet, ...project.tags])));
+        }
+      );
       console.log(projectList)
     } catch (error) {
       console.error(`Error fetching my projects:`, error)
@@ -51,6 +70,11 @@ export default function HomePage() {
       })
       const projectList: Project[] = parseProjectInfo(response.data.projects)
       setExploreProjectsCards(projectList)
+      setExploreProjectsCardsView(projectList)
+      projectList.forEach((project) => {
+        setExploreTagSet((prevTagSet) => Array.from(new Set([...prevTagSet, ...project.tags])));
+      }
+    );
     } catch (error) {
       console.error(`Error fetching all projects:`, error)
     }
@@ -110,12 +134,12 @@ export default function HomePage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria}/>
-            <CardList infoList={applySorting(myProjectsCards)} includeAddCard={true} />
+            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria} tagSet={myTagSet} onFilterChange={onFilterChange}/>
+            <CardList infoList={applySorting(myProjectCardsView)} includeAddCard={true} />
           </TabPanel>
           <TabPanel>
-            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria}/>
-            <CardList infoList={applySorting(exploreProjectsCards)} /> {/*Fix swapping behavior*/}
+            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria} tagSet={exploreTagSet} onFilterChange={onFilterChange}/>
+            <CardList infoList={applySorting(exploreProjectsCardsView)} /> {/*Fix swapping behavior*/}
           </TabPanel>
         </TabPanels>
       </Tabs>

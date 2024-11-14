@@ -13,6 +13,7 @@
     "@azure/storage-blob": "^12.25.0",
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.8.2",
+    "@choc-ui/chakra-autocomplete": "^5.7.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "axios": "^1.7.7",
