@@ -1,4 +1,5 @@
 import { Box, Button, IconButton, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { Role, canAdmin, canReview } from '../../accessControl'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -111,12 +112,12 @@ export default function ProjectDisplayPage() {
               <Spinner />
             )}
 
-            {project?.role == 'owner' && (
+            {canAdmin(project?.role as Role) && (
               <>
                 <ImageUploadWidget
                   projectId={projectId}
                   rerender={fetchImagesTrigger}
-                  isDisabled={project?.role !== 'owner'}
+                  isDisabled={!canAdmin(project?.role as Role)}
                 />
                 <IconButton
                   icon={<SettingsIcon />}
@@ -146,6 +147,7 @@ export default function ProjectDisplayPage() {
                 Start Labeling!
               </Button>
               <Button
+                isDisabled={!canReview(project?.role as Role)}
                 colorScheme="green"
                 onClick={() => {
                   navigate(`/review/${projectId}`)

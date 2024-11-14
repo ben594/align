@@ -21,14 +21,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { BACKEND_URL } from '../../constants'
 import { CloseIcon } from '@chakra-ui/icons'
 import FlexRow from '../../components/FlexRow'
+import { Role } from '../../accessControl'
 import { Spacing } from '../../components/Spacing'
 import useRerender from '../../hooks/useRerender'
 
 interface RoleManagerProps {
   projectId: string
 }
-
-type Role = 'owner' | 'reviewer' | 'labeler' | 'admin'
 
 const DEFAULT_ROLE: Role = 'labeler'
 
