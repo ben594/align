@@ -13,6 +13,7 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from '@chakra-ui/react'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -21,11 +22,10 @@ import { CloseIcon } from '@chakra-ui/icons'
 import FlexRow from '../../components/FlexRow'
 import { Spacing } from '../../components/Spacing'
 import axios from 'axios'
-
-// TODO: integrate with backend
+import useRerender from '../../hooks/useRerender'
 
 interface RoleManagerProps {
-  projectId: string | undefined
+  projectId: string
 }
 
 type Role = 'owner' | 'reviewer' | 'labeler' | 'admin'
@@ -40,6 +40,10 @@ interface User {
 }
 
 const RoleManager = ({ projectId }: RoleManagerProps) => {
+  const toast = useToast()
+
+  const [fetchUsersDep, fetchUsersTrigger] = useRerender()
+
   // Current list of users on the project
   const [users, setUsers] = useState<User[]>([
     { id: 1, name: 'Alice', email: 'alice@example.com', role: 'admin' },
@@ -63,20 +67,48 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
     }
   }, [projectId])
 
+  const updateRole = useCallback(
+    async (userId: number, projectId: string, roleName: string) => {
+      const token = sessionStorage.getItem('jwt')
+      try {
+        const response = await axios.post(
+          `${BACKEND_URL}/roles/update`,
+          {
+            user_id: userId,
+            project_id: projectId,
+            role_name: roleName,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        if (response.status === 200) {
+          toast({
+            title: 'Role updated successfully!',
+            status: 'success',
+          })
+        } else {
+          console.error('Failed to update role')
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    []
+  )
+
   useEffect(() => {
     fetchUsers()
-  }, [projectId])
+  }, [projectId, fetchUsersDep])
 
   // State for new user inputs
   const [newEmail, setNewEmail] = useState('')
   const [newRole, setNewRole] = useState<Role>(DEFAULT_ROLE)
 
   const handleRoleChange = (id: number, newRole: Role) => {
-    setUsers(prevUsers =>
-      prevUsers.map(user =>
-        user.id === id ? { ...user, role: newRole } : user
-      )
-    )
+    updateRole(id, projectId, newRole).then(fetchUsersTrigger)
   }
 
   const handleRemoveUser = (id: number) => {
@@ -133,7 +165,6 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
                         }
                         size="sm"
                       >
-                        <option value="owner">Owner</option>
                         <option value="admin">Admin</option>
                         <option value="reviewer">Reviewer</option>
                         <option value="labeler">Labeler</option>

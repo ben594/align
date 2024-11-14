@@ -1,4 +1,4 @@
-import { Box, Heading, IconButton } from '@chakra-ui/react'
+import { Box, Heading, IconButton, Spinner } from '@chakra-ui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { ArrowBackIcon } from '@chakra-ui/icons'
@@ -29,7 +29,11 @@ export default function ProjectSettingsPage() {
           <Heading>Project Settings</Heading>
         </FlexRow>
         <Spacing v={32} />
-        <RoleManager projectId={projectId} />
+        {projectId == null ? (
+          <Spinner />
+        ) : (
+          <RoleManager projectId={projectId} />
+        )}
       </Box>
     </FlexColumn>
   )

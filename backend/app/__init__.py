@@ -39,6 +39,10 @@ def create_app():
 
     app.register_blueprint(label_bp)
 
+    from .controllers.role_controller import bp as role_bp
+
+    app.register_blueprint(role_bp)
+
     app.config["JWT_SECRET_KEY"] = "secret_key"
 
     return app
