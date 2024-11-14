@@ -220,3 +220,13 @@ def upload_images(project_id):
                 )
 
     return jsonify({"imageUrls": uploaded_image_urls}), 200
+
+
+@project_bp.route("/project/<int:project_id>/users", methods=["GET"])
+@jwt_required()
+def get_project_members(project_id):
+    users = Project.get_project_members(project_id)
+    if not users:
+        return jsonify({"error": "No users found for this project"}), 404
+
+    return jsonify(users), 200

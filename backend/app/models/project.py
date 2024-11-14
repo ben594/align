@@ -174,3 +174,24 @@ class Project:
             """
         )
         return [Project(*row) for row in rows] if rows else []
+
+    @staticmethod
+    def get_project_members(project_id):
+        rows = app.db.execute(
+            """
+            SELECT U.user_id, U.firstname, U.lastname, U.email, R.role_name
+            FROM Users U
+            JOIN Roles R ON U.user_id = R.user_id
+            WHERE R.project_id = :project_id
+            """,
+            project_id=project_id,
+        )
+        return [
+            {
+                "id": row[0],
+                "name": f"{row[1]} {row[2]}",
+                "email": row[3],
+                "role": row[4],
+            }
+            for row in rows
+        ] if rows else []
