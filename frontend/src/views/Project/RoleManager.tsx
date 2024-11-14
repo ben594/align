@@ -38,6 +38,9 @@ interface User {
   role: Role
 }
 
+// TODO: flow is not great if a user removes themselves from a project (or downgrades their role)
+// The page should probably redirect
+
 const RoleManager = ({ projectId }: RoleManagerProps) => {
   const toast = useToast()
 
