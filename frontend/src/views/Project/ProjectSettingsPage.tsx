@@ -1,10 +1,21 @@
-import { Box, Heading, IconButton, Spinner } from '@chakra-ui/react'
+import {
+  Box,
+  Heading,
+  IconButton,
+  Spinner,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from '@chakra-ui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import FlexColumn from '../../components/FlexColumn'
 import FlexRow from '../../components/FlexRow'
 import Header from '../../components/Header'
+import ProjectEditor from './ProjectEditor'
 import RoleManager from './RoleEditor'
 import { Spacing } from '../../components/Spacing'
 
@@ -32,7 +43,20 @@ export default function ProjectSettingsPage() {
         {projectId == null ? (
           <Spinner />
         ) : (
-          <RoleManager projectId={projectId} />
+          <Tabs isFitted variant="solid-rounded" minWidth="700px">
+            <TabList>
+              <Tab>General</Tab>
+              <Tab>Roles</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <ProjectEditor projectId={projectId} />
+              </TabPanel>
+              <TabPanel>
+                <RoleManager projectId={projectId} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         )}
       </Box>
     </FlexColumn>

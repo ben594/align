@@ -3,7 +3,7 @@ import {
   Button,
   Card,
   CardBody,
-  Heading,
+  Flex,
   IconButton,
   Input,
   Select,
@@ -40,7 +40,7 @@ interface User {
 // TODO: flow is not great if a user removes themselves from a project (or downgrades their role)
 // The page should probably redirect
 
-const RoleManager = ({ projectId }: RoleManagerProps) => {
+const RoleEditor = ({ projectId }: RoleManagerProps) => {
   const toast = useToast()
 
   // Current list of users on the project
@@ -188,10 +188,6 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
   return (
     <Card>
       <CardBody>
-        <Heading size="md" textAlign="center">
-          Manage Project Members
-        </Heading>
-        <Spacing v={16} />
         <Box>
           <Table variant="simple">
             <Thead>
@@ -272,9 +268,15 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
                   </Select>
                 </Td>
                 <Td>
-                  <Button colorScheme="green" size="sm" onClick={handleAddUser}>
-                    Add
-                  </Button>
+                  <FlexRow justifyContent="center">
+                    <Button
+                      colorScheme="green"
+                      size="sm"
+                      onClick={handleAddUser}
+                    >
+                      Add
+                    </Button>
+                  </FlexRow>
                 </Td>
               </Tr>
             </Tbody>
@@ -285,4 +287,4 @@ const RoleManager = ({ projectId }: RoleManagerProps) => {
   )
 }
 
-export default RoleManager
+export default RoleEditor
