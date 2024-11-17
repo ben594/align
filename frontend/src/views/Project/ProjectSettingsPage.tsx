@@ -5,7 +5,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons'
 import FlexColumn from '../../components/FlexColumn'
 import FlexRow from '../../components/FlexRow'
 import Header from '../../components/Header'
-import RoleManager from './RoleManager'
+import RoleManager from './RoleEditor'
 import { Spacing } from '../../components/Spacing'
 
 export default function ProjectSettingsPage() {
