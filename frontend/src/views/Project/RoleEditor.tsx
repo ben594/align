@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   CardBody,
-  Flex,
   IconButton,
   Input,
   Select,
@@ -22,9 +21,8 @@ import { BACKEND_URL } from '../../constants'
 import { CloseIcon } from '@chakra-ui/icons'
 import FlexRow from '../../components/FlexRow'
 import { Role } from '../../accessControl'
-import { Spacing } from '../../components/Spacing'
 
-interface RoleManagerProps {
+interface RoleEditorProps {
   projectId: string
 }
 
@@ -40,7 +38,7 @@ interface User {
 // TODO: flow is not great if a user removes themselves from a project (or downgrades their role)
 // The page should probably redirect
 
-const RoleEditor = ({ projectId }: RoleManagerProps) => {
+const RoleEditor = ({ projectId }: RoleEditorProps) => {
   const toast = useToast()
 
   // Current list of users on the project
