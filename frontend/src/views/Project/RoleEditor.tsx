@@ -146,6 +146,8 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
             title: 'Added member.',
             status: 'success',
           })
+
+          setNewEmail('') // Clear input field
         }
       } catch (error) {
         console.error(error)
@@ -179,8 +181,6 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
   const handleAddUser = () => {
     // TODO: get from db
     createRole(newEmail, projectId, newRole).then(fetchUsers)
-    setNewEmail('') // Clear the input fields
-    setNewRole(DEFAULT_ROLE)
   }
 
   return (
