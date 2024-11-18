@@ -132,6 +132,28 @@ def create_project():
     return jsonify({"error": "Failed to create project"}), 500
 
 
+@project_bp.route("/project/<int:project_id>/update", methods=["POST"])
+@jwt_required()
+def update_project(project_id):
+    data = request.get_json()
+    project_name = data.get("project_name")
+    description = data.get("description")
+    price_per_image = data.get("price_per_image")
+
+    if not project_name and not description and not price_per_image:
+        return jsonify({"error": "No fields to update"}), 400
+
+    if Role.get(get_jwt_identity(), project_id).role_name not in ("owner", "admin"):
+        return jsonify({"error": "Unauthorized"}), 403
+
+    success = Project.update(project_id, project_name, description, price_per_image)
+
+    if success:
+        return jsonify({"message": "Project updated successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to update project"}), 500
+
+
 @project_bp.route("/project/<int:project_id>/join", methods=["POST"])
 @jwt_required()
 def join_project(project_id):

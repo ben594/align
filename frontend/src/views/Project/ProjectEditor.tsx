@@ -28,11 +28,10 @@ interface ProjectEditorProps {
 const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
   const [projectName, setProjectName] = useState('')
   const [description, setDescription] = useState('')
-  const [pricePerImage, setPricePerImage] = useState(0)
+  const [pricePerImage, setPricePerImage] = useState('0')
   const [tag, setTag] = useState('')
   const [tags, setTags] = useState<string[]>([])
 
-  const navigate = useNavigate()
   const toast = useToast()
 
   const fetchProject = useCallback(async () => {
@@ -90,8 +89,9 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
     setTags(tags.filter((_, index) => index !== indexToRemove))
   }
 
-  const submitProject = async () => {
-    if (projectName === '' || description === '') {
+  const updateProject = async () => {
+    console.log(pricePerImage)
+    if (projectName === '' || description === '' || pricePerImage === '') {
       toast({
         title: 'Error',
         description: 'Please fill out all required fields.',
@@ -101,35 +101,37 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
     }
 
     try {
-      const formData = new FormData()
-      formData.append('projectName', projectName)
-      formData.append('description', description)
-      formData.append('pricePerImage', pricePerImage.toString())
-      formData.append('tags', JSON.stringify(tags))
+      const data = {
+        project_name: projectName,
+        description: description,
+        price_per_image: pricePerImage,
+      }
 
       const token = sessionStorage.getItem('jwt')
 
-      const response = await axios.post(`${BACKEND_URL}/projects`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const response = await axios.post(
+        `${BACKEND_URL}/project/${projectId}/update`,
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
 
-      if (response.status === 201 || response.status === 200) {
+      if (response.status === 200) {
         toast({
-          title: 'Project created successfully!',
+          title: 'Project updated successfully!',
           status: 'success',
         })
-
-        navigate('/dashboard')
       } else {
-        throw new Error('Failed to create project.')
+        throw new Error('Failed to update project.')
       }
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to create project.',
+        description: 'Failed to update project.',
         status: 'error',
       })
     }
@@ -169,9 +171,7 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
               <Input
                 type="number"
                 value={pricePerImage}
-                onChange={e =>
-                  setPricePerImage(e.target.value as unknown as number)
-                }
+                onChange={e => setPricePerImage(e.target.value)}
               />
             </FormControl>
           </CardBody>
@@ -206,7 +206,7 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
         </Card>
 
         <Box>
-          <Button colorScheme="blue" width="150px" onClick={submitProject}>
+          <Button colorScheme="blue" width="150px" onClick={updateProject}>
             Update
           </Button>
         </Box>

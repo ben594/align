@@ -88,6 +88,33 @@ class Project:
         return project_id[0][0] if project_id else None
 
     @staticmethod
+    def update(project_id, project_name=None, description=None, price_per_image=None):
+        updates = []
+        params = {"project_id": project_id}
+
+        if project_name is not None:
+            updates.append("project_name = :project_name")
+            params["project_name"] = project_name
+        if description is not None:
+            updates.append("description = :description")
+            params["description"] = description
+        if price_per_image is not None:
+            updates.append("price_per_image = :price_per_image")
+            params["price_per_image"] = price_per_image
+
+        if not updates:
+            return False
+
+        update_query = f"""
+            UPDATE Projects
+            SET {', '.join(updates)}
+            WHERE project_id = :project_id
+        """
+
+        result = app.db.execute(update_query, **params)
+        return bool(result)
+
+    @staticmethod
     def get_vendor_projects(user_id):
         rows = app.db.execute(
             """
