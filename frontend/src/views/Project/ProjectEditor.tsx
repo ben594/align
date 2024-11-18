@@ -122,7 +122,7 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
 
       if (response.status === 200) {
         toast({
-          title: 'Project updated successfully!',
+          title: 'Project updated!',
           status: 'success',
         })
       } else {
