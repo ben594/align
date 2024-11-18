@@ -15,13 +15,17 @@ import {
   VStack,
   useToast,
 } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { BACKEND_URL } from '../../constants'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
 
-export default function ProjectEditor() {
+interface ProjectEditorProps {
+  projectId: string
+}
+
+const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
   const [projectName, setProjectName] = useState('')
   const [description, setDescription] = useState('')
   const [pricePerImage, setPricePerImage] = useState(0)
@@ -30,6 +34,50 @@ export default function ProjectEditor() {
 
   const navigate = useNavigate()
   const toast = useToast()
+
+  const fetchProject = useCallback(async () => {
+    const token = sessionStorage.getItem('jwt')
+    try {
+      const response = await axios.get(`${BACKEND_URL}/projects/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setProjectName(response.data.name)
+      setDescription(response.data.description)
+      setPricePerImage(response.data.pricePerImage)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [projectId])
+
+  const fetchTags = useCallback(async () => {
+    const token = sessionStorage.getItem('jwt')
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/project/${projectId}/tags`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      )
+      if (response.data && response.data.tags) {
+        setTags(response.data.tags)
+      }
+    } catch (error) {
+      console.error('Error fetching project tags:', error)
+    }
+  }, [projectId])
+
+  useEffect(() => {
+    fetchProject()
+  }, [projectId])
+
+  useEffect(() => {
+    fetchTags()
+  }, [projectId])
 
   const handleAddTag = () => {
     if (tag.trim() !== '') {
@@ -166,3 +214,5 @@ export default function ProjectEditor() {
     </Box>
   )
 }
+
+export default ProjectEditor
