@@ -46,7 +46,7 @@ export default function ProjectSettingsPage() {
           <Tabs isFitted variant="solid-rounded" minWidth="700px">
             <TabList>
               <Tab>General</Tab>
-              <Tab>Roles</Tab>
+              <Tab>Team</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
