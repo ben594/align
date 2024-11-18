@@ -7,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Heading,
   Input,
   Tag,
   TagCloseButton,
@@ -19,7 +20,6 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { BACKEND_URL } from '../../constants'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 
 interface ProjectEditorProps {
   projectId: string
@@ -178,6 +178,9 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
         </Card>
 
         <Card width="100%">
+          <Heading position="absolute" color="red">
+            TODO: POST request to update tags
+          </Heading>
           <CardBody>
             <FormControl>
               <FormLabel>Tags</FormLabel>
