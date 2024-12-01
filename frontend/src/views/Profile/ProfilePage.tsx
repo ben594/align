@@ -426,23 +426,6 @@ export default function ProfilePage() {
           <Heading marginTop="40px" textAlign="center">
             Label History
           </Heading>
-          <div>
-      {userLabels && userLabels.length > 0 ? (
-        userLabels.map((label, index) => (
-          <div key={index}>
-            <p>Project ID: {label.project_id}</p>
-            <p>Accepted Status: {label.accepted_status}</p>
-            <Badge colorScheme={label.accepted_status ? 'green' : 'red'}>
-  {label.accepted_status ? 'Accepted' : 'Rejected'}
-</Badge>
-
-            <p>Label Text: {label.label_text}</p>
-          </div>
-        ))
-      ) : (
-        <p>No labels available</p>
-      )}
-    </div>
           <LabelList labels={userLabels} />
       </Box>
       </Box>
