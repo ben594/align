@@ -14,7 +14,7 @@ import {
   HStack,
   Tag,
   TagLabel,
-  TagCloseButton
+  TagCloseButton,
 } from '@chakra-ui/react'
 
 import { BACKEND_URL } from '../../constants'
@@ -37,22 +37,22 @@ export default function ProjectCreationPage() {
   const [description, setDescription] = useState('')
   const [pricePerImage, setPricePerImage] = useState(0)
   const [tag, setTag] = useState('')
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([])
   const user_id = sessionStorage.getItem('user_id')
 
   const navigate = useNavigate()
   const toast = useToast()
 
   const handleAddTag = () => {
-    if (tag.trim() !== "") {
-      setTags([...tags, tag.toUpperCase()]); 
-      setTag("");               
+    if (tag.trim() !== '') {
+      setTags([...tags, tag.toUpperCase()])
+      setTag('')
     }
-  };
+  }
 
   const handleRemoveTag = (indexToRemove: number) => {
-    setTags(tags.filter((_, index) => index !== indexToRemove));
-  };
+    setTags(tags.filter((_, index) => index !== indexToRemove))
+  }
 
   const submitProject = async () => {
     if (projectName === '' || description === '') {
@@ -69,7 +69,7 @@ export default function ProjectCreationPage() {
       formData.append('projectName', projectName)
       formData.append('description', description)
       formData.append('pricePerImage', pricePerImage.toString())
-      formData.append('tags', JSON.stringify(tags));
+      formData.append('tags', JSON.stringify(tags))
 
       const token = sessionStorage.getItem('jwt')
 
@@ -92,17 +92,21 @@ export default function ProjectCreationPage() {
       }
 
       // make $25 payment to align upon project creation
-      // TODO: don't pass in user id from frontend
       // TODO: shouldn't be able to call subtract from frontend
       try {
         await axios.post(
-          `${BACKEND_URL}/subtract_from_balance/${user_id}/${25}`
+          `${BACKEND_URL}/subtract_from_balance/${25}`,
+          null,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         )
         console.log('Balance deducted successfully.')
       } catch (error) {
         console.error('Error deducting balance:', error)
       }
-
     } catch (error) {
       toast({
         title: 'Error',
@@ -185,23 +189,20 @@ export default function ProjectCreationPage() {
                   onChange={e => setTag(e.target.value)}
                   placeholder="Provide a descriptive tag"
                 />
-                <Button colorScheme='blue' ml={2} onClick={handleAddTag}>Add</Button>
+                <Button colorScheme="blue" ml={2} onClick={handleAddTag}>
+                  Add
+                </Button>
               </Flex>
             </FormControl>
 
             <HStack mt={4} spacing={2}>
               {tags.map((tag, index) => (
-                <Tag
-                  key={index}
-                  variant="solid"
-                  size="sm"
-                >
+                <Tag key={index} variant="solid" size="sm">
                   <TagLabel>{tag}</TagLabel>
                   <TagCloseButton onClick={() => handleRemoveTag(index)} />
                 </Tag>
               ))}
             </HStack>
-
           </CardBody>
         </Card>
 
