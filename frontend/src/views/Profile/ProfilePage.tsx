@@ -26,14 +26,21 @@ import {
 } from '@chakra-ui/react'
 import { Link, useParams } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
-
 import { EditIcon } from '@chakra-ui/icons'
 import Header from '../../components/Header'
 import axios from 'axios'
 import CardList from '../../components/CardList'
+import LabelList from '../../components/LabelList'
+
 import { Project } from '../Project/ProjectCreationPage'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
+export interface Label {
+  project_id: number;
+  accepted_status: string;
+  label_text: string;
+}
 
 export default function ProfilePage() {
   const { user_id } = useParams()
@@ -45,7 +52,7 @@ export default function ProfilePage() {
   const [tempAvatarSrc, setTempAvatarSrc] = useState<string | null>(null)
   const [isHovered, setIsHovered] = useState(false)
   const [userProjectsCards, setUserProjectsCards] = useState<Project[]>([])
-
+  const [userLabels, setUserLabels] = useState<Label[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isOpen: isBadgeOpen, onOpen: onBadgeOpen, onClose: onBadgeClose } = useDisclosure();
 
@@ -133,6 +140,21 @@ export default function ProfilePage() {
       })
       .catch(error => console.error("Error fetching user's projects:", error))
   }, [user_id])
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwt');
+  
+    fetch(`${BACKEND_URL}/user/${user_id}/labels`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        setUserLabels(data.labels);  
+      })
+      .catch(error => console.error("Error fetching user's labels:", error));
+  }, [user_id]);
 
   /* I apologize for all of this messy profile picture code. I will clean it up at some point */
 
@@ -400,6 +422,12 @@ export default function ProfilePage() {
           </Heading>
           <CardList infoList={userProjectsCards} includeAddCard={false} />
         </Box>
+        <Box width="80%">
+          <Heading marginTop="40px" textAlign="center">
+            Label History
+          </Heading>
+          <LabelList labels={userLabels} />
+      </Box>
       </Box>
 
       <Modal isOpen={isOpen} onClose={handleCloseModal}>
