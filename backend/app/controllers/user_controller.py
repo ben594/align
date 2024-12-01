@@ -1,11 +1,12 @@
-from flask import Blueprint, jsonify, redirect, url_for, request, make_response
+from flask import Blueprint, jsonify, redirect, url_for, request, make_response, abort
 from flask_login import logout_user
-from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 from azure.storage.blob import BlobServiceClient
 
 from ..models.user import User
 from ..models.project import Project
+from ..models.payment import Payment
 import uuid
 import os
 
@@ -127,3 +128,25 @@ def get_user_projects(user_id):
     ]
     
     return jsonify(projects=projects_list), 200
+
+@bp.route("/user/<int:user_id>/payments", methods=["GET"])
+@jwt_required()
+def get_user_payments(user_id):
+    request_user_id = get_jwt_identity()
+    if request_user_id != user_id:
+        abort(403)
+        return
+    
+    payments = Payment.get_all_by_uid(user_id)
+    payments_list = [
+        {
+            "id": payment.transaction_id,
+            "userID": payment.balance_change,
+            "senderID": payment.sender_id,
+            "transactionTime": payment.transaction_time,
+            "balanceChange": payment.balance_change 
+        }
+        for payment in payments
+    ]
+    
+    return jsonify(payments=payments_list), 200

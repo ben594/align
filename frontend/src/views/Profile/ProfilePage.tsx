@@ -33,13 +33,22 @@ import CardList from '../../components/CardList'
 import LabelList from '../../components/LabelList'
 
 import { Project } from '../Project/ProjectCreationPage'
+import PaymentList from '../../components/PaymentList'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 export interface Label {
-  project_id: number;
-  accepted_status: boolean;
-  label_text: string;
+  project_id: number
+  accepted_status: boolean
+  label_text: string
+}
+
+export interface Payment {
+  id: number
+  userID: number
+  senderID: number | undefined
+  transactionTime: string
+  balanceChange: number
 }
 
 export default function ProfilePage() {
@@ -53,13 +62,18 @@ export default function ProfilePage() {
   const [isHovered, setIsHovered] = useState(false)
   const [userProjectsCards, setUserProjectsCards] = useState<Project[]>([])
   const [userLabels, setUserLabels] = useState<Label[]>([])
+  const [userPayments, setUserPayments] = useState<Payment[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isOpen: isBadgeOpen, onOpen: onBadgeOpen, onClose: onBadgeClose } = useDisclosure();
+  const {
+    isOpen: isBadgeOpen,
+    onOpen: onBadgeOpen,
+    onClose: onBadgeClose,
+  } = useDisclosure()
 
-  const [clickedBadge] = useState('');
+  const [clickedBadge] = useState('')
   const handleBadgeClick = () => {
-    onBadgeOpen(); 
-  };
+    onBadgeOpen()
+  }
 
   const toast = useToast()
   const myUserId = sessionStorage.getItem('user_id')
@@ -142,8 +156,22 @@ export default function ProfilePage() {
   }, [user_id])
 
   useEffect(() => {
-    const token = sessionStorage.getItem('jwt');
-  
+    const token = sessionStorage.getItem('jwt')
+    fetch(`${BACKEND_URL}/user/${user_id}/payments`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        setUserPayments(data.payments)
+      })
+      .catch(error => console.error("Error fetching user's payments:", error))
+  }, [user_id])
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('jwt')
+
     fetch(`${BACKEND_URL}/user/${user_id}/labels`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -151,10 +179,10 @@ export default function ProfilePage() {
     })
       .then(response => response.json())
       .then(data => {
-        setUserLabels(data.labels);  
+        setUserLabels(data.labels)
       })
-      .catch(error => console.error("Error fetching user's labels:", error));
-  }, [user_id]);
+      .catch(error => console.error("Error fetching user's labels:", error))
+  }, [user_id])
 
   /* I apologize for all of this messy profile picture code. I will clean it up at some point */
 
@@ -338,10 +366,12 @@ export default function ProfilePage() {
             <Text color="gray.500">{email}</Text>
 
             <HStack spacing={2} wrap="wrap" justify="center">
-              <Badge colorScheme="blue" 
+              <Badge
+                colorScheme="blue"
                 variant="outline"
                 onClick={() => handleBadgeClick()}
-                cursor="pointer" >
+                cursor="pointer"
+              >
                 Badges
               </Badge>
               {(acceptedLabelCount ?? 0) >= 1 && (
@@ -377,43 +407,43 @@ export default function ProfilePage() {
                 <ModalCloseButton />
                 <ModalBody>
                   <VStack spacing={4} align="left" mb="8">
-                    <Text>Badges are awarded when you reach 1, 10, 50, 100, and 1000+ label acceptances. Good luck labeling!
+                    <Text>
+                      Badges are awarded when you reach 1, 10, 50, 100, and
+                      1000+ label acceptances. Good luck labeling!
                     </Text>
                     <HStack spacing={2} wrap="wrap" justify="center">
-                      <Badge colorScheme="blue" 
+                      <Badge
+                        colorScheme="blue"
                         variant="outline"
                         onClick={() => handleBadgeClick()}
-                        cursor="pointer" >
+                        cursor="pointer"
+                      >
                         Badges
                       </Badge>
-                        <Badge colorScheme="pink" variant="solid">
-                          +1
-                        </Badge>
-                      
-                        <Badge colorScheme="purple" variant="solid">
-                          +10
-                        </Badge>
-                    
-                     
-                        <Badge colorScheme="green" variant="solid">
-                          +50
-                        </Badge>
-                     
-                      
-                        <Badge colorScheme="orange" variant="solid">
-                          +100
-                        </Badge>
-                    
-                        <Badge colorScheme="yellow" variant="solid">
-                          +1000
-                        </Badge>
-                    
+                      <Badge colorScheme="pink" variant="solid">
+                        +1
+                      </Badge>
+
+                      <Badge colorScheme="purple" variant="solid">
+                        +10
+                      </Badge>
+
+                      <Badge colorScheme="green" variant="solid">
+                        +50
+                      </Badge>
+
+                      <Badge colorScheme="orange" variant="solid">
+                        +100
+                      </Badge>
+
+                      <Badge colorScheme="yellow" variant="solid">
+                        +1000
+                      </Badge>
                     </HStack>
                   </VStack>
                 </ModalBody>
               </ModalContent>
             </Modal>
-
           </VStack>
         </Box>
         <Box width="80%">
@@ -427,7 +457,15 @@ export default function ProfilePage() {
             Label History
           </Heading>
           <LabelList labels={userLabels} />
-      </Box>
+        </Box>
+        {userPayments.length > 0 &&
+          <Box width="80%">
+            <Heading marginTop="40px" textAlign="center">
+              Payment History
+            </Heading>
+            <PaymentList payments={userPayments} />
+          </Box>
+        }
       </Box>
 
       <Modal isOpen={isOpen} onClose={handleCloseModal}>

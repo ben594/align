@@ -92,6 +92,8 @@ export default function ProjectCreationPage() {
       }
 
       // make $25 payment to align upon project creation
+      // TODO: don't pass in user id from frontend
+      // TODO: shouldn't be able to call subtract from frontend
       try {
         await axios.post(
           `${BACKEND_URL}/subtract_from_balance/${user_id}/${25}`

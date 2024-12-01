@@ -15,10 +15,6 @@ def create_app():
     app.db = DB(app)
     login.init_app(app)
 
-    from .controllers.index import bp as index_bp
-
-    app.register_blueprint(index_bp)
-
     from .controllers.user_controller import bp as user_bp
 
     app.register_blueprint(user_bp)

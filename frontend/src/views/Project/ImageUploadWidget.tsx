@@ -56,7 +56,6 @@ const ImageUploadWidget = ({
       })
 
       // Send the POST request to upload images
-      // TODO: maybe show the uploaded images in the UI?
       const response = await axios.post(
         `${BACKEND_URL}/project/${projectId}/upload`,
         formData,

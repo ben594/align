@@ -1,10 +1,5 @@
 import { Box, Text, Badge, VStack, Divider } from '@chakra-ui/react';
-
-type Label = {
-  project_id: number;
-  accepted_status: string;
-  label_text: string;
-};
+import { Label } from '../views/Profile/ProfilePage';
 
 type LabelListProps = {
   labels: Label[];

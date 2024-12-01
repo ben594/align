@@ -5,8 +5,6 @@ from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
 from azure.storage.blob import BlobServiceClient
-from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
 import uuid
 import json
