@@ -79,7 +79,7 @@ const ImageUploadWidget = ({
       const pricePerImage = await axios.get(
         `${BACKEND_URL}/project/${projectId}/get_project_ppi`
       )
-      const totalPrice = (selectedFiles?.length ?? 0) * pricePerImage.data
+      const totalPrice = (selectedFiles?.length ?? 0) * pricePerImage.data 
 
       // User must pay if images successfuly uploaded
 

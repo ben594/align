@@ -38,6 +38,7 @@ export default function ProjectCreationPage() {
   const [pricePerImage, setPricePerImage] = useState(0)
   const [tag, setTag] = useState('')
   const [tags, setTags] = useState<string[]>([]);
+  const user_id = sessionStorage.getItem('user_id')
 
   const navigate = useNavigate()
   const toast = useToast()
@@ -89,6 +90,17 @@ export default function ProjectCreationPage() {
       } else {
         throw new Error('Failed to create project.')
       }
+
+      // make $25 payment to align upon project creation
+      try {
+        await axios.post(
+          `${BACKEND_URL}/subtract_from_balance/${user_id}/${25}`
+        )
+        console.log('Balance deducted successfully.')
+      } catch (error) {
+        console.error('Error deducting balance:', error)
+      }
+
     } catch (error) {
       toast({
         title: 'Error',
