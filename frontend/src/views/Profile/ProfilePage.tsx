@@ -47,6 +47,13 @@ export default function ProfilePage() {
   const [userProjectsCards, setUserProjectsCards] = useState<Project[]>([])
 
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isBadgeOpen, onOpen: onBadgeOpen, onClose: onBadgeClose } = useDisclosure();
+
+  const [clickedBadge] = useState('');
+  const handleBadgeClick = () => {
+    onBadgeOpen(); 
+  };
+
   const toast = useToast()
   const myUserId = sessionStorage.getItem('user_id')
 
@@ -256,7 +263,7 @@ export default function ProfilePage() {
           alignItems="center"
           justifyContent="center"
         >
-          <VStack>
+          <VStack align="start" spacing={2} mt={4} mr={7}>
             <Stat>
               <StatLabel>Account Balance ($USD)</StatLabel>
               <StatNumber>{balance}</StatNumber>
@@ -266,6 +273,13 @@ export default function ProfilePage() {
               <StatLabel>Accepted Label Count</StatLabel>
               <StatNumber>{acceptedLabelCount}</StatNumber>
             </Stat>
+
+            {/* placeholder, need to update */}
+            <Stat>
+              <StatLabel>Bonus (Align Points)</StatLabel>
+              <StatNumber>{50}</StatNumber>
+            </Stat>
+
             <Link to="/leaderboard">
               <Button colorScheme="blue">Compare</Button>
             </Link>
@@ -302,22 +316,82 @@ export default function ProfilePage() {
             <Text color="gray.500">{email}</Text>
 
             <HStack spacing={2} wrap="wrap" justify="center">
-              <Badge colorScheme="pink" variant="solid">
-                Tag
+              <Badge colorScheme="blue" 
+                variant="outline"
+                onClick={() => handleBadgeClick()}
+                cursor="pointer" >
+                Badges
               </Badge>
-              <Badge colorScheme="purple" variant="solid">
-                Tag
-              </Badge>
-              <Badge colorScheme="green" variant="solid">
-                Tag
-              </Badge>
-              <Badge colorScheme="blue" variant="outline">
-                Tag
-              </Badge>
-              <Badge colorScheme="green" variant="solid">
-                Tag
-              </Badge>
+              {(acceptedLabelCount ?? 0) >= 1 && (
+                <Badge colorScheme="pink" variant="solid">
+                  +1
+                </Badge>
+              )}
+              {(acceptedLabelCount ?? 0) >= 10 && (
+                <Badge colorScheme="purple" variant="solid">
+                  +10
+                </Badge>
+              )}
+              {(acceptedLabelCount ?? 0) >= 50 && (
+                <Badge colorScheme="green" variant="solid">
+                  +50
+                </Badge>
+              )}
+              {(acceptedLabelCount ?? 0) >= 100 && (
+                <Badge colorScheme="orange" variant="solid">
+                  +100
+                </Badge>
+              )}
+              {(acceptedLabelCount ?? 0) > 999 && (
+                <Badge colorScheme="yellow" variant="solid">
+                  +1000
+                </Badge>
+              )}
             </HStack>
+            <Modal isOpen={isBadgeOpen} onClose={onBadgeClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>About Badges</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <VStack spacing={4} align="left" mb="8">
+                    <Text>Badges are awarded when you reach 1, 10, 50, 100, and 1000+ label acceptances. Good luck labeling!
+                    </Text>
+                    <HStack spacing={2} wrap="wrap" justify="center">
+                      <Badge colorScheme="blue" 
+                        variant="outline"
+                        onClick={() => handleBadgeClick()}
+                        cursor="pointer" >
+                        Badges
+                      </Badge>
+                        <Badge colorScheme="pink" variant="solid">
+                          +1
+                        </Badge>
+                      
+                        <Badge colorScheme="purple" variant="solid">
+                          +10
+                        </Badge>
+                    
+                     
+                        <Badge colorScheme="green" variant="solid">
+                          +50
+                        </Badge>
+                     
+                      
+                        <Badge colorScheme="orange" variant="solid">
+                          +100
+                        </Badge>
+                    
+                        <Badge colorScheme="yellow" variant="solid">
+                          +1000
+                        </Badge>
+                    
+                    </HStack>
+                  </VStack>
+                </ModalBody>
+              </ModalContent>
+            </Modal>
+
           </VStack>
         </Box>
         <Box width="80%">
