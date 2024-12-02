@@ -180,6 +180,7 @@ class Project:
         )
         return [Project(*row) for row in rows] if rows else []
     
+    
     @staticmethod
     def get_project_ppi(project_id):
         price = app.db.execute(

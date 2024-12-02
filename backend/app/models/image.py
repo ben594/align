@@ -71,6 +71,20 @@ class Image:
             project_id=project_id,
         )
         return [Image(*row) for row in rows] if rows else []
+    
+    @staticmethod
+    def get_project_metrics(project_id):
+        metrics = app.db.execute(
+        """
+        SELECT
+            (SUM(CASE WHEN labeled_status AND accepted_status THEN 1 ELSE 0 END)::DECIMAL / COUNT(*)) * 100 AS percentage
+        FROM Images
+        WHERE project_id = :project_id
+        """,
+        project_id=project_id,
+        )
+        print(metrics)
+        return metrics[0][0] if result else None
 
     @staticmethod
     def get_next_image(project_id):

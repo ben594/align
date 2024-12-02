@@ -206,7 +206,6 @@ def get_project_ppi(project_id):
     price_per_image = Project.get_project_ppi(project_id)
     return jsonify(price_per_image), 200
 
-
 # Route to upload multiple images to azure blob storage
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])
 @jwt_required()

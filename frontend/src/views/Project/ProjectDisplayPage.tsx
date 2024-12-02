@@ -13,6 +13,7 @@ import { Project } from './ProjectCreationPage'
 import ProjectCard from '../../components/ProjectCard'
 import { SettingsIcon } from '@chakra-ui/icons'
 import axios from 'axios'
+import ProjectMetrics from '../../components/ProjectMetrics'
 
 interface ProjectDisplayPageProps {
   projectId: string | undefined
@@ -116,6 +117,7 @@ export default function ProjectDisplayPage() {
                   refetch={fetchImages}
                   isDisabled={!canAdmin(project?.role as Role)}
                 />
+                <ProjectMetrics projectId={projectId} />
                 <IconButton
                   icon={<SettingsIcon />}
                   aria-label="Settings"
