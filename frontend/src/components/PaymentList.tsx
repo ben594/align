@@ -15,8 +15,8 @@ export default function PaymentList({ payments }: PaymentListProps) {
             .reverse() //reverse chronological order
             .map((payment, index) => (
               <Box key={index} p={4} bg="gray.50" boxShadow="sm">
-                {payment.balanceChange >= 0 && <Text fontSize="md">From: {payment.senderID}</Text>}
-                {payment.balanceChange < 0 && <Text fontSize="md">To: {payment.senderID}</Text>}
+                {payment.balanceChange >= 0 && <Text fontSize="md"></Text>}
+                {payment.balanceChange < 0 && <Text fontSize="md"></Text>}
                 <Text fontSize="md" color="gray.800">
                   Time: {payment.transactionTime}
                 </Text>

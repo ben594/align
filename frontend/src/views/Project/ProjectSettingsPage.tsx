@@ -18,6 +18,7 @@ import Header from '../../components/Header'
 import ProjectEditor from './ProjectEditor'
 import RoleManager from './RoleEditor'
 import { Spacing } from '../../components/Spacing'
+import ProjectMetrics from './ProjectMetrics'
 
 export default function ProjectSettingsPage() {
   const navigate = useNavigate()
@@ -47,6 +48,7 @@ export default function ProjectSettingsPage() {
             <TabList>
               <Tab>General</Tab>
               <Tab>Team</Tab>
+              <Tab>Metrics</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
@@ -54,6 +56,9 @@ export default function ProjectSettingsPage() {
               </TabPanel>
               <TabPanel>
                 <RoleManager projectId={projectId} />
+              </TabPanel>
+              <TabPanel>
+                <ProjectMetrics projectId={projectId} />
               </TabPanel>
             </TabPanels>
           </Tabs>

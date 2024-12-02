@@ -182,7 +182,6 @@ export default function ProjectDisplayPage() {
     )
   }
 
-  // TODO @jamie: make the grid look nicer and add onclick images direct to labeling page
 
   return (
     <Box
