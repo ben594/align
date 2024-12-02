@@ -177,6 +177,22 @@ def get_all_project_images_url(project_id):
     return jsonify(image_data), 200
 
 
+@project_bp.route("/project/<int:project_id>/finalized_images", methods=["GET"])
+def get_all_finalized_images(project_id):
+    print("in controller")
+    images = Image.get_all_finalized_images(project_id)
+    image_data = [
+        {
+            "image_url": image.image_url,
+            "label": image.label_text,
+            "labeled_status": image.labeled_status,
+            "accepted_status": image.accepted_status,
+        }
+        for image in images
+    ]
+    return jsonify(image_data), 200
+
+
 @project_bp.route("/project/<int:project_id>/tags", methods=["GET"])
 @jwt_required()
 def get_project_tags(project_id):

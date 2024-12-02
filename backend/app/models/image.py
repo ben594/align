@@ -57,6 +57,20 @@ class Image:
             project_id=project_id,
         )
         return [Image(*row) for row in rows] if rows else []
+    
+    @staticmethod
+    def get_all_finalized_images(project_id):
+        rows = app.db.execute(
+            """
+            SELECT *
+            FROM Images
+            WHERE project_id = :project_id
+            AND labeled_status = TRUE
+            AND accepted_status = TRUE
+            """,
+            project_id=project_id,
+        )
+        return [Image(*row) for row in rows] if rows else []
 
     @staticmethod
     def get_next_image(project_id):

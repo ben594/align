@@ -152,6 +152,15 @@ export default function ProjectDisplayPage() {
               >
                 Start Reviewing!
               </Button>
+              {canAdmin(project?.role as Role) && (
+                <Button
+                  colorScheme="blue"
+                  mb="4"
+                  onClick={() => navigate(`/project/${projectId}/finalized_images`)}
+                >
+                  View Labeled Images
+                </Button>
+              )}
             </>
           )}
         </FlexColumn>

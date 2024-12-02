@@ -9,6 +9,7 @@ import Leaderboard from './views/Leaderboard/Leaderboard'
 import ProfilePage from './views/Profile/ProfilePage'
 import ProjectCreationPage from './views/Project/ProjectCreationPage.tsx'
 import ProjectDisplayPage from './views/Project/ProjectDisplayPage.tsx'
+import FinalizedImagesPage from './views/Project/FinalizedImagesPage.tsx'
 import ProjectSettingsPage from './views/Project/ProjectSettingsPage.tsx'
 import ReviewingInterface from './views/Labeling/ReviewingInterface'
 
@@ -76,6 +77,15 @@ const router = createBrowserRouter([
         <ProjectDisplayPage />
       </AuthRoute>
     ),
+  },
+  {
+    path: '/project/:projectId/finalized_images',
+    element: (
+      <AuthRoute>
+        <FinalizedImagesPage />
+      </AuthRoute>
+    ),
+
   },
   {
     path: '/project/:projectId/settings',
