@@ -1,14 +1,11 @@
-import { Box, Button, IconButton, SimpleGrid, Spinner } from '@chakra-ui/react'
-import { Role, canAdmin, canReview } from '../../accessControl'
+import { Box, Button, SimpleGrid, useToast } from '@chakra-ui/react'
 import { useCallback, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { BACKEND_URL } from '../../constants'
 import FlexColumn from '../../components/FlexColumn'
-import FlexRow from '../../components/FlexRow'
 import Header from '../../components/Header'
 import ImageCard from '../../components/ImageCard'
-import { Project } from './ProjectCreationPage'
 import axios from 'axios'
 
 interface FinalizedImagesPageProps {
@@ -18,9 +15,11 @@ interface FinalizedImagesPageProps {
 export default function FinalizedImagesPage() {
     const { projectId } = useParams()
 
+    // TODO permissions so only owner can view this page
+
     const ImageGrid = ({ projectId }: FinalizedImagesPageProps) => {
         const [finalizedImages, setFinalizedImages] = useState([])
-        const [project, setProject] = useState<Project>()
+        const toast = useToast()
 
         const fetchFinalizedImages = useCallback(async () => {
             const token = sessionStorage.getItem('jwt')
@@ -39,47 +38,49 @@ export default function FinalizedImagesPage() {
             }
         }, [projectId])
 
-        const fetchProject = useCallback(async () => {
-            const token = sessionStorage.getItem('jwt')
-            try {
-                const response = await axios.get(
-                    `${BACKEND_URL}/projects/${projectId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                )
-                setProject(response.data)
-            } catch (error) {
-                console.error(error)
-            }
-        }, [projectId])
-
         useEffect(() => {
             fetchFinalizedImages()
         }, [projectId])
 
-        useEffect(() => {
-            fetchProject()
-        }, [projectId])
-
-        console.log(finalizedImages);
-
         return (
-            <SimpleGrid columns={[2, null, 4]} spacing="40px">
-                {finalizedImages.map((image: any, index: number) => (
-                    <ImageCard
-                        key={index}
-                        image_url={image.image_url}
-                        label={image.label}
-                        tags={[
-                            image.labeled_status ? 'Labeled' : 'Not Labeled',
-                            image.accepted_status ? 'Accepted' : 'Not Accepted',
-                        ]}
-                    />
-                ))}
-            </SimpleGrid>
+            <FlexColumn rowGap={4} maxWidth="1000px" alignItems="center">
+                <Button
+                    width="500px" colorScheme="blue"
+                    onClick={() => {
+                        const csvData = finalizedImages.map((image: any) => {
+                            return `${image.image_url},${image.label}`;
+                        }).join('\n');
+                        const blob = new Blob([csvData], { type: 'text/csv' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'labeled_images.csv';
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        toast({
+                            title: 'Labeled dataset downloaded successfully',
+                            status: 'success',
+                            duration: 2000,
+                            isClosable: true,
+                        });
+                    }
+                    }
+                >
+                    Download Labeled Images
+                </Button>
+                <SimpleGrid columns={[2, null, 4]} spacing="40px">
+                    {finalizedImages.map((image: any, index: number) => (
+                        <ImageCard
+                            key={index}
+                            image_url={image.image_url}
+                            label={image.label}
+                            tags={[
+                                image.labeled_status ? 'Labeled' : 'Not Labeled',
+                                image.accepted_status ? 'Accepted' : 'Not Accepted',
+                            ]} />
+                    ))}
+                </SimpleGrid>
+            </FlexColumn>
         )
     }
 
