@@ -138,9 +138,11 @@ def get_user_labels(user_id):
     labels = Image.get_user_labels(user_id)
     label_list = [
         {
-            "project_id": label.project_id,
-            "accepted_status": label.accepted_status,
-            "label_text": label.label_text
+            "project_id": label["project_id"],
+            "accepted_status": label["accepted_status"],
+            "label_text": label["label_text"],
+            "project_name": label["project_name"]
+            
         }
         for label in labels
     ]

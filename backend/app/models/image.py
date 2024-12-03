@@ -157,14 +157,27 @@ class Image:
     def get_user_labels(user_id):
         rows = app.db.execute(
             """
-            SELECT * 
-            FROM Images
-            WHERE labeler_uid = :user_id
+            SELECT Images.project_id AS project_id, 
+            Images.label_text AS label_text,
+            Images.accepted_status AS accepted_status,
+            Projects.project_name AS project_name
+            FROM Images, Projects
+            WHERE Images.labeler_uid = :user_id
+            AND Images.project_id = Projects.project_id
             """,
             user_id=user_id,
         )
+        print('ROWS', rows)
 
-        return [Image(*(row)) for row in rows] if rows else []
+        return [
+        {
+            "project_id": row[0],
+            "label_text": row[1],
+            "accepted_status": row[2],
+            "project_name": row[3]
+        }
+        for row in rows
+    ] if rows else []
 
 
     @staticmethod
