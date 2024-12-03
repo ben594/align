@@ -153,30 +153,6 @@ class User(UserMixin):
             user_id=user_id,
         )
         return result[0][0] if result else None
-
-    # Update user's balance in User table
-    @staticmethod
-    def subtract_from_balance(user_id, amount):
-        # TODO Record transaction in Payments table as well
-        balance_change = -1 * int(amount)
-        result = app.db.execute(
-            """
-            BEGIN;
-
-            UPDATE Users
-            SET balance = balance - :amount
-            WHERE user_id = :user_id;
-            
-            INSERT INTO Payments(user_id, transaction_time, balance_change)
-            VALUES(:user_id, NOW(), :balance_change);
-            
-            COMMIT;
-            """,
-            user_id=user_id,
-            amount=amount,
-            balance_change=balance_change
-        )
-        return bool(result)
     
     @staticmethod
     def update_profile_image(user_id, new_image_url):

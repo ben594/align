@@ -43,6 +43,18 @@ class Project:
             project_id=project_id,
         )
         return Project(*(rows[0])) if rows else None
+    
+    @staticmethod
+    def get_project_vendor_uid(project_id):
+        rows = app.db.execute(
+            """
+            SELECT vendor_uid
+            FROM Projects
+            WHERE project_id = :project_id
+            """,
+            project_id=project_id,
+        )
+        return rows[0][0] if rows else None
 
     @staticmethod
     def create(
@@ -122,7 +134,7 @@ class Project:
                 # stop transaction if user does not have enough money
                 if user_balance < amount:
                     raise Exception(
-                        "User balance not enough to create project, rolling back transaction"
+                        f"User balance {user_balance} not enough to create project, rolling back transaction"
                     )
 
                 # subtract balance from account within transaction
@@ -172,6 +184,7 @@ class Project:
 
                 return project_id if project_id else None
         except Exception as e:
+            print(e)
             return None
 
         return project_id[0][0] if project_id else None

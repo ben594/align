@@ -1,4 +1,8 @@
 from flask import current_app as app
+from sqlalchemy import text
+
+from .project import Project
+import os
 
 
 class Image:
@@ -37,14 +41,75 @@ class Image:
         image_url,
         project_id,
     ):
-        app.db.execute(
-            """
-            INSERT INTO Images (image_url, project_id, labeled_status, accepted_status, labeler_uid, label_text)
-            VALUES (:image_url, :project_id, FALSE, FALSE, NULL, NULL)
-            """,
-            image_url=image_url,
-            project_id=project_id,
-        )
+        # run transaction to insert image and deduct balance from vendor
+        with app.db.engine.begin() as conn:
+            # insert image record
+            conn.execute(
+                statement=text(
+                    """
+                    INSERT INTO Images (image_url, project_id, labeled_status, accepted_status, labeler_uid, label_text)
+                    VALUES (:image_url, :project_id, FALSE, FALSE, NULL, NULL)
+                    """
+                ),
+                parameters=dict(
+                    image_url=image_url,
+                    project_id=project_id,
+                ),
+            )
+
+            # deduct from balance
+            vendor_uid = Project.get_project_vendor_uid(project_id)
+
+            # get user balance
+            user_balance = conn.execute(
+                statement=text(
+                    """
+                    SELECT balance
+                    FROM Users
+                    WHERE user_id = :user_id;
+                    """
+                ),
+                parameters=dict(
+                    user_id=vendor_uid,
+                ),
+            ).scalar()
+
+            # stop transaction if user does not have enough money
+            amount = Project.get_project_ppi(project_id)
+            if user_balance < amount:
+                raise Exception(
+                    "User balance not enough to create project, rolling back transaction"
+                )
+
+            # subtract balance from account within transaction
+            conn.execute(
+                statement=text(
+                    """
+                    UPDATE Users
+                    SET balance = balance - :amount
+                    WHERE user_id = :user_id;
+                    """
+                ),
+                parameters=dict(
+                    user_id=vendor_uid,
+                    amount=amount,
+                ),
+            )
+
+            # create new payment record
+            balance_change = -1 * amount
+            conn.execute(
+                statement=text(
+                    """
+                    INSERT INTO Payments(user_id, transaction_time, balance_change)
+                    VALUES(:user_id, NOW(), :balance_change);
+                    """
+                ),
+                parameters=dict(
+                    user_id=vendor_uid,
+                    balance_change=balance_change,
+                ),
+            )
 
     @staticmethod
     def get_all_images_per_project(project_id):
@@ -57,7 +122,7 @@ class Image:
             project_id=project_id,
         )
         return [Image(*row) for row in rows] if rows else []
-    
+
     @staticmethod
     def get_all_finalized_images(project_id):
         rows = app.db.execute(
@@ -71,17 +136,17 @@ class Image:
             project_id=project_id,
         )
         return [Image(*row) for row in rows] if rows else []
-    
+
     @staticmethod
     def get_project_metrics(project_id):
         metrics = app.db.execute(
-        """
+            """
         SELECT
             (SUM(CASE WHEN labeled_status AND accepted_status THEN 1 ELSE 0 END)::DECIMAL / COUNT(*)) * 100 AS percentage
         FROM Images
         WHERE project_id = :project_id
         """,
-        project_id=project_id,
+            project_id=project_id,
         )
         print(metrics)
         return metrics[0][0] if result else None
@@ -101,7 +166,7 @@ class Image:
         )
 
         return Image(*(rows[0])) if rows else None
-    
+
     # TODO: edit the query so you can only get images where you didn't write the label
     @staticmethod
     def get_next_image_review(project_id):
@@ -167,18 +232,21 @@ class Image:
             """,
             user_id=user_id,
         )
-        print('ROWS', rows)
+        print("ROWS", rows)
 
-        return [
-        {
-            "project_id": row[0],
-            "label_text": row[1],
-            "accepted_status": row[2],
-            "project_name": row[3]
-        }
-        for row in rows
-    ] if rows else []
-
+        return (
+            [
+                {
+                    "project_id": row[0],
+                    "label_text": row[1],
+                    "accepted_status": row[2],
+                    "project_name": row[3],
+                }
+                for row in rows
+            ]
+            if rows
+            else []
+        )
 
     @staticmethod
     def get_top_projects():
