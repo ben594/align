@@ -1,4 +1,4 @@
-import { ArrowForwardIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { HamburgerIcon } from '@chakra-ui/icons'
 import {
   Avatar,
   Box,
@@ -11,6 +11,8 @@ import {
   MenuList,
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
+import { FaHome, FaTrophy } from 'react-icons/fa'
+import { MdLogout } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
@@ -104,9 +106,18 @@ export default function Header() {
                 Profile
               </MenuItem>
               <MenuItem
-                icon={<ArrowForwardIcon boxSize="24px" />}
-                onClick={logout}
+                icon={<FaHome size="24px" />}
+                onClick={() => navigate('/dashboard')}
               >
+                Dashboard
+              </MenuItem>
+              <MenuItem
+                icon={<FaTrophy size="24px" />}
+                onClick={() => navigate('/leaderboard')}
+              >
+                Leaderboard
+              </MenuItem>
+              <MenuItem icon={<MdLogout size="24px" />} onClick={logout}>
                 Logout
               </MenuItem>
             </MenuList>
