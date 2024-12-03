@@ -12,6 +12,7 @@ import ProjectDisplayPage from './views/Project/ProjectDisplayPage.tsx'
 import FinalizedImagesPage from './views/Project/FinalizedImagesPage.tsx'
 import ProjectSettingsPage from './views/Project/ProjectSettingsPage.tsx'
 import ReviewingInterface from './views/Labeling/ReviewingInterface'
+import NotFoundPage from './views/NotFoundPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -94,6 +95,10 @@ const router = createBrowserRouter([
         <ProjectSettingsPage />
       </AuthRoute>
     ),
+  },
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 ])
 
