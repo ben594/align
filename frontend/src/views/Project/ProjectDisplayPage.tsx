@@ -135,11 +135,14 @@ export default function ProjectDisplayPage() {
 
             {canAdmin(project?.role as Role) && (
               <>
-                <ImageUploadWidget
-                  projectId={projectId}
-                  refetch={fetchImages}
-                  isDisabled={!canAdmin(project?.role as Role) || isArchived}
-                />
+                {!isArchived && (
+                  <ImageUploadWidget
+                    projectId={projectId}
+                    refetch={fetchImages}
+                    isDisabled={!canAdmin(project?.role as Role) || isArchived}
+                  />
+                )}
+
                 <ProjectMetrics projectId={projectId} />
                 <IconButton
                   icon={<SettingsIcon />}
@@ -160,24 +163,29 @@ export default function ProjectDisplayPage() {
             </Button>
           ) : (
             <>
-              <Button
-                colorScheme="green"
-                onClick={() => {
-                  navigate(`/label/${projectId}`)
-                }}
-                isDisabled={isArchived}
-              >
-                Start Labeling!
-              </Button>
-              <Button
-                isDisabled={!canReview(project?.role as Role) || isArchived}
-                colorScheme="green"
-                onClick={() => {
-                  navigate(`/review/${projectId}`)
-                }}
-              >
-                Start Reviewing!
-              </Button>
+              {!isArchived && (
+                <>
+                  <Button
+                    colorScheme="green"
+                    onClick={() => {
+                      navigate(`/label/${projectId}`)
+                    }}
+                    isDisabled={isArchived}
+                  >
+                    Start Labeling!
+                  </Button>
+                  <Button
+                    isDisabled={!canReview(project?.role as Role) || isArchived}
+                    colorScheme="green"
+                    onClick={() => {
+                      navigate(`/review/${projectId}`)
+                    }}
+                  >
+                    Start Reviewing!
+                  </Button>
+                </>
+              )}
+
               {canAdmin(project?.role as Role) && (
                 <Button
                   colorScheme="blue"
