@@ -1,13 +1,10 @@
 from flask import current_app as app
+from sqlalchemy import text
+
+from .project import Project
 
 class Label:
-    def __init__(
-        self,
-        labeler_uid,
-        project_id,
-        image_url,
-        label
-    ):
+    def __init__(self, labeler_uid, project_id, image_url, label):
         self.labeler_uid = labeler_uid
         self.project_id = project_id
         self.image_url = image_url
@@ -29,25 +26,76 @@ class Label:
             """,
             labeler_uid=labeler_uid,
             label_text=label,
-            image_url=image_url
+            image_url=image_url,
         )
 
         return image_url if image_url else None
-    
+
     @staticmethod
     def approve_label(image_url):
-        status = app.db.execute(
-            """
-            UPDATE Images
-            SET accepted_status = TRUE
-            WHERE image_url = :image_url
-            """,
-            image_url=image_url
-        )
-        return bool(status)
-    
+        # transaction to approve label and transfer fund to labeler
+        # begin transaction
+        with app.db.engine.begin() as conn:
+            status = (
+                conn.execute(
+                    statement=text(
+                        """
+                        UPDATE Images
+                        SET accepted_status = TRUE
+                        WHERE image_url = :image_url
+                        """
+                    ),
+                    parameters=dict(
+                        image_url=image_url,
+                    ),
+                ).rowcount
+                > 0
+            )
+
+            # transfer money to labeler
+            labeler_uid = conn.execute(
+                statement=text(
+                    """
+                    SELECT labeler_uid
+                    FROM Images
+                    WHERE image_url = :image_url
+                    """
+                ),
+                parameters=dict(
+                    image_url=image_url,
+                ),
+            ).scalar()
+           
+            project_id = conn.execute(
+                statement=text(
+                    """
+                    SELECT project_id
+                    FROM Images
+                    WHERE image_url = :image_url
+                    """
+                ),
+                parameters=dict(
+                    image_url=image_url,
+                ),
+            ).scalar()
+
+            ppi = Project.get_project_ppi(project_id)
+
+            conn.execute(
+                statement=text(
+                    """
+                UPDATE Users
+                SET balance = balance + :ppi
+                WHERE user_id = :labeler_uid
+                """
+                ),
+                parameters=dict(labeler_uid=labeler_uid, ppi=ppi),
+            )
+
+            return bool(status)
+
     @staticmethod
-    def pay_labeler(labeler_uid, ppi): 
+    def pay_labeler(labeler_uid, ppi):
         try:
             status = app.db.execute(
                 """
@@ -56,13 +104,13 @@ class Label:
                 WHERE user_id = :labeler_uid
                 """,
                 labeler_uid=labeler_uid,
-                ppi=ppi
+                ppi=ppi,
             )
         except Exception as e:
             print(f"Error updating user balance: {e}")
             return False
         return bool(status)
-    
+
     # TODO add rejected label to history
     @staticmethod
     def reject_label(image_url):
@@ -72,10 +120,10 @@ class Label:
             SET labeled_status = FALSE
             WHERE image_url = :image_url
             """,
-            image_url=image_url
+            image_url=image_url,
         )
         return bool(status)
-    
+
     @staticmethod
     def update_finalize_label(project_id, image_url, new_label):
         status = app.db.execute(
@@ -89,8 +137,6 @@ class Label:
             """,
             project_id=project_id,
             image_url=image_url,
-            new_label=new_label
+            new_label=new_label,
         )
         return bool(status)
-
-
