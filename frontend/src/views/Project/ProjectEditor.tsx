@@ -79,7 +79,7 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
   }, [projectId])
 
   const handleAddTag = () => {
-    if (tag.trim() !== '') {
+    if (tag.trim() !== '' && !tags.includes(tag.toUpperCase())) {
       setTags([...tags, tag.toUpperCase()])
       setTag('')
     }
@@ -105,6 +105,7 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
         project_name: projectName,
         description: description,
         price_per_image: pricePerImage,
+        tags,
       }
 
       const token = sessionStorage.getItem('jwt')
@@ -178,9 +179,6 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
         </Card>
 
         <Card width="100%">
-          <Heading position="absolute" color="red">
-            TODO: POST request to update tags
-          </Heading>
           <CardBody>
             <FormControl>
               <FormLabel>Tags</FormLabel>

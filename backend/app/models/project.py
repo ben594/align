@@ -65,6 +65,12 @@ class Project:
             price_per_image=price_per_image,
         )
 
+        Project.add_tags(tags_list, project_id[0][0])
+
+        return project_id[0][0] if project_id else None
+
+    @staticmethod
+    def add_tags(tags_list, project_id):
         for tag in tags_list:
             app.db.execute(
                 """
@@ -81,14 +87,23 @@ class Project:
                 VALUES (:project_id, :tag)
                 ON CONFLICT DO NOTHING
                 """,
-                project_id=project_id[0][0],
+                project_id=project_id,
                 tag=tag
             )
-        
-        return project_id[0][0] if project_id else None
 
     @staticmethod
-    def update(project_id, project_name=None, description=None, price_per_image=None):
+    def remove_all_tags(project_id):
+        result = app.db.execute(
+            """
+            DELETE FROM ProjectTags
+            WHERE project_id = :project_id
+            """,
+            project_id=project_id,
+        )
+        return bool(result)
+
+    @staticmethod
+    def update(project_id, project_name=None, description=None, price_per_image=None, tags_list=None):
         updates = []
         params = {"project_id": project_id}
 
@@ -101,6 +116,9 @@ class Project:
         if price_per_image is not None:
             updates.append("price_per_image = :price_per_image")
             params["price_per_image"] = price_per_image
+        if tags_list is not None:
+            Project.remove_all_tags(project_id)
+            Project.add_tags(tags_list, project_id)
 
         if not updates:
             return False
