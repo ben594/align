@@ -6,6 +6,7 @@ from azure.storage.blob import BlobServiceClient
 
 from ..models.user import User
 from ..models.project import Project
+from ..models.image import Image
 from ..models.payment import Payment
 import uuid
 import os
@@ -130,6 +131,20 @@ def get_user_projects(user_id):
     ]
     
     return jsonify(projects=projects_list), 200
+
+@bp.route("/user/<int:user_id>/labels", methods=["GET"])
+@jwt_required()
+def get_user_labels(user_id):
+    labels = Image.get_user_labels(user_id)
+    label_list = [
+        {
+            "project_id": label.project_id,
+            "accepted_status": label.accepted_status,
+            "label_text": label.label_text
+        }
+        for label in labels
+    ]
+    return jsonify(labels=label_list), 200
 
 @bp.route("/user/<int:user_id>/payments", methods=["GET"])
 @jwt_required()

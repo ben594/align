@@ -154,6 +154,20 @@ class Image:
             return None
 
     @staticmethod
+    def get_user_labels(user_id):
+        rows = app.db.execute(
+            """
+            SELECT * 
+            FROM Images
+            WHERE labeler_uid = :user_id
+            """,
+            user_id=user_id,
+        )
+
+        return [Image(*(row)) for row in rows] if rows else []
+
+
+    @staticmethod
     def get_top_projects():
         projects = app.db.execute(
             """
