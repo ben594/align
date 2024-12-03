@@ -101,21 +101,21 @@ export default function ProjectDisplayPage() {
 
     return (
       <FlexColumn rowGap={4} alignItems="center">
-        <Box
-          bg="yellow.100"
-          borderWidth="1px"
-          borderColor="yellow.300"
-          p={4}
-          borderRadius="md"
-          textAlign="center"
-        >
-          {isArchived && (
+        {isArchived && (
+          <Box
+            bg="yellow.100"
+            borderWidth="1px"
+            borderColor="yellow.300"
+            p={4}
+            borderRadius="md"
+            textAlign="center"
+          >
             <Text fontSize="sm" fontWeight="medium" color="yellow.800">
               Note: This project has been archived by the owner. It is now
               read-only.
             </Text>
-          )}
-        </Box>
+          </Box>
+        )}
         <FlexColumn rowGap={4} maxWidth="1000px">
           <FlexRow columnGap={4}>
             {project ? (
