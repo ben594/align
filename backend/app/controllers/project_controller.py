@@ -38,6 +38,7 @@ def get_project(project_id):
                     "description": project.description,
                     "pricePerImage": project.price_per_image,
                     "tags": Project.get_all_tags(project.project_id),
+                    "isArchived": project.is_archived,
                 }
             ),
             200,
@@ -266,3 +267,19 @@ def get_project_members(project_id):
         return jsonify({"error": "No users found for this project"}), 404
 
     return jsonify(users), 200
+
+@project_bp.route("/project/<int:project_id>/archive", methods=["POST"])
+@jwt_required()
+def archive_project(project_id):
+    user_id = get_jwt_identity()
+    role = Role.get(user_id, project_id)
+
+    if role.role_name not in ("owner"):
+        return jsonify({"error": "Unauthorized"}), 403
+
+    success = Project.archive_project(project_id)
+
+    if success:
+        return jsonify({"message": "Project archived successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to archive project"}), 500

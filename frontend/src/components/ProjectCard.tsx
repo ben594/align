@@ -68,7 +68,7 @@ export default function ProjectCard({
   }, [id, vendorUID])
 
   return (
-    <Card height="300px" {...cardProps}>
+    <Card height="320" maxHeight="320px" overflowY="auto" {...cardProps}>
       <CardBody>
         <Stack>
           {role && (
@@ -99,9 +99,7 @@ export default function ProjectCard({
           <Text textAlign="left" overflow="scroll" textOverflow="ellipsis">
             {description}
           </Text>
-          <Text textAlign="left">
-            Payment per image: ${pricePerImage}
-          </Text>
+          <Text textAlign="left">Payment per image: ${pricePerImage}</Text>
         </Stack>
       </CardBody>
       {!hideButton && (

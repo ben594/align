@@ -11,12 +11,14 @@ class Project:
         project_name,
         description,
         price_per_image,
+        is_archived,
     ):
         self.vendor_uid = vendor_uid
         self.project_id = project_id
         self.project_name = project_name
         self.description = description
         self.price_per_image = price_per_image
+        self.is_archived = is_archived
 
     @staticmethod
     def is_owner(user_id, project_id):
@@ -43,6 +45,18 @@ class Project:
             project_id=project_id,
         )
         return Project(*(rows[0])) if rows else None
+    
+    @staticmethod
+    def get_project_vendor_uid(project_id):
+        rows = app.db.execute(
+            """
+            SELECT vendor_uid
+            FROM Projects
+            WHERE project_id = :project_id
+            """,
+            project_id=project_id,
+        )
+        return rows[0][0] if rows else None
 
     @staticmethod
     def create(
@@ -122,7 +136,7 @@ class Project:
                 # stop transaction if user does not have enough money
                 if user_balance < amount:
                     raise Exception(
-                        "User balance not enough to create project, rolling back transaction"
+                        f"User balance {user_balance} not enough to create project, rolling back transaction"
                     )
 
                 # subtract balance from account within transaction
@@ -172,6 +186,7 @@ class Project:
 
                 return project_id if project_id else None
         except Exception as e:
+            print(e)
             return None
 
         return project_id[0][0] if project_id else None
@@ -344,16 +359,24 @@ class Project:
             """,
             project_id=project_id,
         )
-        return (
-            [
-                {
-                    "id": row[0],
-                    "name": f"{row[1]} {row[2]}",
-                    "email": row[3],
-                    "role": row[4],
-                }
-                for row in rows
-            ]
-            if rows
-            else []
+        return [
+            {
+                "id": row[0],
+                "name": f"{row[1]} {row[2]}",
+                "email": row[3],
+                "role": row[4],
+            }
+            for row in rows
+        ] if rows else []
+
+    @staticmethod
+    def archive_project(project_id):
+        result = app.db.execute(
+            """
+            UPDATE Projects
+            SET is_archived = TRUE
+            WHERE project_id = :project_id
+            """,
+            project_id=project_id,
         )
+        return bool(result)

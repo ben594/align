@@ -12,7 +12,9 @@ export default function AddCard({}: AddCardProps) {
   return (
     <ClickableOpacity>
       <Card
-        height="300px"
+        height="320px"
+        maxHeight="320px"
+        overflowY="hidden"
         onClick={() => {
           navigate('/new-project')
         }}

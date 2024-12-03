@@ -73,32 +73,6 @@ const ImageUploadWidget = ({
         title: 'Images uploaded successfully!',
         status: 'success',
       })
-
-      // Get price per image for this project
-      const pricePerImage = await axios.get(
-        `${BACKEND_URL}/project/${projectId}/get_project_ppi`
-      )
-      const totalPrice = (selectedFiles?.length ?? 0) * pricePerImage.data
-
-      // User must pay if images successfuly uploaded
-
-      // TODO: should not directly call subtract from frontend, instead include in transaction with project creation in the backend
-      const token = sessionStorage.getItem('jwt')
-      try {
-        await axios.post(
-          `${BACKEND_URL}/subtract_from_balance/${totalPrice}`,
-          null,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        )
-        console.log('Balance deducted successfully.')
-      } catch (error) {
-        console.error('Error deducting balance:', error)
-      }
     } catch (error) {
       toast({
         title: 'Error',
