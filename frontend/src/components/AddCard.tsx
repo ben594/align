@@ -15,6 +15,7 @@ export default function AddCard({}: AddCardProps) {
         height="320px"
         maxHeight="320px"
         overflowY="hidden"
+        cursor="pointer"
         onClick={() => {
           navigate('/new-project')
         }}
