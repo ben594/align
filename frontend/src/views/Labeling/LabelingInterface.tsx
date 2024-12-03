@@ -64,6 +64,8 @@ export default function LabelingInterface() {
       })
     }
 
+    await profanityCheck()
+
     try {
       const formData = new FormData()
       formData.append('projectID', projectId ?? '')
