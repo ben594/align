@@ -11,12 +11,14 @@ class Project:
         project_name,
         description,
         price_per_image,
+        is_archived,
     ):
         self.vendor_uid = vendor_uid
         self.project_id = project_id
         self.project_name = project_name
         self.description = description
         self.price_per_image = price_per_image
+        self.is_archived = is_archived
 
     @staticmethod
     def is_owner(user_id, project_id):
@@ -357,16 +359,24 @@ class Project:
             """,
             project_id=project_id,
         )
-        return (
-            [
-                {
-                    "id": row[0],
-                    "name": f"{row[1]} {row[2]}",
-                    "email": row[3],
-                    "role": row[4],
-                }
-                for row in rows
-            ]
-            if rows
-            else []
+        return [
+            {
+                "id": row[0],
+                "name": f"{row[1]} {row[2]}",
+                "email": row[3],
+                "role": row[4],
+            }
+            for row in rows
+        ] if rows else []
+
+    @staticmethod
+    def archive_project(project_id):
+        result = app.db.execute(
+            """
+            UPDATE Projects
+            SET is_archived = TRUE
+            WHERE project_id = :project_id
+            """,
+            project_id=project_id,
         )
+        return bool(result)
