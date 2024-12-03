@@ -129,7 +129,18 @@ class User(UserMixin):
             user_id=user_id,
         )
         return email[0][0] if email else None
-    
+
+    @staticmethod
+    def get_all_emails():
+        res = app.db.execute(
+            """
+            SELECT email
+            FROM Users
+            """
+        )
+        emails = [row[0] for row in res]
+        return emails
+
     @staticmethod
     def get_profile_image(user_id):
         result = app.db.execute(

@@ -21,6 +21,12 @@ import { BACKEND_URL } from '../../constants'
 import { CloseIcon } from '@chakra-ui/icons'
 import FlexRow from '../../components/FlexRow'
 import { Role } from '../../accessControl'
+import { Select as Dropdown } from 'chakra-react-select'
+
+type EmailOption = {
+  value: string
+  label: string
+}
 
 interface RoleEditorProps {
   projectId: string
@@ -46,6 +52,7 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
     { id: 1, name: 'Alice', email: 'alice@example.com', role: 'admin' },
     { id: 2, name: 'Bob', email: 'bob@example.com', role: 'labeler' },
   ])
+  const [emails, setEmails] = useState<string[]>([])
 
   const fetchUsers = useCallback(async () => {
     const token = sessionStorage.getItem('jwt')
@@ -59,6 +66,20 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
         }
       )
       setUsers(response.data)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [projectId])
+
+  const fetchEmails = useCallback(async () => {
+    const token = sessionStorage.getItem('jwt')
+    try {
+      const response = await axios.get(`${BACKEND_URL}/user/emails`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setEmails(response.data)
     } catch (error) {
       console.error(error)
     }
@@ -164,6 +185,7 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
 
   useEffect(() => {
     fetchUsers()
+    fetchEmails()
   }, [projectId])
 
   // State for new user inputs
@@ -247,10 +269,16 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
               {/* Last row is input for adding user */}
               <Tr>
                 <Td colSpan={2}>
-                  <Input
+                  <Dropdown<EmailOption>
+                    options={emails.map(email => ({
+                      value: email,
+                      label: email,
+                    }))}
+                    value={{ value: newEmail, label: newEmail }}
                     placeholder="Email"
-                    value={newEmail}
-                    onChange={e => setNewEmail(e.target.value)}
+                    onChange={e => {
+                      setNewEmail(e?.value ?? '')
+                    }}
                     size="sm"
                   />
                 </Td>
