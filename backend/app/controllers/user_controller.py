@@ -8,6 +8,7 @@ from ..models.user import User
 from ..models.project import Project
 from ..models.image import Image
 from ..models.payment import Payment
+from ..models.role import Role
 import uuid
 import os
 
@@ -120,6 +121,7 @@ def get_user_projects(user_id):
             "vendorUID": project.vendor_uid,
             "pricePerImage": project.price_per_image,
             "tags": Project.get_all_tags(project.project_id),
+            "isArchived": project.is_archived
         }
         for project in projects
     ]

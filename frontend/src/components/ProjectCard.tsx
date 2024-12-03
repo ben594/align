@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react'
 import { BACKEND_URL } from '../constants'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import FlexRow from './FlexRow'
 
 interface ProjectCardProps extends Omit<CardProps, 'id'> {
   role: string | undefined
@@ -26,6 +27,7 @@ interface ProjectCardProps extends Omit<CardProps, 'id'> {
   vendorUID: number
   pricePerImage: number
   hideButton?: boolean
+  isArchived?: boolean
   tags: Array<string>
 }
 
@@ -38,6 +40,7 @@ export default function ProjectCard({
   pricePerImage,
   hideButton,
   tags,
+  isArchived,
   ...cardProps
 }: ProjectCardProps) {
   const navigate = useNavigate()
@@ -68,14 +71,27 @@ export default function ProjectCard({
   }, [id, vendorUID])
 
   return (
-    <Card height="320" maxHeight="320px" overflowY="auto" {...cardProps}>
+    <Card
+      height="320"
+      maxHeight="320px"
+      overflowY="auto"
+      {...cardProps}
+      backgroundColor={isArchived ? 'gray.50' : undefined}
+    >
       <CardBody>
         <Stack>
-          {role && (
-            <Tag colorScheme="red" width="fit-content">
-              {role}
-            </Tag>
-          )}
+          <FlexRow gap={2}>
+            {isArchived && (
+              <Tag colorScheme="yellow" width="fit-content">
+                Archived
+              </Tag>
+            )}
+            {role && (
+              <Tag colorScheme="red" width="fit-content">
+                {role}
+              </Tag>
+            )}
+          </FlexRow>
           <Heading size="xl" textAlign="left">
             {name}
           </Heading>
