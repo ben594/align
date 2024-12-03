@@ -33,6 +33,7 @@ export default function LabelingInterface() {
     }
   }, [])
 
+
   const submitLabel = async () => {
     if (label === '') {
       toast({
@@ -42,6 +43,16 @@ export default function LabelingInterface() {
       })
       return
     }
+
+    const profanityCheck = async () => {
+      const res = await fetch('https://vector.profanity.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ label }),
+      })
+      console.log(res)
+    }
+
 
     try {
       const formData = new FormData()
