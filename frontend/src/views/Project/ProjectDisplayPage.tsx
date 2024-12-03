@@ -111,8 +111,7 @@ export default function ProjectDisplayPage() {
             textAlign="center"
           >
             <Text fontSize="sm" fontWeight="medium" color="yellow.800">
-              Note: This project has been archived by the owner. It is now
-              read-only.
+              This project has been archived by the owner. It is now read-only.
             </Text>
           </Box>
         )}
