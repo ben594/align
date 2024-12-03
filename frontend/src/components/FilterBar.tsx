@@ -11,11 +11,12 @@ import {
 type FilterBarProps = {
     onSortChange: (sortCriteria: string) => void,
     onFilterChange: (filters: string[]) => void,
+    onTagRemoved: () => void,
     sortCriteria: string,
     tagSet: Array<string>
 };
 
-export default function FilterBar({ onSortChange, sortCriteria, tagSet, onFilterChange }: FilterBarProps) {
+export default function FilterBar({ onSortChange, sortCriteria, tagSet, onFilterChange, onTagRemoved }: FilterBarProps) {
     return (
         <Flex gap={4} paddingLeft={10} paddingRight={10}>
             <Menu closeOnSelect={false}>
@@ -28,7 +29,7 @@ export default function FilterBar({ onSortChange, sortCriteria, tagSet, onFilter
                     </MenuOptionGroup>
                 </MenuList>
             </Menu>
-            <AutoComplete openOnFocus multiple onChange={onFilterChange}>
+            <AutoComplete openOnFocus multiple onChange={onFilterChange} onTagRemoved={onTagRemoved}>
                 <AutoCompleteInput placeholder="Search...">
                 {({ tags }) =>
                     tags.map((tag, tid) => (
