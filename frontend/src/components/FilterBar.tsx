@@ -67,7 +67,7 @@ export default function FilterBar({ onSortChange, sortCriteria, tagSet, onFilter
                 ) : 
                 (
                     <>
-                        <Input value={searchText} onChange={onSearchChange} placeholder='Start typing...'/>
+                        <Input h="38px" value={searchText} onChange={onSearchChange} placeholder='Start typing...'/>
                         <IconButton onClick={onToggleMode} icon={<FaSearch/>} aria-label='Search'/>
                     </>
                 )
