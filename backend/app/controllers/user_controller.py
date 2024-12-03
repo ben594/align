@@ -51,13 +51,6 @@ def logout():
     logout_user()
     return jsonify({"message": "User logged out successfully"}), 200
 
-@bp.route("/subtract_from_balance/<amount>", methods=["POST"])
-@jwt_required()
-def subtract_from_balance(amount):
-    user_id = get_jwt_identity()
-    User.subtract_from_balance(user_id, amount)
-    return jsonify({"message": "Payment received"}), 200
-
 @bp.route("/profile/<int:user_id>/stats", methods=["GET"])
 @jwt_required()
 def get_user_stats(user_id):
@@ -126,6 +119,7 @@ def get_user_projects(user_id):
             "description": project.description,
             "vendorUID": project.vendor_uid,
             "pricePerImage": project.price_per_image,
+            "tags": Project.get_all_tags(project.project_id),
         }
         for project in projects
     ]

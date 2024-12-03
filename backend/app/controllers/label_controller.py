@@ -56,3 +56,13 @@ def reject_label():
         return jsonify({"message": "Label rejected"}), 201
     return jsonify({"error": "Failed to reject label and update image label history"}), 500
 
+@label_bp.route("/update_finalize_label", methods=["POST"])
+@jwt_required()
+def update_finalize_label():
+    project_id = request.form.get("projectID")
+    image_url = request.form.get("imageURL")
+    new_label = request.form.get("newLabel")
+    finalize_label = Label.update_finalize_label(project_id, image_url, new_label)
+    if finalize_label:
+        return jsonify({"message": "Label finalized"}), 201
+    return jsonify({"error": "Failed to finalize label"}), 500

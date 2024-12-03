@@ -30,6 +30,8 @@ export interface Project {
   id: number
   vendorUID: number
   pricePerImage: number
+  tags: Array<string>
+  isArchived: boolean
 }
 
 export default function ProjectCreationPage() {
@@ -88,29 +90,12 @@ export default function ProjectCreationPage() {
 
         navigate('/dashboard')
       } else {
-        throw new Error('Failed to create project.')
-      }
-
-      // make $25 payment to align upon project creation
-      // TODO: shouldn't be able to call subtract from frontend
-      try {
-        await axios.post(
-          `${BACKEND_URL}/subtract_from_balance/${25}`,
-          null,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        console.log('Balance deducted successfully.')
-      } catch (error) {
-        console.error('Error deducting balance:', error)
+        throw new Error("Failed to create project.")
       }
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to create project.',
+        description: error.response.data.message,
         status: 'error',
       })
     }

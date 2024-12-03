@@ -37,6 +37,8 @@ def get_project(project_id):
                     "name": project.project_name,
                     "description": project.description,
                     "pricePerImage": project.price_per_image,
+                    "tags": Project.get_all_tags(project.project_id),
+                    "isArchived": project.is_archived,
                 }
             ),
             200,
@@ -70,6 +72,7 @@ def get_projects_by_role():
             "description": project.description,
             "vendorUID": project.vendor_uid,
             "pricePerImage": project.price_per_image,
+            "tags": Project.get_all_tags(project.project_id),
         }
         for project in projects
     ]
@@ -94,6 +97,7 @@ def get_all_projects():
             "description": project.description,
             "vendorUID": project.vendor_uid,
             "pricePerImage": project.price_per_image,
+            "tags": Project.get_all_tags(project.project_id),
         }
         for project in projects
     ]
@@ -111,23 +115,24 @@ def create_project():
     tags = request.form.get("tags")
 
     if not vendor_uid or not project_name or not description or not price_per_image:
-        return jsonify({"error": "Invalid project parameters"}), 400
+        return jsonify({"message": "Invalid project parameters"}), 400
 
     tags_list = json.loads(tags) if tags else []
 
-    project_id = Project.create(
-        vendor_uid,
-        project_name,
-        description,
-        price_per_image,
-        tags_list,
-    )
-
-    role = Role.create(vendor_uid, project_id, "owner")
+    try:
+        project_id = Project.create(
+            vendor_uid,
+            project_name,
+            description,
+            price_per_image,
+            tags_list,
+        )
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
 
     if project_id:
         return jsonify({"message": "Project created", "project_id": project_id}), 201
-    return jsonify({"error": "Failed to create project"}), 500
+    return jsonify({"message": "Failed to create project"}), 500
 
 
 @project_bp.route("/project/<int:project_id>/update", methods=["POST"])
@@ -145,7 +150,9 @@ def update_project(project_id):
     if Role.get(get_jwt_identity(), project_id).role_name not in ("owner", "admin"):
         return jsonify({"error": "Unauthorized"}), 403
 
-    success = Project.update(project_id, project_name, description, price_per_image, tags_list)
+    success = Project.update(
+        project_id, project_name, description, price_per_image, tags_list
+    )
 
     if success:
         return jsonify({"message": "Project updated successfully"}), 200
@@ -157,7 +164,6 @@ def update_project(project_id):
 @jwt_required()
 def join_project(project_id):
     vendor_uid = get_jwt_identity()
-
     role = Role.create(vendor_uid, project_id, "labeler")
 
     return jsonify({"message": "Added to project", "project_id": project_id}), 201
@@ -220,6 +226,7 @@ def get_project_ppi(project_id):
     price_per_image = Project.get_project_ppi(project_id)
     return jsonify(price_per_image), 200
 
+
 # Route to upload multiple images to azure blob storage
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])
 @jwt_required()
@@ -279,3 +286,20 @@ def get_project_members(project_id):
         return jsonify({"error": "No users found for this project"}), 404
 
     return jsonify(users), 200
+
+
+@project_bp.route("/project/<int:project_id>/archive", methods=["POST"])
+@jwt_required()
+def archive_project(project_id):
+    user_id = get_jwt_identity()
+    role = Role.get(user_id, project_id)
+
+    if role.role_name not in ("owner"):
+        return jsonify({"error": "Unauthorized"}), 403
+
+    success = Project.archive_project(project_id)
+
+    if success:
+        return jsonify({"message": "Project archived successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to archive project"}), 500

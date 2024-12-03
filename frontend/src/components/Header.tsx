@@ -76,6 +76,8 @@ export default function Header() {
       backgroundColor="white"
       zIndex={10}
       top="0px"
+      boxShadow="0px 4px 6px rgba(0, 0, 0, 0.1)"
+      marginBottom={8}
     >
       <Flex padding="15px" justify="space-between">
         <Heading

@@ -1,4 +1,11 @@
-import { Box, Button, IconButton, SimpleGrid, Spinner } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  IconButton,
+  SimpleGrid,
+  Spinner,
+  Text,
+} from '@chakra-ui/react'
 import { Role, canAdmin, canReview } from '../../accessControl'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -90,8 +97,25 @@ export default function ProjectDisplayPage() {
       fetchProject()
     }
 
+    const isArchived = project?.isArchived
+
     return (
       <FlexColumn rowGap={4} alignItems="center">
+        {isArchived && (
+          <Box
+            bg="yellow.100"
+            borderWidth="1px"
+            borderColor="yellow.300"
+            p={4}
+            borderRadius="md"
+            textAlign="center"
+          >
+            <Text fontSize="sm" fontWeight="medium" color="yellow.800">
+              Note: This project has been archived by the owner. It is now
+              read-only.
+            </Text>
+          </Box>
+        )}
         <FlexColumn rowGap={4} maxWidth="1000px">
           <FlexRow columnGap={4}>
             {project ? (
@@ -102,6 +126,7 @@ export default function ProjectDisplayPage() {
                 vendorUID={project.vendorUID}
                 pricePerImage={project.pricePerImage}
                 role={project.role}
+                tags={project.tags}
                 hideButton={true}
                 height="min-content"
                 maxWidth="400px"
@@ -112,21 +137,26 @@ export default function ProjectDisplayPage() {
 
             {canAdmin(project?.role as Role) && (
               <>
-                <ImageUploadWidget
-                  projectId={projectId}
-                  refetch={fetchImages}
-                  isDisabled={!canAdmin(project?.role as Role)}
-                />
+                {!isArchived && (
+                  <ImageUploadWidget
+                    projectId={projectId}
+                    refetch={fetchImages}
+                    isDisabled={!canAdmin(project?.role as Role) || isArchived}
+                  />
+                )}
+
                 <ProjectMetrics projectId={projectId} />
-                <IconButton
-                  icon={<SettingsIcon />}
-                  aria-label="Settings"
-                  colorScheme="blue"
-                  isRound
-                  onClick={() => {
-                    navigate(`/project/${projectId}/settings`)
-                  }}
-                />
+                {!isArchived && (
+                  <IconButton
+                    icon={<SettingsIcon />}
+                    aria-label="Settings"
+                    colorScheme="blue"
+                    isRound
+                    onClick={() => {
+                      navigate(`/project/${projectId}/settings`)
+                    }}
+                  />
+                )}
               </>
             )}
           </FlexRow>
@@ -137,28 +167,36 @@ export default function ProjectDisplayPage() {
             </Button>
           ) : (
             <>
-              <Button
-                colorScheme="green"
-                onClick={() => {
-                  navigate(`/label/${projectId}`)
-                }}
-              >
-                Start Labeling!
-              </Button>
-              <Button
-                isDisabled={!canReview(project?.role as Role)}
-                colorScheme="green"
-                onClick={() => {
-                  navigate(`/review/${projectId}`)
-                }}
-              >
-                Start Reviewing!
-              </Button>
+              {!isArchived && (
+                <>
+                  <Button
+                    colorScheme="green"
+                    onClick={() => {
+                      navigate(`/label/${projectId}`)
+                    }}
+                    isDisabled={isArchived}
+                  >
+                    Start Labeling!
+                  </Button>
+                  <Button
+                    isDisabled={!canReview(project?.role as Role) || isArchived}
+                    colorScheme="green"
+                    onClick={() => {
+                      navigate(`/review/${projectId}`)
+                    }}
+                  >
+                    Start Reviewing!
+                  </Button>
+                </>
+              )}
+
               {canAdmin(project?.role as Role) && (
                 <Button
                   colorScheme="blue"
                   mb="4"
-                  onClick={() => navigate(`/project/${projectId}/finalized_images`)}
+                  onClick={() =>
+                    navigate(`/project/${projectId}/finalized_images`)
+                  }
                 >
                   View Labeled Images
                 </Button>
@@ -183,7 +221,6 @@ export default function ProjectDisplayPage() {
       </FlexColumn>
     )
   }
-
 
   return (
     <Box

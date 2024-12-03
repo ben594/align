@@ -156,7 +156,7 @@ export default function AuthPage() {
           <TabPanel>
             <VStack width="500px" height="500px" spacing="15px">
               <Heading>Login</Heading>
-              <FormControl>
+              <FormControl isRequired>
                 <FormLabel>Email</FormLabel>
                 <Input
                   type="email"
@@ -165,7 +165,7 @@ export default function AuthPage() {
                   onChange={e => setEmail(e.target.value)}
                 />
               </FormControl>
-              <FormControl>
+              <FormControl isRequired>
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"

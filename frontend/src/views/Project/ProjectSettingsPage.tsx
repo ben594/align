@@ -16,15 +16,16 @@ import FlexColumn from '../../components/FlexColumn'
 import FlexRow from '../../components/FlexRow'
 import Header from '../../components/Header'
 import ProjectEditor from './ProjectEditor'
-import RoleManager from './RoleEditor'
+import RoleEditor from './RoleEditor'
 import { Spacing } from '../../components/Spacing'
+import DangerZone from './DangerZone'
 
 export default function ProjectSettingsPage() {
   const navigate = useNavigate()
   const { projectId } = useParams()
 
   return (
-    <FlexColumn width="100vw" alignItems="center">
+    <FlexColumn width="100vw" minHeight="100vh" alignItems="center">
       <Header />
       <Box>
         <FlexRow position="relative" justify="center">
@@ -47,13 +48,17 @@ export default function ProjectSettingsPage() {
             <TabList>
               <Tab>General</Tab>
               <Tab>Team</Tab>
+              <Tab>Other</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
                 <ProjectEditor projectId={projectId} />
               </TabPanel>
               <TabPanel>
-                <RoleManager projectId={projectId} />
+                <RoleEditor projectId={projectId} />
+              </TabPanel>
+              <TabPanel>
+                <DangerZone projectId={projectId} />
               </TabPanel>
             </TabPanels>
           </Tabs>
