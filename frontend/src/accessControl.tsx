@@ -16,3 +16,6 @@ export const canReview = (role: Role | undefined | null) =>
 
 export const canAdmin = (role: Role | undefined | null) =>
   hasRolePermission(role, ['owner', 'admin'])
+
+export const canOwner = (role: Role | undefined | null) =>
+  hasRolePermission(role, ['owner'])
