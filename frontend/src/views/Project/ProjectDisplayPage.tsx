@@ -5,6 +5,7 @@ import {
   SimpleGrid,
   Spinner,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { Role, canAdmin, canReview } from '../../accessControl'
 import { useCallback, useEffect, useState } from 'react'
@@ -29,6 +30,7 @@ interface ProjectDisplayPageProps {
 export default function ProjectDisplayPage() {
   const navigate = useNavigate()
   const { projectId } = useParams()
+  const toast = useToast()
 
   // TODO Only display start labeling / reviewing buttons when images have been uploaded
 
@@ -92,6 +94,11 @@ export default function ProjectDisplayPage() {
         )
       } catch (error) {
         console.error(error)
+        toast({
+          title: 'Error',
+          description: 'Failed to join project.',
+          status: 'error',
+        })
       }
 
       fetchProject()
@@ -160,7 +167,7 @@ export default function ProjectDisplayPage() {
             )}
           </FlexRow>
 
-          {project?.role == null ? (
+          {project?.role == null && !isArchived ? (
             <Button colorScheme="green" onClick={joinProject}>
               Join project!
             </Button>

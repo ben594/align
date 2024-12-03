@@ -138,6 +138,10 @@ def create_project():
 @project_bp.route("/project/<int:project_id>/update", methods=["POST"])
 @jwt_required()
 def update_project(project_id):
+    project = Project.get(project_id)
+    if project.is_archived:
+        return jsonify({"error": "Project is archived"}), 400
+
     data = request.get_json()
     project_name = data.get("project_name")
     description = data.get("description")
@@ -163,6 +167,10 @@ def update_project(project_id):
 @project_bp.route("/project/<int:project_id>/join", methods=["POST"])
 @jwt_required()
 def join_project(project_id):
+    project = Project.get(project_id)
+    if project.is_archived:
+        return jsonify({"error": "Project is archived"}), 400
+
     vendor_uid = get_jwt_identity()
     role = Role.create(vendor_uid, project_id, "labeler")
 
@@ -186,7 +194,6 @@ def get_all_project_images_url(project_id):
 
 @project_bp.route("/project/<int:project_id>/finalized_images", methods=["GET"])
 def get_all_finalized_images(project_id):
-    print("in controller")
     images = Image.get_all_finalized_images(project_id)
     image_data = [
         {
@@ -231,6 +238,10 @@ def get_project_ppi(project_id):
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])
 @jwt_required()
 def upload_images(project_id):
+    project = Project.get(project_id)
+    if project.is_archived:
+        return jsonify({"error": "Project is archived"}), 400
+    
     user_id = get_jwt_identity()
 
     if not Project.is_owner(user_id, project_id):
