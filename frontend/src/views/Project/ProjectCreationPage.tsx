@@ -157,7 +157,7 @@ export default function ProjectCreationPage() {
                 value={pricePerImage}
                 onChange={e => {
                   const value = e.target.value as unknown as number;
-                  if (value > 0) {
+                  if (value >= 0) {
                     setPricePerImage(value);
                   } else {
                     toast({

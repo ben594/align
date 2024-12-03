@@ -64,18 +64,6 @@ export default function ReviewingInterface() {
           withCredentials: true,
         }
       )
-      const ppi = projectData.data.pricePerImage
-      // TODO remove this and move to backend
-      const paid_labeler = await axios.post(
-        `${BACKEND_URL}/pay_labeler/${labelerID}/${ppi}`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
 
       if (response.status === 201 || response.status === 200) {
         toast({
