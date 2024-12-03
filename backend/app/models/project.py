@@ -1,4 +1,6 @@
+import os
 from flask import current_app as app
+from sqlalchemy import text
 
 
 class Project:
@@ -50,42 +52,127 @@ class Project:
         price_per_image,
         tags_list,
     ):
-        project_id = app.db.execute(
-            """
-            INSERT INTO Projects (vendor_uid,
-            project_name,
-            description,
-            price_per_image)
-            VALUES (:vendor_uid, :project_name, :description, :price_per_image)
-            RETURNING project_id
-            """,
-            vendor_uid=vendor_uid,
-            project_name=project_name,
-            description=description,
-            price_per_image=price_per_image,
-        )
+        try:
+            # begin transaction
+            with app.db.engine.begin() as conn:
+                # create project record
+                project_id = conn.execute(
+                    statement=text(
+                        """                
+                        INSERT INTO Projects (vendor_uid,
+                        project_name,
+                        description,
+                        price_per_image)
+                        VALUES (:vendor_uid, :project_name, :description, :price_per_image)
+                        RETURNING project_id;
+                        """
+                    ),
+                    parameters=dict(
+                        vendor_uid=vendor_uid,
+                        project_name=project_name,
+                        description=description,
+                        price_per_image=price_per_image,
+                    ),
+                ).scalar()
 
-        for tag in tags_list:
-            app.db.execute(
-                """
-                INSERT INTO Tags (tag_name)
-                VALUES (:tag)
-                ON CONFLICT (tag_name) DO NOTHING
-                """,
-                tag=tag
-            )
-            
-            app.db.execute(
-                """
-                INSERT INTO ProjectTags (project_id, tag_name)
-                VALUES (:project_id, :tag)
-                ON CONFLICT DO NOTHING
-                """,
-                project_id=project_id[0][0],
-                tag=tag
-            )
-        
-        return project_id[0][0] if project_id else None
+                # create tag records for the project
+                for tag in tags_list:
+                    conn.execute(
+                        statement=text(
+                            """
+                        INSERT INTO Tags (tag_name)
+                        VALUES (:tag)
+                        ON CONFLICT (tag_name) DO NOTHING
+                        """
+                        ),
+                        parameters=dict(
+                            tag=tag,
+                        ),
+                    )
+
+                    conn.execute(
+                        statement=text(
+                            """
+                            INSERT INTO ProjectTags (project_id, tag_name)
+                            VALUES (:project_id, :tag)
+                            ON CONFLICT DO NOTHING
+                            """
+                        ),
+                        parameters=dict(
+                            project_id=project_id,
+                            tag=tag,
+                        ),
+                    )
+
+                # get user balance
+                amount = float(os.getenv("PROJECT_COST"))
+                user_balance = conn.execute(
+                    statement=text(
+                        """
+                        SELECT balance
+                        FROM Users
+                        WHERE user_id = :user_id;
+                        """
+                    ),
+                    parameters=dict(
+                        user_id=vendor_uid,
+                    ),
+                ).scalar()
+
+                # stop transaction if user does not have enough money
+                if user_balance < amount:
+                    raise Exception(
+                        "User balance not enough to create project, rolling back transaction"
+                    )
+
+                # subtract balance from account within transaction
+                conn.execute(
+                    statement=text(
+                        """
+                        UPDATE Users
+                        SET balance = balance - :amount
+                        WHERE user_id = :user_id;
+                        """
+                    ),
+                    parameters=dict(
+                        user_id=vendor_uid,
+                        amount=amount,
+                    ),
+                )
+
+                # create new payment record
+                balance_change = -1 * amount
+                conn.execute(
+                    statement=text(
+                        """
+                        INSERT INTO Payments(user_id, transaction_time, balance_change)
+                        VALUES(:user_id, NOW(), :balance_change);
+                        """
+                    ),
+                    parameters=dict(
+                        user_id=vendor_uid,
+                        balance_change=balance_change,
+                    ),
+                )
+
+                # create project owner role
+                conn.execute(
+                    statement=text(
+                        """
+                        INSERT INTO Roles (user_id, project_id, role_name)
+                        VALUES (:user_id, :project_id, :role_name)
+                        """
+                    ),
+                    parameters=dict(
+                        user_id=vendor_uid,
+                        project_id=project_id,
+                        role_name="owner",
+                    ),
+                )
+
+                return project_id if project_id else None
+        except Exception as e:
+            return None
 
     @staticmethod
     def update(project_id, project_name=None, description=None, price_per_image=None):
@@ -127,7 +214,7 @@ class Project:
         return [Project(*row) for row in rows] if rows else []
 
     @staticmethod
-    def get_all_tags(project_id): # Move to a separate tag model for modularity
+    def get_all_tags(project_id):  # Move to a separate tag model for modularity
         tags = app.db.execute(
             """
             SELECT t.tag_name
@@ -135,7 +222,7 @@ class Project:
             JOIN Tags t ON pt.tag_name = t.tag_name
             WHERE pt.project_id = :project_id; 
             """,
-            project_id=project_id
+            project_id=project_id,
         )
         return [row[0] for row in tags] if tags else []
 
@@ -179,7 +266,7 @@ class Project:
             role=role,
         )
         return [Project(*row) for row in rows] if rows else []
-    
+
     @staticmethod
     def get_project_ppi(project_id):
         price = app.db.execute(
@@ -188,7 +275,7 @@ class Project:
             FROM Projects
             WHERE project_id = :project_id
             """,
-            project_id = project_id
+            project_id=project_id,
         )
         return price[0][0] if price else None
 
@@ -213,12 +300,16 @@ class Project:
             """,
             project_id=project_id,
         )
-        return [
-            {
-                "id": row[0],
-                "name": f"{row[1]} {row[2]}",
-                "email": row[3],
-                "role": row[4],
-            }
-            for row in rows
-        ] if rows else []
+        return (
+            [
+                {
+                    "id": row[0],
+                    "name": f"{row[1]} {row[2]}",
+                    "email": row[3],
+                    "role": row[4],
+                }
+                for row in rows
+            ]
+            if rows
+            else []
+        )

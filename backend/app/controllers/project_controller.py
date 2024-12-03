@@ -123,8 +123,6 @@ def create_project():
         tags_list,
     )
 
-    role = Role.create(vendor_uid, project_id, "owner")
-
     if project_id:
         return jsonify({"message": "Project created", "project_id": project_id}), 201
     return jsonify({"error": "Failed to create project"}), 500
@@ -156,7 +154,6 @@ def update_project(project_id):
 @jwt_required()
 def join_project(project_id):
     vendor_uid = get_jwt_identity()
-
     role = Role.create(vendor_uid, project_id, "labeler")
 
     return jsonify({"message": "Added to project", "project_id": project_id}), 201
