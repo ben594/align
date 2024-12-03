@@ -155,8 +155,19 @@ export default function ProjectCreationPage() {
               <Input
                 type="number"
                 value={pricePerImage}
-                onChange={e =>
-                  setPricePerImage(e.target.value as unknown as number)
+                onChange={e => {
+                  const value = e.target.value as unknown as number;
+                  if (value > 0) {
+                    setPricePerImage(value);
+                  } else {
+                    toast({
+                      title: 'Error',
+                      description: 'Price per image must be greater than 0.',
+                      status: 'error',
+                    })
+                    throw new Error('Price per image must be greater than 0.');
+                  }
+                }
                 }
               />
             </FormControl>
