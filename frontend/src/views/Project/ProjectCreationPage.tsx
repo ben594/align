@@ -90,12 +90,12 @@ export default function ProjectCreationPage() {
 
         navigate('/dashboard')
       } else {
-        throw new Error('Failed to create project.')
+        throw new Error("Failed to create project.")
       }
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to create project.',
+        description: error.response.data.message,
         status: 'error',
       })
     }
@@ -155,8 +155,19 @@ export default function ProjectCreationPage() {
               <Input
                 type="number"
                 value={pricePerImage}
-                onChange={e =>
-                  setPricePerImage(e.target.value as unknown as number)
+                onChange={e => {
+                  const value = e.target.value as unknown as number;
+                  if (value > 0) {
+                    setPricePerImage(value);
+                  } else {
+                    toast({
+                      title: 'Error',
+                      description: 'Price per image must be greater than 0.',
+                      status: 'error',
+                    })
+                    throw new Error('Price per image must be greater than 0.');
+                  }
+                }
                 }
               />
             </FormControl>

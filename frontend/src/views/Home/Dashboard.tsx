@@ -168,7 +168,6 @@ export default function HomePage() {
         onChange={resetSearch}
       >
         <TabList
-          position="sticky"
           top="70px"
           zIndex="2"
           backgroundColor="white"

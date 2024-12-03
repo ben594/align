@@ -115,21 +115,24 @@ def create_project():
     tags = request.form.get("tags")
 
     if not vendor_uid or not project_name or not description or not price_per_image:
-        return jsonify({"error": "Invalid project parameters"}), 400
+        return jsonify({"message": "Invalid project parameters"}), 400
 
     tags_list = json.loads(tags) if tags else []
 
-    project_id = Project.create(
-        vendor_uid,
-        project_name,
-        description,
-        price_per_image,
-        tags_list,
-    )
+    try:
+        project_id = Project.create(
+            vendor_uid,
+            project_name,
+            description,
+            price_per_image,
+            tags_list,
+        )
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
 
     if project_id:
         return jsonify({"message": "Project created", "project_id": project_id}), 201
-    return jsonify({"error": "Failed to create project"}), 500
+    return jsonify({"message": "Failed to create project"}), 500
 
 
 @project_bp.route("/project/<int:project_id>/update", methods=["POST"])
@@ -147,7 +150,9 @@ def update_project(project_id):
     if Role.get(get_jwt_identity(), project_id).role_name not in ("owner", "admin"):
         return jsonify({"error": "Unauthorized"}), 403
 
-    success = Project.update(project_id, project_name, description, price_per_image, tags_list)
+    success = Project.update(
+        project_id, project_name, description, price_per_image, tags_list
+    )
 
     if success:
         return jsonify({"message": "Project updated successfully"}), 200
@@ -202,11 +207,25 @@ def get_project_tags(project_id):
     print(tags)
     return jsonify(tags=tags), 200
 
+@project_bp.route("/project/<int:project_id>/metrics", methods=["GET"])
+@jwt_required()
+def get_project_metrics(project_id):
+    metrics = Project.get_project_metrics(project_id)
+    metrics_list = [
+        {
+            "percent_labeled": metrics[0],
+            "percent_approved": metrics[0]
+        }
+        for metric in metrics
+    ]
+    print("print Metrics", metrics)
+    return jsonify(metrics=metrics_list), 200
 
 @project_bp.route("/project/<int:project_id>/get_project_ppi", methods=["GET"])
 def get_project_ppi(project_id):
     price_per_image = Project.get_project_ppi(project_id)
     return jsonify(price_per_image), 200
+
 
 # Route to upload multiple images to azure blob storage
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])
@@ -267,6 +286,7 @@ def get_project_members(project_id):
         return jsonify({"error": "No users found for this project"}), 404
 
     return jsonify(users), 200
+
 
 @project_bp.route("/project/<int:project_id>/archive", methods=["POST"])
 @jwt_required()

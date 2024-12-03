@@ -81,35 +81,37 @@ class Image:
                     "User balance not enough to create project, rolling back transaction"
                 )
 
-            # subtract balance from account within transaction
-            conn.execute(
-                statement=text(
-                    """
-                    UPDATE Users
-                    SET balance = balance - :amount
-                    WHERE user_id = :user_id;
-                    """
-                ),
-                parameters=dict(
-                    user_id=vendor_uid,
-                    amount=amount,
-                ),
-            )
+            # if amount is 0 then shouldn't do anything
+            if amount > 0:
+                # subtract balance from account within transaction
+                conn.execute(
+                    statement=text(
+                        """
+                        UPDATE Users
+                        SET balance = balance - :amount
+                        WHERE user_id = :user_id;
+                        """
+                    ),
+                    parameters=dict(
+                        user_id=vendor_uid,
+                        amount=amount,
+                    ),
+                )
 
-            # create new payment record
-            balance_change = -1 * amount
-            conn.execute(
-                statement=text(
-                    """
-                    INSERT INTO Payments(user_id, transaction_time, balance_change)
-                    VALUES(:user_id, NOW(), :balance_change);
-                    """
-                ),
-                parameters=dict(
-                    user_id=vendor_uid,
-                    balance_change=balance_change,
-                ),
-            )
+                # create new payment record
+                balance_change = -1 * amount
+                conn.execute(
+                    statement=text(
+                        """
+                        INSERT INTO Payments(user_id, transaction_time, balance_change)
+                        VALUES(:user_id, NOW(), :balance_change);
+                        """
+                    ),
+                    parameters=dict(
+                        user_id=vendor_uid,
+                        balance_change=balance_change,
+                    ),
+                )
 
     @staticmethod
     def get_all_images_per_project(project_id):
