@@ -44,7 +44,7 @@ export default function ProjectCreationPage() {
   const toast = useToast()
 
   const handleAddTag = () => {
-    if (tag.trim() !== '') {
+    if (tag.trim() !== '' && !tags.includes(tag.toUpperCase())) {
       setTags([...tags, tag.toUpperCase()])
       setTag('')
     }

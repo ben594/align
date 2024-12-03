@@ -135,6 +135,7 @@ def update_project(project_id):
     project_name = data.get("project_name")
     description = data.get("description")
     price_per_image = data.get("price_per_image")
+    tags_list = data.get("tags")
 
     if not project_name and not description and not price_per_image:
         return jsonify({"error": "No fields to update"}), 400
@@ -142,7 +143,7 @@ def update_project(project_id):
     if Role.get(get_jwt_identity(), project_id).role_name not in ("owner", "admin"):
         return jsonify({"error": "Unauthorized"}), 403
 
-    success = Project.update(project_id, project_name, description, price_per_image)
+    success = Project.update(project_id, project_name, description, price_per_image, tags_list)
 
     if success:
         return jsonify({"message": "Project updated successfully"}), 200
@@ -174,6 +175,22 @@ def get_all_project_images_url(project_id):
     return jsonify(image_data), 200
 
 
+@project_bp.route("/project/<int:project_id>/finalized_images", methods=["GET"])
+def get_all_finalized_images(project_id):
+    print("in controller")
+    images = Image.get_all_finalized_images(project_id)
+    image_data = [
+        {
+            "image_url": image.image_url,
+            "label": image.label_text,
+            "labeled_status": image.labeled_status,
+            "accepted_status": image.accepted_status,
+        }
+        for image in images
+    ]
+    return jsonify(image_data), 200
+
+
 @project_bp.route("/project/<int:project_id>/tags", methods=["GET"])
 @jwt_required()
 def get_project_tags(project_id):
@@ -186,7 +203,6 @@ def get_project_tags(project_id):
 def get_project_ppi(project_id):
     price_per_image = Project.get_project_ppi(project_id)
     return jsonify(price_per_image), 200
-
 
 # Route to upload multiple images to azure blob storage
 @project_bp.route("/project/<int:project_id>/upload", methods=["POST"])

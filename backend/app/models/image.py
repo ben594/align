@@ -57,6 +57,34 @@ class Image:
             project_id=project_id,
         )
         return [Image(*row) for row in rows] if rows else []
+    
+    @staticmethod
+    def get_all_finalized_images(project_id):
+        rows = app.db.execute(
+            """
+            SELECT *
+            FROM Images
+            WHERE project_id = :project_id
+            AND labeled_status = TRUE
+            AND accepted_status = TRUE
+            """,
+            project_id=project_id,
+        )
+        return [Image(*row) for row in rows] if rows else []
+    
+    @staticmethod
+    def get_project_metrics(project_id):
+        metrics = app.db.execute(
+        """
+        SELECT
+            (SUM(CASE WHEN labeled_status AND accepted_status THEN 1 ELSE 0 END)::DECIMAL / COUNT(*)) * 100 AS percentage
+        FROM Images
+        WHERE project_id = :project_id
+        """,
+        project_id=project_id,
+        )
+        print(metrics)
+        return metrics[0][0] if result else None
 
     @staticmethod
     def get_next_image(project_id):
@@ -124,6 +152,33 @@ class Image:
             ]
         else:
             return None
+
+    @staticmethod
+    def get_user_labels(user_id):
+        rows = app.db.execute(
+            """
+            SELECT Images.project_id AS project_id, 
+            Images.label_text AS label_text,
+            Images.accepted_status AS accepted_status,
+            Projects.project_name AS project_name
+            FROM Images, Projects
+            WHERE Images.labeler_uid = :user_id
+            AND Images.project_id = Projects.project_id
+            """,
+            user_id=user_id,
+        )
+        print('ROWS', rows)
+
+        return [
+        {
+            "project_id": row[0],
+            "label_text": row[1],
+            "accepted_status": row[2],
+            "project_name": row[3]
+        }
+        for row in rows
+    ] if rows else []
+
 
     @staticmethod
     def get_top_projects():

@@ -38,6 +38,7 @@ import PaymentList from '../../components/PaymentList'
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 export interface Label {
+  project_name: ReactNode
   project_id: number
   accepted_status: boolean
   label_text: string
@@ -325,9 +326,24 @@ export default function ProfilePage() {
             </Stat>
 
             {/* placeholder, need to update */}
+            
             <Stat>
               <StatLabel>Bonus (Align Points)</StatLabel>
-              <StatNumber>{50}</StatNumber>
+              {(acceptedLabelCount ?? 0) >= 1 && (acceptedLabelCount ?? 0) <= 9 &&(
+                <StatNumber>{1}</StatNumber>
+              )}
+              {(acceptedLabelCount ?? 0) >= 10 && (acceptedLabelCount ?? 0) <= 49 &&(
+                <StatNumber>{11}</StatNumber>
+              )}
+              {(acceptedLabelCount ?? 0) >= 50 && (acceptedLabelCount ?? 0) <= 99 &&(
+                <StatNumber>{61}</StatNumber>
+              )}
+              {(acceptedLabelCount ?? 0) >= 100 && (acceptedLabelCount ?? 0) <= 999 &&(
+                <StatNumber>{161}</StatNumber>
+              )}
+              {(acceptedLabelCount ?? 0) >= 1000 &&(
+                <StatNumber>{1161}</StatNumber>
+              )}
             </Stat>
 
             <Link to="/leaderboard">
@@ -407,16 +423,10 @@ export default function ProfilePage() {
                 <ModalCloseButton />
                 <ModalBody>
                   <VStack spacing={4} align="left" mb="8">
-                    <Text>
-                      Badges are awarded when you reach 1, 10, 50, 100, and
-                      1000+ label acceptances. Good luck labeling!
-                    </Text>
-                    <HStack spacing={2} wrap="wrap" justify="center">
+                  <HStack spacing={2} wrap="wrap" justify="center">
                       <Badge
                         colorScheme="blue"
                         variant="outline"
-                        onClick={() => handleBadgeClick()}
-                        cursor="pointer"
                       >
                         Badges
                       </Badge>
@@ -440,6 +450,18 @@ export default function ProfilePage() {
                         +1000
                       </Badge>
                     </HStack>
+
+                    <Text>
+                      Badges are awarded when you reach 1, 10, 50, 100, and
+                      1000+ label acceptances. <br></br>
+                      <br></br>
+                      For each badge you earn, you get the respective
+                      amount in Bonus (Align Points) which can be spent in the Align 
+                      store for special Align merch (coming 2025). <br></br>
+                      <br></br>
+                      Good luck labeling!
+                    </Text>
+                    
                   </VStack>
                 </ModalBody>
               </ModalContent>

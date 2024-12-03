@@ -72,6 +72,11 @@ def get_next_image(project_id):
     return jsonify({f"error": "Error getting image {image_id}"}), 400
 
 
+@image_bp.route("/project/<int:project_id>/metrics", methods=["GET"])
+def get_project_metrics(project_id):
+    metrics = Image.get_project_metrics(project_id)
+    return jsonify(metrics), 200
+
 @image_bp.route("/images/next/review/<int:project_id>", methods=["GET"])
 @jwt_required()
 def get_next_image_review(project_id):

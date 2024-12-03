@@ -13,6 +13,7 @@ import { Project } from './ProjectCreationPage'
 import ProjectCard from '../../components/ProjectCard'
 import { SettingsIcon } from '@chakra-ui/icons'
 import axios from 'axios'
+import ProjectMetrics from '../../components/ProjectMetrics'
 
 interface ProjectDisplayPageProps {
   projectId: string | undefined
@@ -116,6 +117,7 @@ export default function ProjectDisplayPage() {
                   refetch={fetchImages}
                   isDisabled={!canAdmin(project?.role as Role)}
                 />
+                <ProjectMetrics projectId={projectId} />
                 <IconButton
                   icon={<SettingsIcon />}
                   aria-label="Settings"
@@ -152,6 +154,15 @@ export default function ProjectDisplayPage() {
               >
                 Start Reviewing!
               </Button>
+              {canAdmin(project?.role as Role) && (
+                <Button
+                  colorScheme="blue"
+                  mb="4"
+                  onClick={() => navigate(`/project/${projectId}/finalized_images`)}
+                >
+                  View Labeled Images
+                </Button>
+              )}
             </>
           )}
         </FlexColumn>
@@ -173,7 +184,6 @@ export default function ProjectDisplayPage() {
     )
   }
 
-  // TODO @jamie: make the grid look nicer and add onclick images direct to labeling page
 
   return (
     <Box
