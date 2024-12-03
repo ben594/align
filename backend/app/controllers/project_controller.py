@@ -201,6 +201,19 @@ def get_project_tags(project_id):
     print(tags)
     return jsonify(tags=tags), 200
 
+@project_bp.route("/project/<int:project_id>/metrics", methods=["GET"])
+@jwt_required()
+def get_project_metrics(project_id):
+    metrics = Project.get_project_metrics(project_id)
+    metrics_list = [
+        {
+            "percent_labeled": metrics[0],
+            "percent_approved": metrics[0]
+        }
+        for metric in metrics
+    ]
+    print("print Metrics", metrics)
+    return jsonify(metrics=metrics_list), 200
 
 @project_bp.route("/project/<int:project_id>/get_project_ppi", methods=["GET"])
 def get_project_ppi(project_id):

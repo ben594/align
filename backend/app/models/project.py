@@ -156,6 +156,28 @@ class Project:
             project_id=project_id
         )
         return [row[0] for row in tags] if tags else []
+    
+    @staticmethod
+    def get_project_metrics(project_id): 
+        rows = app.db.execute(
+           """
+            SELECT 
+            ROUND(100.0 * SUM(CASE WHEN labeled_status = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS percent_labeled,
+            ROUND(100.0 * SUM(CASE WHEN accepted_status = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS percent_approved
+            FROM Images
+            WHERE Images.project_id = :project_id
+            GROUP BY Images.project_id; 
+            """,
+            project_id=project_id
+        )
+        return [
+        {
+            "percent_labeled": float(row[0]),
+            "percent_approved": float(row[1])
+        }
+        for row in rows
+        ] if rows else []
+    
 
     @staticmethod
     def get_all_image_urls(project_id):
