@@ -31,6 +31,7 @@ export interface Project {
   vendorUID: number
   pricePerImage: number
   tags: Array<string>
+  isArchived: boolean
 }
 
 export default function ProjectCreationPage() {

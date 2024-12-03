@@ -38,6 +38,7 @@ def get_project(project_id):
                     "description": project.description,
                     "pricePerImage": project.price_per_image,
                     "tags": Project.get_all_tags(project.project_id),
+                    "isArchived": project.is_archived,
                 }
             ),
             200,

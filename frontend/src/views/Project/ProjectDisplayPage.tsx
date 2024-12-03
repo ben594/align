@@ -1,4 +1,11 @@
-import { Box, Button, IconButton, SimpleGrid, Spinner } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  IconButton,
+  SimpleGrid,
+  Spinner,
+  Text,
+} from '@chakra-ui/react'
 import { Role, canAdmin, canReview } from '../../accessControl'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -90,8 +97,23 @@ export default function ProjectDisplayPage() {
       fetchProject()
     }
 
+    const isArchived = project?.isArchived
+
     return (
       <FlexColumn rowGap={4} alignItems="center">
+        <Box
+          bg="yellow.100"
+          borderWidth="1px"
+          borderColor="yellow.300"
+          p={4}
+          borderRadius="md"
+          textAlign="center"
+        >
+          <Text fontSize="sm" fontWeight="medium" color="yellow.800">
+            Note: This project has been archived by the owner. It is now
+            read-only.
+          </Text>
+        </Box>
         <FlexColumn rowGap={4} maxWidth="1000px">
           <FlexRow columnGap={4}>
             {project ? (
@@ -116,7 +138,7 @@ export default function ProjectDisplayPage() {
                 <ImageUploadWidget
                   projectId={projectId}
                   refetch={fetchImages}
-                  isDisabled={!canAdmin(project?.role as Role)}
+                  isDisabled={!canAdmin(project?.role as Role) || isArchived}
                 />
                 <ProjectMetrics projectId={projectId} />
                 <IconButton
@@ -143,11 +165,12 @@ export default function ProjectDisplayPage() {
                 onClick={() => {
                   navigate(`/label/${projectId}`)
                 }}
+                isDisabled={isArchived}
               >
                 Start Labeling!
               </Button>
               <Button
-                isDisabled={!canReview(project?.role as Role)}
+                isDisabled={!canReview(project?.role as Role) || isArchived}
                 colorScheme="green"
                 onClick={() => {
                   navigate(`/review/${projectId}`)
@@ -159,7 +182,9 @@ export default function ProjectDisplayPage() {
                 <Button
                   colorScheme="blue"
                   mb="4"
-                  onClick={() => navigate(`/project/${projectId}/finalized_images`)}
+                  onClick={() =>
+                    navigate(`/project/${projectId}/finalized_images`)
+                  }
                 >
                   View Labeled Images
                 </Button>
@@ -184,7 +209,6 @@ export default function ProjectDisplayPage() {
       </FlexColumn>
     )
   }
-
 
   return (
     <Box
