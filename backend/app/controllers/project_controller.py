@@ -137,6 +137,7 @@ def update_project(project_id):
     project_name = data.get("project_name")
     description = data.get("description")
     price_per_image = data.get("price_per_image")
+    tags_list = data.get("tags")
 
     if not project_name and not description and not price_per_image:
         return jsonify({"error": "No fields to update"}), 400
@@ -144,7 +145,7 @@ def update_project(project_id):
     if Role.get(get_jwt_identity(), project_id).role_name not in ("owner", "admin"):
         return jsonify({"error": "Unauthorized"}), 403
 
-    success = Project.update(project_id, project_name, description, price_per_image)
+    success = Project.update(project_id, project_name, description, price_per_image, tags_list)
 
     if success:
         return jsonify({"message": "Project updated successfully"}), 200
