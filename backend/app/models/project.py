@@ -66,6 +66,7 @@ class Project:
         price_per_image,
         tags_list,
     ):
+<<<<<<< HEAD
         # begin transaction
         with app.db.engine.begin() as conn:
             # create project record
@@ -87,6 +88,80 @@ class Project:
                     price_per_image=price_per_image,
                 ),
             ).scalar()
+=======
+        try:
+            # begin transaction
+            with app.db.engine.begin() as conn:
+                # create project record
+                project_id = conn.execute(
+                    statement=text(
+                        """                
+                        INSERT INTO Projects (vendor_uid,
+                        project_name,
+                        description,
+                        price_per_image)
+                        VALUES (:vendor_uid, :project_name, :description, :price_per_image)
+                        RETURNING project_id;
+                        """
+                    ),
+                    parameters=dict(
+                        vendor_uid=vendor_uid,
+                        project_name=project_name,
+                        description=description,
+                        price_per_image=price_per_image,
+                    ),
+                ).scalar()
+
+                # create tag records for the project
+                for tag in tags_list:
+                    conn.execute(
+                        statement=text(
+                            """
+                        INSERT INTO Tags (tag_name)
+                        VALUES (:tag)
+                        ON CONFLICT (tag_name) DO NOTHING
+                        """
+                        ),
+                        parameters=dict(
+                            tag=tag,
+                        ),
+                    )
+
+                    conn.execute(
+                        statement=text(
+                            """
+                            INSERT INTO ProjectTags (project_id, tag_name)
+                            VALUES (:project_id, :tag)
+                            ON CONFLICT DO NOTHING
+                            """
+                        ),
+                        parameters=dict(
+                            project_id=project_id,
+                            tag=tag,
+                        ),
+                    )
+
+                # get user balance
+                amount = float(os.getenv("PROJECT_COST") or 25)
+                user_balance = conn.execute(
+                    statement=text(
+                        """
+                        SELECT balance
+                        FROM Users
+                        WHERE user_id = :user_id;
+                        """
+                    ),
+                    parameters=dict(
+                        user_id=vendor_uid,
+                    ),
+                ).scalar()
+
+                # stop transaction if user does not have enough money
+                if user_balance < amount:
+                    raise Exception(
+                        f"User balance {user_balance} not enough to create project, rolling back transaction"
+                    )
+>>>>>>> 03a4a03bfab53d12125fc9ba010b55b7e4ba4416
 
             # create tag records for the project
             for tag in tags_list:
