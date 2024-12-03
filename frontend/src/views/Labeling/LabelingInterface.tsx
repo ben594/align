@@ -1,5 +1,5 @@
 import { Box, Button, Textarea, useToast } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../../components/Header'
 import FlexRow from '../../components/FlexRow'
@@ -21,12 +21,16 @@ export default function LabelingInterface() {
   const { projectId } = useParams()
   const [imageURL, setImageURL] = useState<string | null>(null)
   const [label, setLabel] = useState('')
+  const hasCalledGetImage = useRef(false);
 
   const toast = useToast()
   const navigate = useNavigate()
 
   useEffect(() => {
-    getNextImage()
+    if (!hasCalledGetImage.current) {
+      getNextImage()
+      hasCalledGetImage.current = true
+    }
   }, [])
 
   const submitLabel = async () => {
@@ -94,9 +98,9 @@ export default function LabelingInterface() {
       }
     } catch {
       toast({
-        title: 'Error',
+        title: 'Info',
         description: 'No more images to label for this project.',
-        status: 'error',
+        status: 'info',
       })
       navigate(`/project/${projectId}/images`)
       return

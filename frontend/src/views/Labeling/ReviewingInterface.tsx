@@ -1,5 +1,5 @@
 import { Box, Button, Textarea, useToast } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../../components/Header'
 import FlexRow from '../../components/FlexRow'
@@ -20,18 +20,20 @@ export interface Image {
 export default function ReviewingInterface() {
   const { projectId } = useParams()
   const [imageURL, setImageURL] = useState<string | null>(null)
+  const [labelerID, setLabelerID] = useState<number | null>(null)
   const [label, setLabel] = useState('')
+  const [reviewFeedback, setFeedback] = useState('')
+  const hasCalledGetImage = useRef(false)
 
   const toast = useToast()
   const navigate = useNavigate()
 
   useEffect(() => {
-    getNextImage()
+    if (!hasCalledGetImage.current) {
+      getNextImage()
+      hasCalledGetImage.current = true
+    }
   }, [])
-
-  useEffect(() => {
-
-  })
 
   const approveLabel = async () => {
     try {
@@ -40,13 +42,38 @@ export default function ReviewingInterface() {
       formData.append('projectID', projectId ?? '')
       formData.append('imageURL', imageURL ?? '')
 
-      // TODO fix post request bc it's not working
-      const response = await axios.post(`${BACKEND_URL}/approve_label`, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const response = await axios.post(
+        `${BACKEND_URL}/approve_label`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      // Get price per image based on projectID and pay labeler
+      const projectData = await axios.get(
+        `${BACKEND_URL}/projects/${projectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      )
+      const ppi = projectData.data.pricePerImage
+      const paid_labeler = await axios.post(
+        `${BACKEND_URL}/pay_labeler/${labelerID}/${ppi}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
 
       if (response.status === 201 || response.status === 200) {
         toast({
@@ -68,7 +95,39 @@ export default function ReviewingInterface() {
 
   // TODO rejectLabel
   const rejectLabel = async () => {
+    try {
+      const token = sessionStorage.getItem('jwt')
+      const formData = new FormData()
+      formData.append('projectID', projectId ?? '')
+      formData.append('imageURL', imageURL ?? '')
 
+      const response = await axios.post(
+        `${BACKEND_URL}/reject_label`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      if (response.status === 201 || response.status === 200) {
+        toast({
+          title: 'Label rejected successfully!',
+          status: 'success',
+        })
+        getNextImage()
+      } else {
+        throw new Error('Failed to reject label.')
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to reject label.',
+        status: 'error',
+      })
+    }
   }
 
   const getNextImage = async () => {
@@ -88,15 +147,16 @@ export default function ReviewingInterface() {
 
       if (response.status === 201 || response.status === 200) {
         setImageURL(response.data.imageURL)
-
+        setLabelerID(response.data.labelerUID)
+        setFeedback('')
         // Get this image's pending label
         setLabel(response.data.labelText)
       }
     } catch {
       toast({
-        title: 'Error',
-        description: 'No more images to label for this project.',
-        status: 'error',
+        title: 'Info',
+        description: 'No more images to review for this project.',
+        status: 'info',
       })
       navigate(`/project/${projectId}/images`)
       return

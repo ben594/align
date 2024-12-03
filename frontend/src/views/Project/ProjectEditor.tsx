@@ -3,46 +3,80 @@ import {
   Button,
   Card,
   CardBody,
+  Flex,
   FormControl,
   FormLabel,
+  HStack,
   Heading,
   Input,
+  Tag,
+  TagCloseButton,
+  TagLabel,
   Textarea,
   VStack,
   useToast,
-  Flex,
-  HStack,
-  Tag,
-  TagLabel,
-  TagCloseButton,
 } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { BACKEND_URL } from '../../constants'
-import Header from '../../components/Header'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
 
-export interface Project {
-  role: string | undefined
-  name: string
-  description: string
-  id: number
-  vendorUID: number
-  pricePerImage: number
-  tags: Array<string>
+interface ProjectEditorProps {
+  projectId: string
 }
 
-export default function ProjectCreationPage() {
+const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
   const [projectName, setProjectName] = useState('')
   const [description, setDescription] = useState('')
-  const [pricePerImage, setPricePerImage] = useState(0)
+  const [pricePerImage, setPricePerImage] = useState('0')
   const [tag, setTag] = useState('')
   const [tags, setTags] = useState<string[]>([])
-  const user_id = sessionStorage.getItem('user_id')
 
-  const navigate = useNavigate()
   const toast = useToast()
+
+  const fetchProject = useCallback(async () => {
+    const token = sessionStorage.getItem('jwt')
+    try {
+      const response = await axios.get(`${BACKEND_URL}/projects/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setProjectName(response.data.name)
+      setDescription(response.data.description)
+      setPricePerImage(response.data.pricePerImage)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [projectId])
+
+  const fetchTags = useCallback(async () => {
+    const token = sessionStorage.getItem('jwt')
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/project/${projectId}/tags`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      )
+      if (response.data && response.data.tags) {
+        setTags(response.data.tags)
+      }
+    } catch (error) {
+      console.error('Error fetching project tags:', error)
+    }
+  }, [projectId])
+
+  useEffect(() => {
+    fetchProject()
+  }, [projectId])
+
+  useEffect(() => {
+    fetchTags()
+  }, [projectId])
 
   const handleAddTag = () => {
     if (tag.trim() !== '') {
@@ -55,8 +89,9 @@ export default function ProjectCreationPage() {
     setTags(tags.filter((_, index) => index !== indexToRemove))
   }
 
-  const submitProject = async () => {
-    if (projectName === '' || description === '') {
+  const updateProject = async () => {
+    console.log(pricePerImage)
+    if (projectName === '' || description === '' || pricePerImage === '') {
       toast({
         title: 'Error',
         description: 'Please fill out all required fields.',
@@ -66,80 +101,45 @@ export default function ProjectCreationPage() {
     }
 
     try {
-      const formData = new FormData()
-      formData.append('projectName', projectName)
-      formData.append('description', description)
-      formData.append('pricePerImage', pricePerImage.toString())
-      formData.append('tags', JSON.stringify(tags))
+      const data = {
+        project_name: projectName,
+        description: description,
+        price_per_image: pricePerImage,
+      }
 
       const token = sessionStorage.getItem('jwt')
 
-      const response = await axios.post(`${BACKEND_URL}/projects`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const response = await axios.post(
+        `${BACKEND_URL}/project/${projectId}/update`,
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
 
-      if (response.status === 201 || response.status === 200) {
+      if (response.status === 200) {
         toast({
-          title: 'Project created successfully!',
+          title: 'Project updated!',
           status: 'success',
         })
-
-        navigate('/dashboard')
       } else {
-        throw new Error('Failed to create project.')
-      }
-
-      // make $25 payment to align upon project creation
-      // TODO: shouldn't be able to call subtract from frontend
-      try {
-        await axios.post(
-          `${BACKEND_URL}/subtract_from_balance/${25}`,
-          null,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        console.log('Balance deducted successfully.')
-      } catch (error) {
-        console.error('Error deducting balance:', error)
+        throw new Error('Failed to update project.')
       }
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to create project.',
+        description: 'Failed to update project.',
         status: 'error',
       })
     }
   }
 
   return (
-    <Box
-      width="100vw"
-      height="100vh"
-      display="flex"
-      flexDirection="column"
-      justifyContent="flex-start"
-      alignItems="flex-start"
-      overflowY="auto"
-    >
-      <Header />
-      <Box>
-        <Heading alignSelf="flex-start" paddingLeft="40px" paddingTop="20px">
-          Create a New Project
-        </Heading>
-      </Box>
-      <VStack
-        spacing={5}
-        width="100%"
-        maxWidth="800px"
-        alignItems="flex-start"
-        padding="40px"
-      >
+    <Box>
+      <VStack spacing={5} width="100%" alignItems="flex-start">
         <Card width="100%">
           <CardBody>
             <FormControl isRequired>
@@ -171,15 +171,16 @@ export default function ProjectCreationPage() {
               <Input
                 type="number"
                 value={pricePerImage}
-                onChange={e =>
-                  setPricePerImage(e.target.value as unknown as number)
-                }
+                onChange={e => setPricePerImage(e.target.value)}
               />
             </FormControl>
           </CardBody>
         </Card>
 
         <Card width="100%">
+          <Heading position="absolute" color="red">
+            TODO: POST request to update tags
+          </Heading>
           <CardBody>
             <FormControl>
               <FormLabel>Tags</FormLabel>
@@ -208,11 +209,13 @@ export default function ProjectCreationPage() {
         </Card>
 
         <Box>
-          <Button colorScheme="blue" width="150px" onClick={submitProject}>
-            Create Project
+          <Button colorScheme="blue" width="150px" onClick={updateProject}>
+            Update
           </Button>
         </Box>
       </VStack>
     </Box>
   )
 }
+
+export default ProjectEditor

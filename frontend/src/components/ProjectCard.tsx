@@ -99,6 +99,9 @@ export default function ProjectCard({
           <Text textAlign="left" overflow="scroll" textOverflow="ellipsis">
             {description}
           </Text>
+          <Text textAlign="left">
+            Payment per image: ${pricePerImage}
+          </Text>
         </Stack>
       </CardBody>
       {!hideButton && (

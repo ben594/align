@@ -1,4 +1,4 @@
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs, Input } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 
 import { BACKEND_URL } from '../../constants'
@@ -16,6 +16,8 @@ export default function HomePage() {
   const [exploreTagSet, setExploreTagSet] = useState<string[]>([])
   const [myProjectCardsView, setMyProjectsCardsView] = useState<Project[]>([])
   const [exploreProjectsCardsView, setExploreProjectsCardsView] = useState<Project[]>([])
+  const [searchText, setSearchText] = useState('')
+  console.log(searchText)
 
   const parseProjectInfo = (projectListRaw: Project[]): Project[] => {
     const projectList: Project[] = []
@@ -104,6 +106,15 @@ export default function HomePage() {
     getProjects()
     getAllProjects()
   }, [])
+
+  const filteredProjects = exploreProjectsCards.filter((project) => {
+    const projectName = project.name.toLowerCase()
+    const projectDescription = project.description.toLowerCase()
+    const projectPrice = project.pricePerImage
+    const searchTextLower = searchText.toLowerCase()
+    const projectText = projectName + projectDescription + projectPrice
+    return projectText.includes(searchTextLower)
+  })
 
   return (
     <Box

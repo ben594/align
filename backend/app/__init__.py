@@ -15,10 +15,6 @@ def create_app():
     app.db = DB(app)
     login.init_app(app)
 
-    from .controllers.index import bp as index_bp
-
-    app.register_blueprint(index_bp)
-
     from .controllers.user_controller import bp as user_bp
 
     app.register_blueprint(user_bp)
@@ -38,6 +34,10 @@ def create_app():
     from .controllers.label_controller import label_bp
 
     app.register_blueprint(label_bp)
+
+    from .controllers.role_controller import bp as role_bp
+
+    app.register_blueprint(role_bp)
 
     app.config["JWT_SECRET_KEY"] = "secret_key"
 

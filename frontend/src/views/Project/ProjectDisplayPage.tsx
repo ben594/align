@@ -1,4 +1,5 @@
-import { Box, Button, Image, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { Box, Button, IconButton, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { Role, canAdmin, canReview } from '../../accessControl'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -6,11 +7,13 @@ import { BACKEND_URL } from '../../constants'
 import FlexColumn from '../../components/FlexColumn'
 import FlexRow from '../../components/FlexRow'
 import Header from '../../components/Header'
+import ImageCard from '../../components/ImageCard'
 import ImageUploadWidget from './ImageUploadWidget'
 import { Project } from './ProjectCreationPage'
 import ProjectCard from '../../components/ProjectCard'
+import { SettingsIcon } from '@chakra-ui/icons'
 import axios from 'axios'
-import ImageCard from '../../components/ImageCard'
+import ProjectMetrics from '../../components/ProjectMetrics'
 
 interface ProjectDisplayPageProps {
   projectId: string | undefined
@@ -20,8 +23,10 @@ export default function ProjectDisplayPage() {
   const navigate = useNavigate()
   const { projectId } = useParams()
 
+  // TODO Only display start labeling / reviewing buttons when images have been uploaded
+
   const ImageGrid = ({ projectId }: ProjectDisplayPageProps) => {
-    const [projectImages, setProjectImages] = useState<String[]>([])
+    const [projectImages, setProjectImages] = useState([])
     const [project, setProject] = useState<Project>()
 
     const fetchImages = useCallback(async () => {
@@ -106,12 +111,24 @@ export default function ProjectDisplayPage() {
               <Spinner />
             )}
 
-            {project?.role == 'owner' && (
-              <ImageUploadWidget
-                projectId={projectId}
-                setProjectImages={setProjectImages}
-                isDisabled={project?.role !== 'owner'}
-              />
+            {canAdmin(project?.role as Role) && (
+              <>
+                <ImageUploadWidget
+                  projectId={projectId}
+                  refetch={fetchImages}
+                  isDisabled={!canAdmin(project?.role as Role)}
+                />
+                <ProjectMetrics projectId={projectId} />
+                <IconButton
+                  icon={<SettingsIcon />}
+                  aria-label="Settings"
+                  colorScheme="blue"
+                  isRound
+                  onClick={() => {
+                    navigate(`/project/${projectId}/settings`)
+                  }}
+                />
+              </>
             )}
           </FlexRow>
 
@@ -130,6 +147,7 @@ export default function ProjectDisplayPage() {
                 Start Labeling!
               </Button>
               <Button
+                isDisabled={!canReview(project?.role as Role)}
                 colorScheme="green"
                 onClick={() => {
                   navigate(`/review/${projectId}`)
@@ -137,6 +155,15 @@ export default function ProjectDisplayPage() {
               >
                 Start Reviewing!
               </Button>
+              {canAdmin(project?.role as Role) && (
+                <Button
+                  colorScheme="blue"
+                  mb="4"
+                  onClick={() => navigate(`/project/${projectId}/finalized_images`)}
+                >
+                  View Labeled Images
+                </Button>
+              )}
             </>
           )}
         </FlexColumn>
@@ -158,7 +185,6 @@ export default function ProjectDisplayPage() {
     )
   }
 
-  // TODO @jamie: make the grid look nicer and add onclick images direct to labeling page
 
   return (
     <Box

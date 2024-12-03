@@ -17,11 +17,30 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 export default function Header() {
   const user_id = sessionStorage.getItem('user_id')
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+
+  const checkLoggedIn = () => {
+    const token = sessionStorage.getItem('jwt')
+    if (!token) {
+      console.error('User not authenticated.')
+      setIsAuthenticated(false)
+    } else {
+      setIsAuthenticated(true)
+    }
+  }
+
+  useEffect(() => {
+    checkLoggedIn()
+  }, [])
 
   const navigate = useNavigate()
 
   const goToLanding = () => {
-    navigate('/')
+    if (isAuthenticated === true) {
+      navigate('/dashboard')
+    } else {
+      navigate('/')
+    }
   }
 
   const goToProfile = () => {
@@ -35,10 +54,15 @@ export default function Header() {
     navigate('/auth')
   }
 
-  const [avatarSrc, setAvatarSrc] = useState(null);
+  const [avatarSrc, setAvatarSrc] = useState(null)
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/profile/${user_id}/profile_image`)
+    const token = sessionStorage.getItem('jwt')
+    fetch(`${BACKEND_URL}/profile/${user_id}/profile_image`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(response => response.json())
       .then(data => setAvatarSrc(data))
       .catch(error => console.error("Error fetching user's name:", error))
@@ -71,7 +95,10 @@ export default function Header() {
               variant="outline"
             />
             <MenuList>
-              <MenuItem icon={<Avatar boxSize="25px" src={avatarSrc || undefined} />} onClick={goToProfile}>
+              <MenuItem
+                icon={<Avatar boxSize="25px" src={avatarSrc || undefined} />}
+                onClick={goToProfile}
+              >
                 Profile
               </MenuItem>
               <MenuItem

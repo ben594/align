@@ -5,8 +5,6 @@ from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
 from azure.storage.blob import BlobServiceClient
-from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
 import uuid
 import json
@@ -134,6 +132,29 @@ def create_project():
         return jsonify({"message": "Project created", "project_id": project_id}), 201
     return jsonify({"error": "Failed to create project"}), 500
 
+
+@project_bp.route("/project/<int:project_id>/update", methods=["POST"])
+@jwt_required()
+def update_project(project_id):
+    data = request.get_json()
+    project_name = data.get("project_name")
+    description = data.get("description")
+    price_per_image = data.get("price_per_image")
+
+    if not project_name and not description and not price_per_image:
+        return jsonify({"error": "No fields to update"}), 400
+
+    if Role.get(get_jwt_identity(), project_id).role_name not in ("owner", "admin"):
+        return jsonify({"error": "Unauthorized"}), 403
+
+    success = Project.update(project_id, project_name, description, price_per_image)
+
+    if success:
+        return jsonify({"message": "Project updated successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to update project"}), 500
+
+
 @project_bp.route("/project/<int:project_id>/join", methods=["POST"])
 @jwt_required()
 def join_project(project_id):
@@ -158,12 +179,30 @@ def get_all_project_images_url(project_id):
     ]
     return jsonify(image_data), 200
 
+
+@project_bp.route("/project/<int:project_id>/finalized_images", methods=["GET"])
+def get_all_finalized_images(project_id):
+    print("in controller")
+    images = Image.get_all_finalized_images(project_id)
+    image_data = [
+        {
+            "image_url": image.image_url,
+            "label": image.label_text,
+            "labeled_status": image.labeled_status,
+            "accepted_status": image.accepted_status,
+        }
+        for image in images
+    ]
+    return jsonify(image_data), 200
+
+
 @project_bp.route("/project/<int:project_id>/tags", methods=["GET"])
 @jwt_required()
 def get_project_tags(project_id):
     tags = Project.get_all_tags(project_id)
     print(tags)
     return jsonify(tags=tags), 200
+
 
 @project_bp.route("/project/<int:project_id>/get_project_ppi", methods=["GET"])
 def get_project_ppi(project_id):
@@ -219,3 +258,13 @@ def upload_images(project_id):
                 )
 
     return jsonify({"imageUrls": uploaded_image_urls}), 200
+
+
+@project_bp.route("/project/<int:project_id>/users", methods=["GET"])
+@jwt_required()
+def get_project_members(project_id):
+    users = Project.get_project_members(project_id)
+    if not users:
+        return jsonify({"error": "No users found for this project"}), 404
+
+    return jsonify(users), 200

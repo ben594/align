@@ -45,5 +45,35 @@ class Label:
             image_url=image_url
         )
         return bool(status)
+    
+    @staticmethod
+    def pay_labeler(labeler_uid, ppi): 
+        try:
+            status = app.db.execute(
+                """
+                UPDATE Users
+                SET balance = balance + :ppi
+                WHERE user_id = :labeler_uid
+                """,
+                labeler_uid=labeler_uid,
+                ppi=ppi
+            )
+        except Exception as e:
+            print(f"Error updating user balance: {e}")
+            return False
+        return bool(status)
+    
+    # TODO add rejected label to history
+    @staticmethod
+    def reject_label(image_url):
+        status = app.db.execute(
+            """
+            UPDATE Images
+            SET labeled_status = FALSE
+            WHERE image_url = :image_url
+            """,
+            image_url=image_url
+        )
+        return bool(status)
 
 
