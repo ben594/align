@@ -47,12 +47,22 @@ export default function LabelingInterface() {
     const profanityCheck = async () => {
       const res = await fetch('https://vector.profanity.dev', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ label }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: label }),
+      }).then(async (data) => {
+        const json = await data.json()
+        if (json.isProfanity) {
+          toast({
+            title: 'Error',
+            description: 'Label rejected due to profanity.',
+            status: 'error',
+          })
+          throw new Error('Label rejected due to profanity.')
+        }
       })
-      console.log(res)
     }
-
 
     try {
       const formData = new FormData()
