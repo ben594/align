@@ -15,6 +15,8 @@ export default function HomePage() {
   const [myTagSet, setMyTagSet] = useState<string[]>([])
   const [exploreTagSet, setExploreTagSet] = useState<string[]>([])
   const [filters, setFilters] = useState<string[]>([])
+  const [mode, setMode] = useState<string>("search")
+  const [searchText, setSearchText] = useState('')
 
   const parseProjectInfo = (projectListRaw: Project[]): Project[] => {
     const projectList: Project[] = []
@@ -75,6 +77,17 @@ export default function HomePage() {
     })
   }
 
+  const applySearch = (projects: Project[]): Project[] => {
+    return projects.filter((project) => {
+      const projectName = project.name.toLowerCase()
+      const projectDescription = project.description.toLowerCase()
+      const projectPrice = project.pricePerImage
+      const searchTextLower = searchText.toLowerCase()
+      const projectText = projectName + projectDescription + projectPrice
+      return projectText.includes(searchTextLower)
+    })
+  }
+
   const applySorting = (projects: Project[]): Project[] => {
     if (sortCriteria) {
       return [...projects].sort((a, b) => {
@@ -96,10 +109,10 @@ export default function HomePage() {
   };
 
   const applyFiltersAndSorting = (projects: Project[]): Project[] => {
-    return applyFilters(applySorting(projects))
+    return applySearch(applyFilters(applySorting(projects)))
   }
   
-  // These two functions probably shouldn't be in this scope but its fine
+  // These four functions probably shouldn't be in this scope but its fine
   const onFilterChange = (inputFilters: string[]) => {
     setFilters(inputFilters);
   }
@@ -110,9 +123,22 @@ export default function HomePage() {
     }
   }
 
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  }
+
+  const onToggleMode = () => {
+    if(mode == "search"){
+      setMode("tags")
+    } else {
+      setMode("search")
+    }
+  }
+
   const resetSearch =() => {
     setFilters([]);
     setSortCriteria("projectName")
+    setMode("search")
   }
 
   useEffect(() => {
@@ -149,11 +175,11 @@ export default function HomePage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria} tagSet={myTagSet} onFilterChange={onFilterChange} onTagRemoved={onTagRemoved}/>
+            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria} tagSet={myTagSet} onFilterChange={onFilterChange} onTagRemoved={onTagRemoved} mode={mode} onToggleMode={onToggleMode} searchText={searchText} onSearchChange={onSearchChange}/>
             <CardList infoList={applyFiltersAndSorting(myProjectsCards)} includeAddCard={true} />
           </TabPanel>
           <TabPanel>
-            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria} tagSet={exploreTagSet} onFilterChange={onFilterChange} onTagRemoved={onTagRemoved}/>
+            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria} tagSet={exploreTagSet} onFilterChange={onFilterChange} onTagRemoved={onTagRemoved} mode={mode} onToggleMode={onToggleMode} searchText={searchText} onSearchChange={onSearchChange}/>
             <CardList infoList={applyFiltersAndSorting(exploreProjectsCards)} /> {/*Fix swapping behavior*/}
           </TabPanel>
         </TabPanels>

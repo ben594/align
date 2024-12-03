@@ -11,7 +11,7 @@ class Project:
         project_name,
         description,
         price_per_image,
-        is_archived,
+        is_archived=False,
     ):
         self.vendor_uid = vendor_uid
         self.project_id = project_id
