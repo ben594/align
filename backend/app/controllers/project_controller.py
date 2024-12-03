@@ -58,7 +58,7 @@ def get_projects_by_role():
             projects.role = role
     else:
         projects = []
-        for role in ["labeler", "reviewer", "owner"]:
+        for role in ["labeler", "reviewer", "owner", "admin"]:
             projects_by_role = Project.get_projects_by_role(user_id, role)
             for project in projects_by_role:
                 project.role = role
