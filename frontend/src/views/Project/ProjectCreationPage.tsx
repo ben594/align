@@ -66,6 +66,15 @@ export default function ProjectCreationPage() {
       return
     }
 
+    if (pricePerImage <= 0) {
+      toast({
+        title: 'Error',
+        description: 'Price per image must be greater than 0.',
+        status: 'error',
+      })
+      return
+    }
+
     try {
       const formData = new FormData()
       formData.append('projectName', projectName)
@@ -156,17 +165,7 @@ export default function ProjectCreationPage() {
                 type="number"
                 value={pricePerImage}
                 onChange={e => {
-                  const value = e.target.value as unknown as number;
-                  if (value > 0) {
-                    setPricePerImage(value);
-                  } else {
-                    toast({
-                      title: 'Error',
-                      description: 'Price per image must be greater than 0.',
-                      status: 'error',
-                    })
-                    throw new Error('Price per image must be greater than 0.');
-                  }
+                  setPricePerImage(e.target.value as unknown as number)
                 }
                 }
               />
