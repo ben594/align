@@ -30,7 +30,7 @@ export default function FilterBar({ onSortChange, sortCriteria, tagSet, onFilter
                 </MenuList>
             </Menu>
             <AutoComplete openOnFocus multiple onChange={onFilterChange} onTagRemoved={onTagRemoved}>
-                <AutoCompleteInput placeholder="Search...">
+                <AutoCompleteInput placeholder="Filter by tags...">
                 {({ tags }) =>
                     tags.map((tag, tid) => (
                     <AutoCompleteTag
