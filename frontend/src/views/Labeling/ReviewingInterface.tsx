@@ -22,6 +22,7 @@ export default function ReviewingInterface() {
   const [imageURL, setImageURL] = useState<string | null>(null)
   const [labelerID, setLabelerID] = useState<number | null>(null)
   const [label, setLabel] = useState('')
+  const [newLabel, setNewLabel] = useState('')
   const [reviewFeedback, setFeedback] = useState('')
   const hasCalledGetImage = useRef(false)
 
@@ -64,6 +65,7 @@ export default function ReviewingInterface() {
         }
       )
       const ppi = projectData.data.pricePerImage
+      // TODO remove this and move to backend
       const paid_labeler = await axios.post(
         `${BACKEND_URL}/pay_labeler/${labelerID}/${ppi}`,
         formData,
@@ -93,7 +95,6 @@ export default function ReviewingInterface() {
     }
   }
 
-  // TODO rejectLabel
   const rejectLabel = async () => {
     try {
       const token = sessionStorage.getItem('jwt')
@@ -125,6 +126,43 @@ export default function ReviewingInterface() {
       toast({
         title: 'Error',
         description: 'Failed to reject label.',
+        status: 'error',
+      })
+    }
+  }
+
+  const updateLabel = async () => {
+    try {
+      const token = sessionStorage.getItem('jwt')
+      const formData = new FormData()
+      formData.append('projectID', projectId ?? '')
+      formData.append('imageURL', imageURL ?? '')
+      formData.append('newLabel', label ?? '')
+
+      const response = await axios.post(
+        `${BACKEND_URL}/update_finalize_label`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      if (response.status === 201 || response.status === 200) {
+        toast({
+          title: 'Label updated and finalized successfully!',
+          status: 'success',
+        })
+        getNextImage()
+      } else {
+        throw new Error('Failed to update label.')
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update label.',
         status: 'error',
       })
     }
@@ -163,7 +201,6 @@ export default function ReviewingInterface() {
     }
   }
 
-  // TODO: in the future we can make the label text editable
   return (
     <Box
       width="100vw"
@@ -176,14 +213,33 @@ export default function ReviewingInterface() {
       <Header />
       <ImageViewer imageURL={imageURL} />
       <Box marginTop="50px" width="50vw" textAlign="center">
-        <text>{label}</text>
+        <Textarea
+          value={newLabel !== '' ? newLabel : label}
+          onChange={(e) => setNewLabel(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              updateLabel();
+            }
+          }}
+          width="100%"
+          height="10px"
+          marginBottom="20px"
+        />
         <FlexRow
           width="100%"
           columnGap={1}
           marginTop="20px"
           justifyContent="center"
         >
-          <Button width="100px" colorScheme="green" onClick={approveLabel}>
+          <Button width="100px" colorScheme="green"
+            onClick={() => {
+              if (newLabel !== null && newLabel !== '') {
+                updateLabel();
+              } else {
+                approveLabel();
+              }
+            }
+            }>
             Approve
           </Button>
           <Button width="100px" colorScheme="red" onClick={rejectLabel}>
