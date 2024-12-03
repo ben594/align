@@ -15,12 +15,13 @@ export default function LabelList({ labels }: LabelListProps) {
             .reverse() //reverse chronological order
             .map((label, index) =>(
             <Box key={index} p={4} bg="gray.50" boxShadow="sm">
-              <Text fontSize="md">
-                Project ID: {label.project_id}
+              <Text fontSize="lg">
+                {label.project_name}
               </Text>
-              <Text fontSize="md" color="gray.800">
-                Your label: {label.label_text}
+              <Text fontSize="sm" color="gray.600">
+              Project ID: {label.project_id} 
               </Text>
+              Your label: {label.label_text} <br></br>
               <Badge colorScheme={label.accepted_status ? 'green' : 'gray'}>
               {label.accepted_status ? 'Accepted' : 'Not accepted'}
               </Badge>
