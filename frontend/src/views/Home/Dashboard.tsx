@@ -1,4 +1,4 @@
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs, Input } from '@chakra-ui/react'
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 
 import { BACKEND_URL } from '../../constants'
@@ -6,14 +6,15 @@ import CardList from '../../components/CardList'
 import Header from '../../components/Header'
 import { Project } from '../Project/ProjectCreationPage'
 import axios from 'axios'
+import FilterBar from '../../components/FilterBar'
 
 export default function HomePage() {
   const [myProjectsCards, setMyProjectsCards] = useState<Project[]>([])
-  const [exploreProjectsCards, setExploreProjectsCards] = useState<Project[]>(
-    []
-  )
-  const [searchText, setSearchText] = useState('')
-  console.log(searchText)
+  const [exploreProjectsCards, setExploreProjectsCards] = useState<Project[]>([])
+  const [sortCriteria, setSortCriteria] = useState<string>("projectName")
+  const [myTagSet, setMyTagSet] = useState<string[]>([])
+  const [exploreTagSet, setExploreTagSet] = useState<string[]>([])
+  const [filters, setFilters] = useState<string[]>([])
 
   const parseProjectInfo = (projectListRaw: Project[]): Project[] => {
     const projectList: Project[] = []
@@ -36,6 +37,10 @@ export default function HomePage() {
       })
       const projectList: Project[] = parseProjectInfo(response.data.projects)
       setMyProjectsCards(projectList)
+      projectList.forEach((project) => {
+          setMyTagSet((prevTagSet) => Array.from(new Set([...prevTagSet, ...project.tags])));
+        }
+      );
     } catch (error) {
       console.error(`Error fetching my projects:`, error)
     }
@@ -52,24 +57,68 @@ export default function HomePage() {
       })
       const projectList: Project[] = parseProjectInfo(response.data.projects)
       setExploreProjectsCards(projectList)
+      projectList.forEach((project) => {
+        setExploreTagSet((prevTagSet) => Array.from(new Set([...prevTagSet, ...project.tags])));
+      }
+    );
     } catch (error) {
       console.error(`Error fetching all projects:`, error)
     }
+  }
+
+  const applyFilters = (projects: Project[]): Project[] => {
+    if (filters.length === 0) {
+      return projects;
+    }
+    return projects.filter((project) => {
+      return filters.some((tag) => project.tags.includes(tag));
+    })
+  }
+
+  const applySorting = (projects: Project[]): Project[] => {
+    if (sortCriteria) {
+      return [...projects].sort((a, b) => {
+        if (sortCriteria === "projectName") {
+          return a.name.localeCompare(b.name);
+        } else if (sortCriteria === "role") {
+          if (a.role === null) return 1;
+          if (b.role === null) return -1;
+          return a.role!.localeCompare(b.role!);
+        } else if (sortCriteria === "tags"){
+          if(a.tags === null || a.tags.length === 0) return 1;
+          if(b.tags === null || b.tags.length === 0) return -1;
+          return a.tags[0].localeCompare(b.tags[0]);
+        }
+        return 0;
+      });
+    }
+    return projects;
+  };
+
+  const applyFiltersAndSorting = (projects: Project[]): Project[] => {
+    return applyFilters(applySorting(projects))
+  }
+  
+  // These two functions probably shouldn't be in this scope but its fine
+  const onFilterChange = (inputFilters: string[]) => {
+    setFilters(inputFilters);
+  }
+
+  const onTagRemoved = () => {
+    if(filters.length === 1){
+      setFilters([]); // fixes a weird bug
+    }
+  }
+
+  const resetSearch =() => {
+    setFilters([]);
+    setSortCriteria("projectName")
   }
 
   useEffect(() => {
     getProjects()
     getAllProjects()
   }, [])
-
-  const filteredProjects = exploreProjectsCards.filter((project) => {
-    const projectName = project.name.toLowerCase()
-    const projectDescription = project.description.toLowerCase()
-    const projectPrice = project.pricePerImage
-    const searchTextLower = searchText.toLowerCase()
-    const projectText = projectName + projectDescription + projectPrice
-    return projectText.includes(searchTextLower)
-  })
 
   return (
     <Box
@@ -82,7 +131,7 @@ export default function HomePage() {
       overflowY="auto"
     >
       <Header />
-      <Tabs align="center" width="100%" variant="soft-rounded">
+      <Tabs align="center" width="100%" variant="soft-rounded" onChange={resetSearch}>
         <TabList
           position="sticky"
           top="70px"
@@ -100,16 +149,12 @@ export default function HomePage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <CardList infoList={myProjectsCards} includeAddCard={true} />
+            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria} tagSet={myTagSet} onFilterChange={onFilterChange} onTagRemoved={onTagRemoved}/>
+            <CardList infoList={applyFiltersAndSorting(myProjectsCards)} includeAddCard={true} />
           </TabPanel>
           <TabPanel>
-            <Input 
-              type="search"
-              placeholder="Search projects"
-              value={searchText}
-              onChange = {(e) => setSearchText(e.target.value)}
-            />
-            <CardList infoList={filteredProjects} />
+            <FilterBar onSortChange={setSortCriteria} sortCriteria={sortCriteria} tagSet={exploreTagSet} onFilterChange={onFilterChange} onTagRemoved={onTagRemoved}/>
+            <CardList infoList={applyFiltersAndSorting(exploreProjectsCards)} /> {/*Fix swapping behavior*/}
           </TabPanel>
         </TabPanels>
       </Tabs>

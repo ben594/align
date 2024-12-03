@@ -37,6 +37,7 @@ def get_project(project_id):
                     "name": project.project_name,
                     "description": project.description,
                     "pricePerImage": project.price_per_image,
+                    "tags": Project.get_all_tags(project.project_id),
                 }
             ),
             200,
@@ -70,6 +71,7 @@ def get_projects_by_role():
             "description": project.description,
             "vendorUID": project.vendor_uid,
             "pricePerImage": project.price_per_image,
+            "tags": Project.get_all_tags(project.project_id),
         }
         for project in projects
     ]
@@ -94,6 +96,7 @@ def get_all_projects():
             "description": project.description,
             "vendorUID": project.vendor_uid,
             "pricePerImage": project.price_per_image,
+            "tags": Project.get_all_tags(project.project_id),
         }
         for project in projects
     ]

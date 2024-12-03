@@ -26,6 +26,7 @@ interface ProjectCardProps extends Omit<CardProps, 'id'> {
   vendorUID: number
   pricePerImage: number
   hideButton?: boolean
+  tags: Array<string>
 }
 
 export default function ProjectCard({
@@ -36,10 +37,10 @@ export default function ProjectCard({
   vendorUID,
   pricePerImage,
   hideButton,
+  tags,
   ...cardProps
 }: ProjectCardProps) {
   const navigate = useNavigate()
-  const [tags, setTags] = useState<string[]>([])
   const [vendorName, setVendorName] = useState(null)
 
   const fetchVendorInfo = async () => {
@@ -63,23 +64,6 @@ export default function ProjectCard({
   }
 
   useEffect(() => {
-    const fetchTags = async () => {
-      const token = sessionStorage.getItem('jwt')
-      try {
-        const response = await axios.get(`${BACKEND_URL}/project/${id}/tags`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        })
-        if (response.data && response.data.tags) {
-          setTags(response.data.tags)
-        }
-      } catch (error) {
-        console.error('Error fetching project tags:', error)
-      }
-    }
-    fetchTags()
     fetchVendorInfo()
   }, [id, vendorUID])
 

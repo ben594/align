@@ -102,6 +102,7 @@ export default function ProjectDisplayPage() {
                 vendorUID={project.vendorUID}
                 pricePerImage={project.pricePerImage}
                 role={project.role}
+                tags={project.tags}
                 hideButton={true}
                 height="min-content"
                 maxWidth="400px"

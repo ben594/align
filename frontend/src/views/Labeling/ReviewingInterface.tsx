@@ -233,9 +233,18 @@ export default function ReviewingInterface() {
         >
           <Button width="100px" colorScheme="green"
             onClick={() => {
-              if (newLabel !== null && newLabel !== '') {
+              const numChanges = newLabel.length - label.length
+              if (newLabel !== null && newLabel !== '' && numChanges > 15) {
+                toast({
+                  title: 'Error',
+                  description: 'Too many changes. Please reject label and try again',
+                  status: 'error',
+                })
+              }
+              else if (newLabel !== null && newLabel !== '' && numChanges < 15) {
                 updateLabel();
-              } else {
+              }
+              else {
                 approveLabel();
               }
             }
