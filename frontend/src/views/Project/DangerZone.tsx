@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { BACKEND_URL } from '../../constants'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 interface DangerZoneProps {
   projectId: string
@@ -17,6 +18,7 @@ interface DangerZoneProps {
 
 const DangerZone = ({ projectId }: DangerZoneProps) => {
   const toast = useToast()
+  const navigate = useNavigate()
 
   const archiveProject = async () => {
     try {
@@ -37,6 +39,7 @@ const DangerZone = ({ projectId }: DangerZoneProps) => {
           title: 'Project archived successfully!',
           status: 'success',
         })
+        navigate(`/project/${projectId}/images`)
       }
     } catch (error) {
       toast({
