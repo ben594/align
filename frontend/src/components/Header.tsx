@@ -11,8 +11,9 @@ import {
   MenuList,
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { FaHome, FaTrophy } from 'react-icons/fa'
-import { MdLogout } from 'react-icons/md'
+import { IoHomeOutline } from "react-icons/io5";
+import { IoTrophyOutline } from "react-icons/io5";
+import { IoLogOutOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
@@ -106,18 +107,18 @@ export default function Header() {
                 Profile
               </MenuItem>
               <MenuItem
-                icon={<FaHome size="24px" />}
+                icon={<IoHomeOutline size="24px" />}
                 onClick={() => navigate('/dashboard')}
               >
                 Dashboard
               </MenuItem>
               <MenuItem
-                icon={<FaTrophy size="24px" />}
+                icon={<IoTrophyOutline size="24px" />}
                 onClick={() => navigate('/leaderboard')}
               >
                 Leaderboard
               </MenuItem>
-              <MenuItem icon={<MdLogout size="24px" />} onClick={logout}>
+              <MenuItem icon={<IoLogOutOutline size="24px" />} onClick={logout}>
                 Logout
               </MenuItem>
             </MenuList>
