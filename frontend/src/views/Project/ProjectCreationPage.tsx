@@ -90,12 +90,12 @@ export default function ProjectCreationPage() {
 
         navigate('/dashboard')
       } else {
-        throw new Error('Failed to create project.')
+        throw new Error("Failed to create project.")
       }
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to create project.',
+        description: error.response.data.message,
         status: 'error',
       })
     }
