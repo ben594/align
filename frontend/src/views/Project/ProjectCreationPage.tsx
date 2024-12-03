@@ -45,7 +45,7 @@ export default function ProjectCreationPage() {
   const toast = useToast()
 
   const handleAddTag = () => {
-    if (tag.trim() !== '') {
+    if (tag.trim() !== '' && !tags.includes(tag.toUpperCase())) {
       setTags([...tags, tag.toUpperCase()])
       setTag('')
     }
@@ -90,23 +90,6 @@ export default function ProjectCreationPage() {
         navigate('/dashboard')
       } else {
         throw new Error('Failed to create project.')
-      }
-
-      // make $25 payment to align upon project creation
-      // TODO: shouldn't be able to call subtract from frontend
-      try {
-        await axios.post(
-          `${BACKEND_URL}/subtract_from_balance/${25}`,
-          null,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        console.log('Balance deducted successfully.')
-      } catch (error) {
-        console.error('Error deducting balance:', error)
       }
     } catch (error) {
       toast({

@@ -24,7 +24,7 @@ export default function ProjectSettingsPage() {
   const { projectId } = useParams()
 
   return (
-    <FlexColumn width="100vw" height="100vh" alignItems="center">
+    <FlexColumn width="100vw" alignItems="center">
       <Header />
       <Box>
         <FlexRow position="relative" justify="center">

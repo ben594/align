@@ -126,8 +126,6 @@ def create_project():
         tags_list,
     )
 
-    role = Role.create(vendor_uid, project_id, "owner")
-
     if project_id:
         return jsonify({"message": "Project created", "project_id": project_id}), 201
     return jsonify({"error": "Failed to create project"}), 500
@@ -140,6 +138,7 @@ def update_project(project_id):
     project_name = data.get("project_name")
     description = data.get("description")
     price_per_image = data.get("price_per_image")
+    tags_list = data.get("tags")
 
     if not project_name and not description and not price_per_image:
         return jsonify({"error": "No fields to update"}), 400
@@ -147,7 +146,7 @@ def update_project(project_id):
     if Role.get(get_jwt_identity(), project_id).role_name not in ("owner", "admin"):
         return jsonify({"error": "Unauthorized"}), 403
 
-    success = Project.update(project_id, project_name, description, price_per_image)
+    success = Project.update(project_id, project_name, description, price_per_image, tags_list)
 
     if success:
         return jsonify({"message": "Project updated successfully"}), 200
@@ -159,7 +158,6 @@ def update_project(project_id):
 @jwt_required()
 def join_project(project_id):
     vendor_uid = get_jwt_identity()
-
     role = Role.create(vendor_uid, project_id, "labeler")
 
     return jsonify({"message": "Added to project", "project_id": project_id}), 201

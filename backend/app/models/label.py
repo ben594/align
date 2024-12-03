@@ -75,5 +75,22 @@ class Label:
             image_url=image_url
         )
         return bool(status)
+    
+    @staticmethod
+    def update_finalize_label(project_id, image_url, new_label):
+        status = app.db.execute(
+            """
+            UPDATE Images
+            SET label_text = :new_label,
+             labeled_status = TRUE,
+             accepted_status = TRUE
+            WHERE project_id = :project_id
+            AND image_url = :image_url
+            """,
+            project_id=project_id,
+            image_url=image_url,
+            new_label=new_label
+        )
+        return bool(status)
 
 
