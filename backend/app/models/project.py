@@ -119,7 +119,7 @@ class Project:
                     )
 
                 # get user balance
-                amount = float(os.getenv("PROJECT_COST")) or 25
+                amount = float(os.getenv("PROJECT_COST") or 25)
                 user_balance = conn.execute(
                     statement=text(
                         """
