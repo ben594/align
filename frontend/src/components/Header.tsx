@@ -1,3 +1,10 @@
+/**
+ * Header.tsx
+ *
+ * This file defines a `Header` component that displays a navigation header with options for the user.
+ * It includes a menu with options to navigate to the profile, dashboard, leaderboard, and logout.
+ */
+
 import { HamburgerIcon } from '@chakra-ui/icons'
 import {
   Avatar,

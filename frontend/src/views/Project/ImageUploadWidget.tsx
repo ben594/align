@@ -24,7 +24,6 @@ const ImageUploadWidget = ({
   projectId,
   refetch,
 }: ImageUploadWidgetProps) => {
-  const user_id = sessionStorage.getItem('user_id')
   const [selectedFiles, setSelectedFiles] = useState<FileList | undefined>(
     undefined
   )
@@ -54,16 +53,12 @@ const ImageUploadWidget = ({
       })
 
       // Send the POST request to upload images
-      const response = await axios.post(
-        `${BACKEND_URL}/project/${projectId}/upload`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
-          },
-        }
-      )
+      await axios.post(`${BACKEND_URL}/project/${projectId}/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
+        },
+      })
 
       refetch?.()
 

@@ -1,5 +1,12 @@
+/**
+ * FlexRow.tsx
+ *
+ * This file defines a `FlexRow` component that wraps the Chakra UI `Flex` component
+ * to enforce a row direction for its children.
+ */
+
 import { Flex, FlexProps } from '@chakra-ui/react'
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 
 const FlexRow = forwardRef(
   ({ children, ...props }: FlexProps, ref): JSX.Element => {

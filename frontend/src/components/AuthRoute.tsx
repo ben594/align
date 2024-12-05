@@ -1,3 +1,10 @@
+/**
+ * AuthRoute.tsx
+ *
+ * This file defines an `AuthRoute` component that protects routes by checking if the user is authenticated.
+ * If the user is not authenticated, they are redirected to the authentication page.
+ */
+
 import { Navigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 export default function AuthRoute({ children }: { children: JSX.Element }) {

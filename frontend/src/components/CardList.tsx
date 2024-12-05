@@ -1,3 +1,9 @@
+/**
+ * CardList.tsx
+ *
+ * This file defines a `CardList` component that displays a list of project cards in a responsive grid layout.
+ * It optionally includes an "Add Card" component.
+ */
 import ProjectCard from './ProjectCard'
 
 import AddCard from './AddCard'

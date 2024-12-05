@@ -1,16 +1,36 @@
-import React from 'react';
-import { Box, Image, Text, Tag, VStack, HStack } from '@chakra-ui/react';
+/**
+ * ImageCard.tsx
+ *
+ * This file defines an `ImageCard` component that displays an image along with its associated tags and label.
+ */
+
+import React from 'react'
+import { Box, Image, Text, Tag, VStack, HStack } from '@chakra-ui/react'
 
 interface ImageCardProps {
-  image_url: string;
-  tags: string[];
-  label?: string;
+  image_url: string
+  tags: string[]
+  label?: string
 }
 
 const ImageCard: React.FC<ImageCardProps> = ({ image_url, tags, label }) => {
   return (
-    <Box borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="md" p="4" bg="white">
-      <Image src={image_url} alt={label} w="100%" h="200px" objectFit="contain" bg="white" />
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      boxShadow="md"
+      p="4"
+      bg="white"
+    >
+      <Image
+        src={image_url}
+        alt={label}
+        w="100%"
+        h="200px"
+        objectFit="contain"
+        bg="white"
+      />
       <VStack align="start" mt="4" spacing="2">
         <HStack spacing="2">
           {tags.map((tag, index) => (
@@ -19,14 +39,10 @@ const ImageCard: React.FC<ImageCardProps> = ({ image_url, tags, label }) => {
             </Tag>
           ))}
         </HStack>
-        <Text>
-          Label: {label}
-        </Text>
+        <Text>Label: {label}</Text>
       </VStack>
     </Box>
-  );
-};
+  )
+}
 
-
-
-export default ImageCard;
+export default ImageCard

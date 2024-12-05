@@ -1,3 +1,12 @@
+/**
+ * ProjectCard.tsx
+ *
+ * This file defines a `ProjectCard` component that displays information about a project,
+ * including its name, description, price per image, and tags. It also provides buttons
+ * for interacting with the project, such as viewing details or performing actions based
+ * on the user's role.
+ */
+
 import {
   Button,
   ButtonGroup,
@@ -112,7 +121,12 @@ export default function ProjectCard({
               <TagLabel>{vendorName}</TagLabel>
             </Tag>
           )}
-          <Text textAlign="left" overflow="auto" textOverflow="ellipsis" fontWeight="bold">
+          <Text
+            textAlign="left"
+            overflow="auto"
+            textOverflow="ellipsis"
+            fontWeight="bold"
+          >
             {description}
           </Text>
           <Text textAlign="left">Payment per image: ${pricePerImage}</Text>
