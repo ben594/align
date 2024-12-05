@@ -91,6 +91,20 @@ class Label:
                 ),
                 parameters=dict(labeler_uid=labeler_uid, ppi=ppi),
             )
+            
+            # create payment record
+            conn.execute(
+                statement=text(
+                    """
+                    INSERT INTO Payments(user_id, transaction_time, balance_change)
+                    VALUES(:user_id, NOW(), :balance_change);
+                    """
+                ),
+                parameters=dict(
+                    user_id=labeler_uid,
+                    balance_change=ppi,
+                ),
+            )
 
             return bool(status)
 
