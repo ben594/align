@@ -2,6 +2,8 @@ import os
 from flask import current_app as app
 from sqlalchemy import text
 
+# Project class handles SQL queries for creating, updating, and archiving projects
+# Also gets project information
 
 class Project:
     def __init__(

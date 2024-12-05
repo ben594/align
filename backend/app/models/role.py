@@ -1,5 +1,7 @@
 from flask import current_app as app
 
+# Role class handles creating, updating, deleting, and getting information about user roles
+# The 3 roles are vendor, labeler, and reviewer
 
 class Role:
     def __init__(self, user_id, project_id, role_name):

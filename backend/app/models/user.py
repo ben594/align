@@ -4,6 +4,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from .. import login
 
+# User class creates, updates, and gets information about a user
+# Password is hashed to protect against SQL injection attacks
+
 
 class User(UserMixin):
     def __init__(self, user_id, email, firstname, lastname, balance):
@@ -55,6 +58,8 @@ class User(UserMixin):
         )
         return len(rows) > 0
 
+    # User registration 
+    # Note that password is hashed for protections
     @staticmethod
     def register(email, password, firstname, lastname):
         try:
@@ -129,17 +134,6 @@ class User(UserMixin):
             user_id=user_id,
         )
         return email[0][0] if email else None
-
-    @staticmethod
-    def get_all_emails():
-        res = app.db.execute(
-            """
-            SELECT email
-            FROM Users
-            """
-        )
-        emails = [row[0] for row in res]
-        return emails
 
     @staticmethod
     def get_profile_image(user_id):

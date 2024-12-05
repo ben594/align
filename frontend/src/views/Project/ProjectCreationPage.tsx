@@ -19,7 +19,7 @@ import {
 
 import { BACKEND_URL } from '../../constants'
 import Header from '../../components/Header'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
@@ -40,7 +40,6 @@ export default function ProjectCreationPage() {
   const [pricePerImage, setPricePerImage] = useState(0)
   const [tag, setTag] = useState('')
   const [tags, setTags] = useState<string[]>([])
-  const user_id = sessionStorage.getItem('user_id')
 
   const navigate = useNavigate()
   const toast = useToast()
@@ -103,9 +102,13 @@ export default function ProjectCreationPage() {
         throw new Error('Failed to create project.')
       }
     } catch (error) {
+      const description =
+        error instanceof AxiosError && error.response?.data?.error
+          ? error.response.data.error
+          : 'Failed to create project.'
       toast({
         title: 'Error',
-        description: error.response.data.message,
+        description,
         status: 'error',
       })
     }

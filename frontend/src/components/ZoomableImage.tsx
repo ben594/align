@@ -1,3 +1,18 @@
+/**
+ * ZoomableImage.tsx
+ *
+ * This file defines a `ZoomableImage` component that wraps the Chakra UI `Image` component
+ * with zoom and pan functionality using the `react-zoom-pan-pinch` library.
+ *
+ * The component displays a reset button when the image is zoomed in, allowing the user to
+ * reset the zoom level and pan position to the initial state.
+ *
+ * Usage:
+ * ```
+ * <ZoomableImage src="path/to/image.jpg" alt="Description of image" />
+ * ```
+ */
+
 import { Box, Button, Image, ImageProps } from '@chakra-ui/react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 
