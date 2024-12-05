@@ -176,3 +176,9 @@ def get_user_payments(user_id):
     ]
     
     return jsonify(payments=payments_list), 200
+
+@bp.route("/user/emails", methods=["GET"])
+@jwt_required()
+def get_all_emails():
+    emails = User.get_all_emails()
+    return jsonify(emails), 200
