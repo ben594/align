@@ -112,7 +112,7 @@ export default function ProjectCard({
               <TagLabel>{vendorName}</TagLabel>
             </Tag>
           )}
-          <Text textAlign="left" overflow="scroll" textOverflow="ellipsis">
+          <Text textAlign="left" overflow="auto" textOverflow="ellipsis" fontWeight="bold">
             {description}
           </Text>
           <Text textAlign="left">Payment per image: ${pricePerImage}</Text>

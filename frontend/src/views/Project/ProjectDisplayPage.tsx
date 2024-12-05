@@ -32,8 +32,6 @@ export default function ProjectDisplayPage() {
   const { projectId } = useParams()
   const toast = useToast()
 
-  // TODO Only display start labeling / reviewing buttons when images have been uploaded
-
   const ImageGrid = ({ projectId }: ProjectDisplayPageProps) => {
     const [projectImages, setProjectImages] = useState([])
     const [project, setProject] = useState<Project>()
@@ -172,7 +170,7 @@ export default function ProjectDisplayPage() {
               Join project!
             </Button>
           ) : (
-            <>
+            <FlexRow columnGap={4} justifyContent="center">
               {!isArchived && (
                 <>
                   <Button
@@ -207,7 +205,7 @@ export default function ProjectDisplayPage() {
                   View Labeled Images
                 </Button>
               )}
-            </>
+            </FlexRow>
           )}
         </FlexColumn>
 

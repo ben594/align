@@ -20,7 +20,7 @@ export default function ImageViewer({ imageURL }: ImageViewerProps) {
           src={imageURL}
           width="640px"
           height="360px"
-          objectFit="cover"
+          objectFit="contain"
         />
       </Flex>
     </Box>
