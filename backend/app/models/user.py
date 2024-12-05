@@ -83,6 +83,17 @@ class User(UserMixin):
             return None
 
     @staticmethod
+    def get_all_emails():
+        res = app.db.execute(
+            """
+            SELECT email
+            FROM Users
+            """
+        )
+        emails = [row[0] for row in res]
+        return emails
+
+    @staticmethod
     @login.user_loader
     def get(id):
         rows = app.db.execute(
