@@ -34,6 +34,7 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
 
   const toast = useToast()
 
+  // get project info
   const fetchProject = useCallback(async () => {
     const token = sessionStorage.getItem('jwt')
     try {
@@ -53,6 +54,7 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
   const fetchTags = useCallback(async () => {
     const token = sessionStorage.getItem('jwt')
     try {
+      // get project tags
       const response = await axios.get(
         `${BACKEND_URL}/project/${projectId}/tags`,
         {
@@ -89,6 +91,7 @@ const ProjectEditor = ({ projectId }: ProjectEditorProps) => {
     setTags(tags.filter((_, index) => index !== indexToRemove))
   }
 
+  // make post request to update project info
   const updateProject = async () => {
     console.log(pricePerImage)
     if (projectName === '' || description === '' || pricePerImage === '') {

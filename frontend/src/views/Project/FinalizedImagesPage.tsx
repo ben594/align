@@ -19,6 +19,7 @@ export default function FinalizedImagesPage() {
         const [finalizedImages, setFinalizedImages] = useState([])
         const toast = useToast()
 
+        // get all labeled and approved images to display
         const fetchFinalizedImages = useCallback(async () => {
             const token = sessionStorage.getItem('jwt')
             try {
@@ -45,6 +46,7 @@ export default function FinalizedImagesPage() {
                 <Button
                     width="500px" colorScheme="blue"
                     onClick={() => {
+                        // download image urls and labels into a csv
                         const csvData = [
                             "Image Name,Label", // header row
                             ...finalizedImages.map((image: any) => {

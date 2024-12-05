@@ -1,5 +1,6 @@
 export type Role = 'owner' | 'admin' | 'reviewer' | 'labeler'
 
+// define common function to check user permissions for a project
 const hasRolePermission = (
   role: Role | undefined | null,
   allowedRoles: Role[]

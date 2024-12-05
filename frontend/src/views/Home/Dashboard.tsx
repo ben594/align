@@ -20,6 +20,7 @@ export default function HomePage() {
   const [mode, setMode] = useState<string>('search')
   const [searchText, setSearchText] = useState('')
 
+  // validate json with type
   const parseProjectInfo = (projectListRaw: Project[]): Project[] => {
     const projectList: Project[] = []
 
@@ -30,6 +31,7 @@ export default function HomePage() {
     return projectList
   }
 
+  // make API call to get list of projects belonging to user
   const getProjects = async () => {
     const token = sessionStorage.getItem('jwt')
     try {
@@ -51,6 +53,7 @@ export default function HomePage() {
     }
   }
 
+  // API call to get all public projects
   const getAllProjects = async () => {
     const token = sessionStorage.getItem('jwt')
     try {
@@ -72,6 +75,7 @@ export default function HomePage() {
     }
   }
 
+  // filter project list based on tag criteria
   const applyFilters = (projects: Project[]): Project[] => {
     if (filters.length === 0) {
       return projects
@@ -81,6 +85,7 @@ export default function HomePage() {
     })
   }
 
+  // filter project list based on search words
   const applySearch = (projects: Project[]): Project[] => {
     return projects.filter(project => {
       const projectName = project.name.toLowerCase()
@@ -92,6 +97,7 @@ export default function HomePage() {
     })
   }
 
+  // sort projects based on sort criteria
   const applySorting = (projects: Project[]): Project[] => {
     if (sortCriteria) {
       return [...projects].sort((a, b) => {
@@ -116,7 +122,8 @@ export default function HomePage() {
     return applySearch(applyFilters(applySorting(projects)))
   }
 
-  // These four functions probably shouldn't be in this scope but its fine
+
+  // the following functions handle changes to filter and search inputs
   const onFilterChange = (inputFilters: string[]) => {
     setFilters(inputFilters)
   }
@@ -212,7 +219,6 @@ export default function HomePage() {
               onSearchChange={onSearchChange}
             />
             <CardList infoList={applyFiltersAndSorting(exploreProjectsCards)} />{' '}
-            {/*Fix swapping behavior*/}
           </TabPanel>
         </TabPanels>
       </Tabs>

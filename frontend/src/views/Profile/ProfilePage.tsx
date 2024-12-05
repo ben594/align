@@ -89,6 +89,7 @@ export default function ProfilePage() {
     return projectList
   }
 
+  // on load, get user's stats from backend
   useEffect(() => {
     const token = sessionStorage.getItem('jwt')
     fetch(`${BACKEND_URL}/profile/${user_id}/stats`, {
@@ -106,6 +107,7 @@ export default function ProfilePage() {
       )
   }, [user_id])
 
+  // on load, get user's name from backend
   useEffect(() => {
     const token = sessionStorage.getItem('jwt')
     fetch(`${BACKEND_URL}/profile/${user_id}/user_name`, {
@@ -118,6 +120,7 @@ export default function ProfilePage() {
       .catch(error => console.error("Error fetching user's name:", error))
   }, [user_id])
 
+  // on load, get user's email from backend
   useEffect(() => {
     const token = sessionStorage.getItem('jwt')
     fetch(`${BACKEND_URL}/profile/${user_id}/email`, {
@@ -130,6 +133,7 @@ export default function ProfilePage() {
       .catch(error => console.error("Error fetching user's email:", error))
   }, [user_id])
 
+  // on load, get user's profile picture from backend
   useEffect(() => {
     const token = sessionStorage.getItem('jwt')
     fetch(`${BACKEND_URL}/profile/${user_id}/profile_image`, {
@@ -142,6 +146,7 @@ export default function ProfilePage() {
       .catch(error => console.error("Error fetching user's name:", error))
   }, [user_id])
 
+  // on load, get user's project list from backend
   useEffect(() => {
     const token = sessionStorage.getItem('jwt')
     fetch(`${BACKEND_URL}/user/${user_id}/projects`, {
@@ -156,6 +161,7 @@ export default function ProfilePage() {
       .catch(error => console.error("Error fetching user's projects:", error))
   }, [user_id])
 
+  // on load, get user's payment history from backend
   useEffect(() => {
     const token = sessionStorage.getItem('jwt')
     fetch(`${BACKEND_URL}/user/${user_id}/payments`, {
@@ -170,6 +176,7 @@ export default function ProfilePage() {
       .catch(error => console.error("Error fetching user's payments:", error))
   }, [user_id])
 
+  // on load, get user's label history from backend
   useEffect(() => {
     const token = sessionStorage.getItem('jwt')
 
@@ -185,10 +192,9 @@ export default function ProfilePage() {
       .catch(error => console.error("Error fetching user's labels:", error))
   }, [user_id])
 
-  /* I apologize for all of this messy profile picture code. I will clean it up at some point */
-
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // handle profile picture change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0]

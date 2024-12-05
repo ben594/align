@@ -57,6 +57,7 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
   const fetchUsers = useCallback(async () => {
     const token = sessionStorage.getItem('jwt')
     try {
+      // get list of users under this project
       const response = await axios.get(
         `${BACKEND_URL}/project/${projectId}/users`,
         {
@@ -89,6 +90,7 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
     async (userId: number, projectId: string, roleName: string) => {
       const token = sessionStorage.getItem('jwt')
       try {
+        // make post request to update roles for this project
         const response = await axios.post(
           `${BACKEND_URL}/roles/update`,
           {
@@ -120,6 +122,7 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
   const deleteRole = useCallback(async (userId: number, projectId: string) => {
     const token = sessionStorage.getItem('jwt')
     try {
+      // post request to delete role
       const response = await axios.post(
         `${BACKEND_URL}/roles/delete`,
         {
@@ -149,6 +152,7 @@ const RoleEditor = ({ projectId }: RoleEditorProps) => {
     async (email: string, projectId: string, roleName: string) => {
       const token = sessionStorage.getItem('jwt')
       try {
+        // post request to create new role under this project
         const response = await axios.post(
           `${BACKEND_URL}/roles/create`,
           {

@@ -33,7 +33,7 @@ export default function LabelingInterface() {
     }
   }, [])
 
-
+  // make API call to submit label for current image
   const submitLabel = async () => {
     if (label === '') {
       toast({
@@ -44,6 +44,7 @@ export default function LabelingInterface() {
       return
     }
 
+    // first check if label has profanity
     const profanityCheck = async () => {
       const res = await fetch('https://vector.profanity.dev', {
         method: 'POST',
@@ -99,6 +100,7 @@ export default function LabelingInterface() {
     }
   }
 
+  // make API call to get next unlabeled image in the project
   const getNextImage = async () => {
     const token = sessionStorage.getItem('jwt')
 

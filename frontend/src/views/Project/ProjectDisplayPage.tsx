@@ -36,6 +36,7 @@ export default function ProjectDisplayPage() {
     const [projectImages, setProjectImages] = useState([])
     const [project, setProject] = useState<Project>()
 
+    // get list of all images under this project
     const fetchImages = useCallback(async () => {
       const token = sessionStorage.getItem('jwt')
       try {
@@ -53,6 +54,7 @@ export default function ProjectDisplayPage() {
       }
     }, [projectId])
 
+    // get project into
     const fetchProject = useCallback(async () => {
       const token = sessionStorage.getItem('jwt')
       try {
@@ -81,6 +83,7 @@ export default function ProjectDisplayPage() {
     const joinProject = async () => {
       const token = sessionStorage.getItem('jwt')
       try {
+        // make post request to add the user as a labeler under this project
         await axios.post(
           `${BACKEND_URL}/project/${projectId}/join`,
           {},

@@ -76,6 +76,7 @@ export default function ProjectCreationPage() {
     }
 
     try {
+      // make post request to create project
       const formData = new FormData()
       formData.append('projectName', projectName)
       formData.append('description', description)

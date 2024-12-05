@@ -31,11 +31,13 @@ export default function ReviewingInterface() {
 
   useEffect(() => {
     if (!hasCalledGetImage.current) {
+      // get image on load
       getNextImage()
       hasCalledGetImage.current = true
     }
   }, [])
 
+  // make API call to mark label as approved
   const approveLabel = async () => {
     try {
       const token = sessionStorage.getItem('jwt')
@@ -54,22 +56,13 @@ export default function ReviewingInterface() {
         }
       )
 
-      // Get price per image based on projectID and pay labeler
-      const projectData = await axios.get(
-        `${BACKEND_URL}/projects/${projectId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      )
-
       if (response.status === 201 || response.status === 200) {
         toast({
           title: 'Label approved successfully!',
           status: 'success',
         })
+
+        // on success, automatically fetch next image
         getNextImage()
       } else {
         throw new Error('Failed to approve label.')
@@ -156,6 +149,7 @@ export default function ReviewingInterface() {
     }
   }
 
+  // make API call to get next unreviewed image in the project
   const getNextImage = async () => {
     const token = sessionStorage.getItem('jwt')
 
@@ -168,8 +162,6 @@ export default function ReviewingInterface() {
           },
         }
       )
-
-      console.log('response: ', response)
 
       if (response.status === 201 || response.status === 200) {
         setImageURL(response.data.imageURL)
