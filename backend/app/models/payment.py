@@ -30,7 +30,7 @@ class Payment:
             SELECT *
             FROM Payments
             WHERE user_id = :user_id
-            ORDER BY transaction_time DESC
+            ORDER BY transaction_time ASC
             """,
             user_id=user_id,
         )
