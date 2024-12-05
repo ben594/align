@@ -1,3 +1,10 @@
+/**
+ * ClickableOpacity.tsx
+ *
+ * This file defines a `ClickableOpacity` component that wraps the Chakra UI `Box` component
+ * to provide a clickable area with opacity changes on hover and active states.
+ */
+
 import { Box, BoxProps } from '@chakra-ui/react'
 import React, { ReactNode } from 'react'
 

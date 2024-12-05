@@ -11,7 +11,9 @@ import os
 from ..models.role import Role
 
 bp = Blueprint("roles", __name__)
+# Controller for everything related to the roles table
 
+# Updates a user's role
 @bp.route("/roles/update", methods=["POST"])
 @jwt_required()
 def update_role():
@@ -33,6 +35,7 @@ def update_role():
     else:
         return jsonify({"error": "Failed to update role"}), 500
 
+# Deletes a user's role
 @bp.route("/roles/delete", methods=["POST"])
 @jwt_required()
 def delete_role():
@@ -53,6 +56,7 @@ def delete_role():
     else:
         return jsonify({"error": "Failed to delete role"}), 500
 
+# Creates a new role
 @bp.route("/roles/create", methods=["POST"])
 @jwt_required()
 def create_role():

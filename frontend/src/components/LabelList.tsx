@@ -1,9 +1,16 @@
-import { Box, Text, Badge, VStack, Divider } from '@chakra-ui/react';
-import { Label } from '../views/Profile/ProfilePage';
+/**
+ * LabelList.tsx
+ *
+ * This file defines a `LabelList` component that displays a list of labels.
+ * Each label shows the project name, project ID, the label text, and its acceptance status.
+ */
+
+import { Box, Text, Badge, VStack } from '@chakra-ui/react'
+import { Label } from '../views/Profile/ProfilePage'
 
 type LabelListProps = {
-  labels: Label[];
-};
+  labels: Label[]
+}
 
 export default function LabelList({ labels }: LabelListProps) {
   return (
@@ -11,26 +18,24 @@ export default function LabelList({ labels }: LabelListProps) {
       {labels.length > 0 ? (
         <VStack spacing={5} align="stretch">
           {labels
-            .slice() 
+            .slice()
             .reverse() //reverse chronological order
-            .map((label, index) =>(
-            <Box key={index} p={4} bg="gray.50" boxShadow="sm">
-              <Text fontSize="lg">
-                {label.project_name}
-              </Text>
-              <Text fontSize="sm" color="gray.600">
-              Project ID: {label.project_id} 
-              </Text>
-              Your label: {label.label_text} <br></br>
-              <Badge colorScheme={label.accepted_status ? 'green' : 'gray'}>
-              {label.accepted_status ? 'Accepted' : 'Not accepted'}
-              </Badge>
-            </Box>
-          ))}
+            .map((label, index) => (
+              <Box key={index} p={4} bg="gray.50" boxShadow="sm">
+                <Text fontSize="lg">{label.project_name}</Text>
+                <Text fontSize="sm" color="gray.600">
+                  Project ID: {label.project_id}
+                </Text>
+                Your label: {label.label_text} <br></br>
+                <Badge colorScheme={label.accepted_status ? 'green' : 'gray'}>
+                  {label.accepted_status ? 'Accepted' : 'Not accepted'}
+                </Badge>
+              </Box>
+            ))}
         </VStack>
       ) : (
         <Text>No labels available</Text>
       )}
     </Box>
-  );
+  )
 }

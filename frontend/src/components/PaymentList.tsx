@@ -1,4 +1,11 @@
-import { Box, Text, Badge, VStack, Divider } from '@chakra-ui/react'
+/**
+ * PaymentList.tsx
+ *
+ * This file defines a `PaymentList` component that displays a list of payments.
+ * Each payment shows the transaction time and the change in balance.
+ */
+
+import { Box, Text, VStack } from '@chakra-ui/react'
 import { Payment } from '../views/Profile/ProfilePage'
 
 type PaymentListProps = {

@@ -13,11 +13,13 @@ import uuid
 import os
 
 bp = Blueprint("users", __name__)
+# Controller for everything related to the users table
 
 AZURE_CONNECTION_STRING = os.getenv("AZURE_CONNECTION_STRING")
 AZURE_CONTAINER_NAME = os.getenv("AZURE_CONTAINER_NAME")
 blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
 
+# Logs in a user
 @bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -30,7 +32,7 @@ def login():
     access_token = create_access_token(identity=user.user_id, expires_delta=False)
     return jsonify(access_token=access_token, user_id=user.user_id), 200
 
-
+# Registers a user
 @bp.route("/signup", methods=["POST"])
 def register():
     data = request.get_json()
@@ -45,13 +47,14 @@ def register():
     access_token = create_access_token(identity=user_id, expires_delta=False)
     return jsonify(access_token=access_token, user_id=user_id), 200
 
-
+# Logs out a user
 @bp.route("/logout", methods=["POST"])
 @jwt_required()
 def logout():
     logout_user()
     return jsonify({"message": "User logged out successfully"}), 200
 
+# Gets the stats of a user
 @bp.route("/profile/<int:user_id>/stats", methods=["GET"])
 @jwt_required()
 def get_user_stats(user_id):
@@ -62,30 +65,35 @@ def get_user_stats(user_id):
         'balance': balance
         }), 200
 
+# Gets the name of a user
 @bp.route("/profile/<int:user_id>/user_name", methods=["GET"])
 @jwt_required()
 def get_user_name(user_id):
     user_name = User.get_user_name(user_id)
     return jsonify(user_name), 200
 
+# Gets the email of a user
 @bp.route("/profile/<int:user_id>/email", methods=["GET"])
 @jwt_required()
 def get_email(user_id):
     email = User.get_email(user_id)
     return jsonify(email), 200
 
+# Gets the profile image of a user
 @bp.route("/profile/<int:user_id>/profile_image", methods=["GET"])
 @jwt_required()
 def get_profile_image(user_id):
     profile_image_url = User.get_profile_image(user_id)
     return jsonify(profile_image_url), 200
 
+# Clears the profile image of a user
 @bp.route("/profile/<int:user_id>/clear_profile_image", methods=["POST"])
 @jwt_required()
 def clear_profile_image(user_id):
     User.update_profile_image(user_id, None)
     return jsonify({}), 200
 
+# Uploads the profile image of a user
 @bp.route("/profile/<int:user_id>/upload_profile_image", methods=["POST"])
 @jwt_required()
 def upload_profile_image(user_id):
@@ -109,6 +117,7 @@ def upload_profile_image(user_id):
     except Exception as e:
         return jsonify({"error": f"Failed to upload image: {str(e)}"}), 500
 
+# Gets the projects of a user
 @bp.route("/user/<int:user_id>/projects", methods=["GET"])
 @jwt_required()
 def get_user_projects(user_id):
@@ -128,6 +137,7 @@ def get_user_projects(user_id):
     
     return jsonify(projects=projects_list), 200
 
+# Gets the labels from a user
 @bp.route("/user/<int:user_id>/labels", methods=["GET"])
 @jwt_required()
 def get_user_labels(user_id):
@@ -144,6 +154,7 @@ def get_user_labels(user_id):
     ]
     return jsonify(labels=label_list), 200
 
+# Gets payments involving a user
 @bp.route("/user/<int:user_id>/payments", methods=["GET"])
 @jwt_required()
 def get_user_payments(user_id):
@@ -165,9 +176,3 @@ def get_user_payments(user_id):
     ]
     
     return jsonify(payments=payments_list), 200
-
-@bp.route("/user/emails", methods=["GET"])
-@jwt_required()
-def get_all_emails():
-    emails = User.get_all_emails()
-    return jsonify(emails), 200
