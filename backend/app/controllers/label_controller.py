@@ -4,12 +4,13 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from ..models.label import Label
 
+# Controller for everything related to the labels table
 label_bp = Blueprint("label", __name__)
 
-
+# Submits a label based on the passed in form data from frontend labeling flow
 @label_bp.route("/label", methods=["POST"])
 @jwt_required()
-def submit_label():
+def submit_label():        
     labeler_uid = get_jwt_identity()
     projectID = request.form.get("projectID")
     imageURL = request.form.get("imageURL")
@@ -18,7 +19,7 @@ def submit_label():
     if not labeler_uid or not projectID or not imageURL or not label:
         return jsonify({"error": "Invalid image label parameters"}), 400
 
-    # connect to models
+    # Connect to models
     label_id = Label.create(
         labeler_uid,
         projectID,
@@ -30,6 +31,7 @@ def submit_label():
         return jsonify({"message": "Label submitted", "label_id": label_id}), 201
     return jsonify({"error": "Failed to submit label"}), 500
 
+# Approves a submitted label
 @label_bp.route("/approve_label", methods=["POST"])
 @jwt_required()
 def approve_label():
@@ -39,6 +41,7 @@ def approve_label():
         return jsonify({"message": "Label approved"}), 201
     return jsonify({"error": "Failed to approve label"}), 500
 
+# Legacy function left for reference. From before we moved transactions to soley backend
 @label_bp.route("/pay_labeler/<int:labeler_uid>/<ppi>", methods=["POST"])
 @jwt_required()
 def pay_labeler(labeler_uid, ppi):
@@ -47,6 +50,7 @@ def pay_labeler(labeler_uid, ppi):
         return jsonify({"message": "Labeler paid"}), 201
     return jsonify({"error": "Failed to pay labeler"}), 500
 
+# Rejects a label
 @label_bp.route("/reject_label", methods=["POST"])
 @jwt_required()
 def reject_label():
@@ -56,6 +60,7 @@ def reject_label():
         return jsonify({"message": "Label rejected"}), 201
     return jsonify({"error": "Failed to reject label and update image label history"}), 500
 
+# When a label is updated in the reviewing flow, this function updates the label
 @label_bp.route("/update_finalize_label", methods=["POST"])
 @jwt_required()
 def update_finalize_label():

@@ -13,13 +13,14 @@ from ..models.project import Project
 from ..models.role import Role
 from ..models.image import Image
 
+# Controller for anything related to projects
 project_bp = Blueprint("projects", __name__)
 
 AZURE_CONNECTION_STRING = os.getenv("AZURE_CONNECTION_STRING")
 AZURE_CONTAINER_NAME = os.getenv("AZURE_CONTAINER_NAME")
 blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
 
-
+# Gets all data for a specific project based on project id
 @project_bp.route("/projects/<int:project_id>", methods=["GET"])
 @jwt_required()
 def get_project(project_id):
@@ -45,7 +46,7 @@ def get_project(project_id):
         )
     return jsonify({"error": "Project not found"}), 404
 
-
+# Gets all projects the passed in user_id can view
 @project_bp.route("/projects", methods=["GET"])
 @jwt_required()
 def get_projects_by_role():
@@ -80,7 +81,7 @@ def get_projects_by_role():
 
     return jsonify(projects=projects_list), 200
 
-
+# Gets all projects for explore page
 @project_bp.route("/projects/all", methods=["GET"])
 @jwt_required()
 def get_all_projects():
@@ -106,7 +107,7 @@ def get_all_projects():
 
     return jsonify(projects=projects_list), 200
 
-
+# Creates a project
 @project_bp.route("/projects", methods=["POST"])
 @jwt_required()
 def create_project():
@@ -136,7 +137,7 @@ def create_project():
         return jsonify({"message": "Project created", "project_id": project_id}), 201
     return jsonify({"message": "Failed to create project"}), 500
 
-
+# Updates project info
 @project_bp.route("/project/<int:project_id>/update", methods=["POST"])
 @jwt_required()
 def update_project(project_id):
@@ -165,7 +166,7 @@ def update_project(project_id):
     else:
         return jsonify({"error": "Failed to update project"}), 500
 
-
+# Adds a user to a project
 @project_bp.route("/project/<int:project_id>/join", methods=["POST"])
 @jwt_required()
 def join_project(project_id):
@@ -178,7 +179,7 @@ def join_project(project_id):
 
     return jsonify({"message": "Added to project", "project_id": project_id}), 201
 
-
+# Gets all urls of images in a project
 @project_bp.route("/project/<int:project_id>/images", methods=["GET"])
 def get_all_project_images_url(project_id):
     images = Image.get_all_images_per_project(project_id)
@@ -193,7 +194,7 @@ def get_all_project_images_url(project_id):
     ]
     return jsonify(image_data), 200
 
-
+# Gets all finalized images of a project (based on passed in project_id)
 @project_bp.route("/project/<int:project_id>/finalized_images", methods=["GET"])
 def get_all_finalized_images(project_id):
     images = Image.get_all_finalized_images(project_id)
@@ -208,7 +209,7 @@ def get_all_finalized_images(project_id):
     ]
     return jsonify(image_data), 200
 
-
+# Gets all tags of a project
 @project_bp.route("/project/<int:project_id>/tags", methods=["GET"])
 @jwt_required()
 def get_project_tags(project_id):
@@ -216,6 +217,7 @@ def get_project_tags(project_id):
     print(tags)
     return jsonify(tags=tags), 200
 
+# Gets all metrics of a project
 @project_bp.route("/project/<int:project_id>/metrics", methods=["GET"])
 @jwt_required()
 def get_project_metrics(project_id):
@@ -230,6 +232,7 @@ def get_project_metrics(project_id):
     print("print Metrics", metrics)
     return jsonify(metrics=metrics_list), 200
 
+# Gets price per image of each image in a project
 @project_bp.route("/project/<int:project_id>/get_project_ppi", methods=["GET"])
 def get_project_ppi(project_id):
     price_per_image = Project.get_project_ppi(project_id)
@@ -290,7 +293,7 @@ def upload_images(project_id):
 
     return jsonify({"imageUrls": uploaded_image_urls}), 200
 
-
+# Get members in a project
 @project_bp.route("/project/<int:project_id>/users", methods=["GET"])
 @jwt_required()
 def get_project_members(project_id):
@@ -300,7 +303,7 @@ def get_project_members(project_id):
 
     return jsonify(users), 200
 
-
+# Archives a project
 @project_bp.route("/project/<int:project_id>/archive", methods=["POST"])
 @jwt_required()
 def archive_project(project_id):
