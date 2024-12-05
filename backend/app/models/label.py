@@ -111,7 +111,6 @@ class Label:
             return False
         return bool(status)
 
-    # TODO add rejected label to history
     @staticmethod
     def reject_label(image_url):
         status = app.db.execute(

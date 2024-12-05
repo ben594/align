@@ -15,8 +15,6 @@ interface FinalizedImagesPageProps {
 export default function FinalizedImagesPage() {
     const { projectId } = useParams()
 
-    // TODO permissions so only owner can view this page
-
     const ImageGrid = ({ projectId }: FinalizedImagesPageProps) => {
         const [finalizedImages, setFinalizedImages] = useState([])
         const toast = useToast()
@@ -47,9 +45,12 @@ export default function FinalizedImagesPage() {
                 <Button
                     width="500px" colorScheme="blue"
                     onClick={() => {
-                        const csvData = finalizedImages.map((image: any) => {
-                            return `${image.image_url},${image.label}`;
-                        }).join('\n');
+                        const csvData = [
+                            "Image Name,Label", // header row
+                            ...finalizedImages.map((image: any) => {
+                                return `${image.image_url},${image.label}`;
+                            }),
+                        ].join('\n');
                         const blob = new Blob([csvData], { type: 'text/csv' });
                         const url = URL.createObjectURL(blob);
                         const a = document.createElement('a');

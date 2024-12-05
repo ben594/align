@@ -57,16 +57,16 @@ export default function Leaderboard() {
           <Thead>
             <Tr>
               <Th>Labeler</Th>
-              <Th># Images Labeled</Th>
-              <Th isNumeric>Accepted Rate %</Th>
+              <Th textAlign="center"># Images Labeled</Th>
+              <Th textAlign="center">Accepted Rate %</Th>
             </Tr>
           </Thead>
           <Tbody>
             {topLabelers.map((labeler, index) => (
               <Tr key={index}>
                 <Td>{labeler.name}</Td>
-                <Td>{labeler.labeled_count}</Td>
-                <Td>{labeler.accepted_rate}</Td>
+                <Td textAlign="center">{labeler.labeled_count}</Td>
+                <Td textAlign="center">{labeler.accepted_rate}</Td>
               </Tr>
             ))}
           </Tbody>
@@ -82,7 +82,7 @@ export default function Leaderboard() {
             <Tr>
               <Th>Project Name</Th>
               <Th># Labelers</Th>
-              <Th isNumeric>Progress</Th>
+              <Th>Progress</Th>
             </Tr>
           </Thead>
           <Tbody>

@@ -169,7 +169,6 @@ class Image:
 
         return Image(*(rows[0])) if rows else None
 
-    # TODO: edit the query so you can only get images where you didn't write the label
     @staticmethod
     def get_next_image_review(project_id):
         rows = app.db.execute(
@@ -267,7 +266,6 @@ class Image:
                 COUNT(DISTINCT i.labeler_uid) DESC
             LIMIT 3
             """
-            # TODO: fix this sql query bc idt it's returning the right number for progress rn
         )
         if projects:
             return [

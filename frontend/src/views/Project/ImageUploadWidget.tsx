@@ -30,8 +30,6 @@ const ImageUploadWidget = ({
   )
   const toast = useToast()
 
-  // TODO: confirm current user has permission to upload images to this projectId
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setSelectedFiles(event.target.files)
