@@ -1,5 +1,6 @@
 from flask import current_app as app
 
+# Payment class handles SQL queries for getting information about transactions 
 
 class Payment:
     def __init__(
