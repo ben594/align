@@ -125,7 +125,7 @@ export default function ReviewingInterface() {
       const formData = new FormData()
       formData.append('projectID', projectId ?? '')
       formData.append('imageURL', imageURL ?? '')
-      formData.append('newLabel', label ?? '')
+      formData.append('newLabel', newLabel ?? '')
 
       const response = await axios.post(
         `${BACKEND_URL}/update_finalize_label`,
