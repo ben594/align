@@ -105,7 +105,7 @@ def gen_tags(num_tags):
         for pid in range(num_projects):
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
-            num_project_tags = fake.random_int(1, 5)
+            num_project_tags = fake.random_int(0, 5)
             selected_tags = random.sample(tags, num_project_tags)
             for tag in selected_tags:
                 writer_proj_tags.writerow([pid, tag])
