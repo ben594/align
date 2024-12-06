@@ -188,15 +188,19 @@ export default function ProjectDisplayPage() {
                   >
                     Start Labeling!
                   </Button>
-                  <Button
-                    isDisabled={!canReview(project?.role as Role) || isArchived}
-                    colorScheme="green"
-                    onClick={() => {
-                      navigate(`/review/${projectId}`)
-                    }}
-                  >
-                    Start Reviewing!
-                  </Button>
+                  {canReview(project?.role as Role) && (
+                    <Button
+                      isDisabled={
+                        !canReview(project?.role as Role) || isArchived
+                      }
+                      colorScheme="green"
+                      onClick={() => {
+                        navigate(`/review/${projectId}`)
+                      }}
+                    >
+                      Start Reviewing!
+                    </Button>
+                  )}
                 </>
               )}
 
