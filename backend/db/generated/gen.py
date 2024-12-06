@@ -112,7 +112,7 @@ def gen_tags(num_tags):
         print(f'{num_tags} generated')        
             
 #def merge_data_csvs():
-
+# not implemented; need to manutally copy over every time you re-generate the data (sorry)
 
 gen_users(num_users)
 project_owners = gen_projects(num_projects)
