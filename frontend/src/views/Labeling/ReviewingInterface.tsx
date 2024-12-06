@@ -168,6 +168,7 @@ export default function ReviewingInterface() {
         setLabelerID(response.data.labelerUID)
         setFeedback('')
         // Get this image's pending label
+        setNewLabel('')
         setLabel(response.data.labelText)
       }
     } catch {
@@ -195,10 +196,10 @@ export default function ReviewingInterface() {
       <Box marginTop="50px" width="50vw" textAlign="center">
         <Textarea
           value={newLabel !== '' ? newLabel : label}
-          onChange={(e) => setNewLabel(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              updateLabel();
+          onChange={e => setNewLabel(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              updateLabel()
             }
           }}
           width="100%"
@@ -211,24 +212,29 @@ export default function ReviewingInterface() {
           marginTop="20px"
           justifyContent="center"
         >
-          <Button width="100px" colorScheme="green"
+          <Button
+            width="100px"
+            colorScheme="green"
             onClick={() => {
               const numChanges = newLabel.length - label.length
               if (newLabel !== null && newLabel !== '' && numChanges > 15) {
                 toast({
                   title: 'Error',
-                  description: 'Too many changes. Please reject label and try again',
+                  description:
+                    'Too many changes. Please reject label and try again',
                   status: 'error',
                 })
+              } else if (
+                newLabel !== null &&
+                newLabel !== '' &&
+                numChanges < 15
+              ) {
+                updateLabel()
+              } else {
+                approveLabel()
               }
-              else if (newLabel !== null && newLabel !== '' && numChanges < 15) {
-                updateLabel();
-              }
-              else {
-                approveLabel();
-              }
-            }
-            }>
+            }}
+          >
             Approve
           </Button>
           <Button width="100px" colorScheme="red" onClick={rejectLabel}>
