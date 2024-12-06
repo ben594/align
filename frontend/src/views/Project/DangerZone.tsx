@@ -25,6 +25,7 @@ const DangerZone = ({ projectId }: DangerZoneProps) => {
 
   const [role, setRole] = useState('')
 
+  // get project info
   const fetchProject = useCallback(async () => {
     const token = sessionStorage.getItem('jwt')
     try {
@@ -43,6 +44,7 @@ const DangerZone = ({ projectId }: DangerZoneProps) => {
     fetchProject()
   }, [projectId])
 
+  // mark project as archived
   const archiveProject = async () => {
     try {
       const token = sessionStorage.getItem('jwt')

@@ -34,6 +34,7 @@ export default function AuthPage() {
   const navigate = useNavigate()
   const toast = useToast()
 
+  // go to dashboard if not logged in
   useEffect(() => {
     const token = sessionStorage.getItem('jwt')
     if (token) {
@@ -41,6 +42,7 @@ export default function AuthPage() {
     }
   }, [])
 
+  // handle login click
   const submitLogin = async () => {
     if (email == '' || password == '') {
       toast({
@@ -65,9 +67,12 @@ export default function AuthPage() {
       if (response.status === 201 || response.status === 200) {
         const token = response.data.access_token
         const user_id = response.data.user_id
-        console.log(user_id);
+
+        // store jwt and user id
         sessionStorage.setItem('jwt', token)
         sessionStorage.setItem('user_id', user_id)
+
+        // go to dashboard on login success
         navigate('/dashboard')
       } else {
         throw new Error('Failed to login.')
@@ -83,6 +88,7 @@ export default function AuthPage() {
     }
   }
 
+  // handle sign up click
   const submitSignup = async () => {
     if (
       email == '' ||
@@ -111,8 +117,12 @@ export default function AuthPage() {
 
       const token = response.data.access_token
       const user_id = response.data.user_id
+
+      // store login creds in browser
       sessionStorage.setItem('jwt', token)
       sessionStorage.setItem('user_id', user_id)
+
+      // go to dashboard on successful signup, user now logged in
       navigate('/dashboard')
     } catch (error) {
       const errorMessage =

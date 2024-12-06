@@ -1,3 +1,10 @@
+/**
+ * Header.tsx
+ *
+ * This file defines a `Header` component that displays a navigation header with options for the user.
+ * It includes a menu with options to navigate to the profile, dashboard, leaderboard, and logout.
+ */
+
 import { HamburgerIcon } from '@chakra-ui/icons'
 import {
   Avatar,
@@ -11,9 +18,9 @@ import {
   MenuList,
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { IoHomeOutline } from "react-icons/io5";
-import { IoTrophyOutline } from "react-icons/io5";
-import { IoLogOutOutline } from "react-icons/io5";
+import { IoHomeOutline } from 'react-icons/io5'
+import { IoTrophyOutline } from 'react-icons/io5'
+import { IoLogOutOutline } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
@@ -92,37 +99,42 @@ export default function Header() {
           align
         </Heading>
         <Flex align="center" paddingRight="10px">
-          <Menu>
-            <MenuButton
-              as={IconButton}
-              aria-label="Options"
-              icon={<HamburgerIcon />}
-              variant="outline"
-            />
-            <MenuList>
-              <MenuItem
-                icon={<Avatar boxSize="25px" src={avatarSrc || undefined} />}
-                onClick={goToProfile}
-              >
-                Profile
-              </MenuItem>
-              <MenuItem
-                icon={<IoHomeOutline size="24px" />}
-                onClick={() => navigate('/dashboard')}
-              >
-                Dashboard
-              </MenuItem>
-              <MenuItem
-                icon={<IoTrophyOutline size="24px" />}
-                onClick={() => navigate('/leaderboard')}
-              >
-                Leaderboard
-              </MenuItem>
-              <MenuItem icon={<IoLogOutOutline size="24px" />} onClick={logout}>
-                Logout
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          {isAuthenticated && (
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<HamburgerIcon />}
+                variant="outline"
+              />
+              <MenuList>
+                <MenuItem
+                  icon={<Avatar boxSize="25px" src={avatarSrc || undefined} />}
+                  onClick={goToProfile}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  icon={<IoHomeOutline size="24px" />}
+                  onClick={() => navigate('/dashboard')}
+                >
+                  Dashboard
+                </MenuItem>
+                <MenuItem
+                  icon={<IoTrophyOutline size="24px" />}
+                  onClick={() => navigate('/leaderboard')}
+                >
+                  Leaderboard
+                </MenuItem>
+                <MenuItem
+                  icon={<IoLogOutOutline size="24px" />}
+                  onClick={logout}
+                >
+                  Logout
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          )}
         </Flex>
       </Flex>
     </Box>

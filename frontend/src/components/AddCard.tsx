@@ -1,3 +1,10 @@
+/**
+ * AddCard.tsx
+ *
+ * This file defines an `AddCard` component that displays a card with an "Add" icon.
+ * When clicked, it navigates the user to the "new project" creation page.
+ */
+
 import { Card, CardBody } from '@chakra-ui/react'
 
 import { AddIcon } from '@chakra-ui/icons'

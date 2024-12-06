@@ -4,7 +4,8 @@ from sqlalchemy import text
 from .project import Project
 import os
 
-
+# Image class Handles SQL queries for everything related to image handling in datasets
+# Operations include image uploading and retrieval of images and their stats 
 class Image:
     def __init__(
         self,
@@ -153,6 +154,7 @@ class Image:
         print(metrics)
         return metrics[0][0] if result else None
 
+    # to show next image in labeling interface
     @staticmethod
     def get_next_image(project_id):
         rows = app.db.execute(
@@ -185,6 +187,7 @@ class Image:
 
         return Image(*(rows[0])) if rows else None
 
+    # for leaderboard
     @staticmethod
     def get_top_labelers():
         labelers = app.db.execute(
@@ -219,6 +222,7 @@ class Image:
         else:
             return None
 
+    # gets all labels from a user for label history 
     @staticmethod
     def get_user_labels(user_id):
         rows = app.db.execute(

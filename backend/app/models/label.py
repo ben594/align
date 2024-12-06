@@ -3,6 +3,8 @@ from sqlalchemy import text
 
 from .project import Project
 
+# Label class includes SQL queries related to creating, updating, approving, and rejecting labels
+
 class Label:
     def __init__(self, labeler_uid, project_id, image_url, label):
         self.labeler_uid = labeler_uid
@@ -10,6 +12,7 @@ class Label:
         self.image_url = image_url
         self.label = label
 
+    # updates db with created label 
     @staticmethod
     def create(
         labeler_uid,
@@ -30,7 +33,8 @@ class Label:
         )
 
         return image_url if image_url else None
-
+    
+    # label is approved 
     @staticmethod
     def approve_label(image_url):
         # transaction to approve label and transfer fund to labeler
@@ -91,9 +95,24 @@ class Label:
                 ),
                 parameters=dict(labeler_uid=labeler_uid, ppi=ppi),
             )
+            
+            # create payment record
+            conn.execute(
+                statement=text(
+                    """
+                    INSERT INTO Payments(user_id, transaction_time, balance_change)
+                    VALUES(:user_id, NOW(), :balance_change);
+                    """
+                ),
+                parameters=dict(
+                    user_id=labeler_uid,
+                    balance_change=ppi,
+                ),
+            )
 
             return bool(status)
 
+    # labeler is paid based on # of approved labels
     @staticmethod
     def pay_labeler(labeler_uid, ppi):
         try:
@@ -111,6 +130,7 @@ class Label:
             return False
         return bool(status)
 
+    #reject label
     @staticmethod
     def reject_label(image_url):
         status = app.db.execute(

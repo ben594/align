@@ -1,5 +1,6 @@
 from flask import current_app as app
 
+# Payment class handles SQL queries for getting information about transactions 
 
 class Payment:
     def __init__(
@@ -30,7 +31,7 @@ class Payment:
             SELECT *
             FROM Payments
             WHERE user_id = :user_id
-            ORDER BY transaction_time DESC
+            ORDER BY transaction_time ASC
             """,
             user_id=user_id,
         )
