@@ -151,8 +151,11 @@ export default function ProjectDisplayPage() {
                     isDisabled={!canAdmin(project?.role as Role) || isArchived}
                   />
                 )}
-
-                <ProjectMetrics projectId={projectId} />
+              </>
+            )}
+            <ProjectMetrics projectId={projectId} />
+            {canAdmin(project?.role as Role) && (
+              <>
                 {!isArchived && (
                   <IconButton
                     icon={<SettingsIcon />}
