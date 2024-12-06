@@ -216,7 +216,7 @@ export default function ReviewingInterface() {
             width="100px"
             colorScheme="green"
             onClick={() => {
-              const numChanges = newLabel.length - label.length
+              const numChanges = Math.abs(newLabel.length - label.length)
               if (newLabel !== null && newLabel !== '' && numChanges > 15) {
                 toast({
                   title: 'Error',
